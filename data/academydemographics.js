@@ -5,7 +5,7 @@ const PERCENT_URM_2021 = 0.19;
 const NUMBER_VOTERS_2022 = 9579;
 const NUMBER_VOTERS_2012 = 5765;
 // source: https://www.thewrap.com/academy-membership-grows-oscar-voters-9500/ 
-let academy_branches = {
+let branchsizes_2022 = {
     "Actors": 1302,
     "Casting Directors": 154,
     "Cinematographers": 290,
