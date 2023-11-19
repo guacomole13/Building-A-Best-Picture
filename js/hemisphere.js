@@ -1,7 +1,8 @@
 class Hemisphere {
 
-    constructor(_parentElement) {
+    constructor(_parentElement, _data) {
         this.parentElement = _parentElement;
+        this.data = _data;
 
         this.initVis();
     }
@@ -37,6 +38,25 @@ class Hemisphere {
     updateVis() {
         // Method to update the visualization
         let vis = this;
+        console.log(vis.data);
+
+        /* set up the parliament */
+        var parliament = d3.parliament();
+        parliament.width(500).height(500).innerRadiusCoef(0.4);
+        parliament.enter.fromCenter(true).smallToBig(true);
+        parliament.exit.toCenter(false).bigToSmall(true);
+
+        /* register event listeners */
+        parliament.on("click", function(d) { alert("You clicked on a seat of " + d.party.name); });
+        parliament.on("mouseover", function(d) { console.log("mouse on " + d.party.name); });
+        parliament.on("mouseout", function(d) { console.log("mouse out of " + d.party.name); });
+
+        console.log("before")
+
+        /* add the parliament to the page */
+        
+        vis.svg.datum(vis.data).call(parliament);
+
         console.log("data updated");
     }
 }
