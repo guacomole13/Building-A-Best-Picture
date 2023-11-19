@@ -2,6 +2,7 @@
 
 let promises = [
     d3.json("data/movies_list.json"),
+    d3.json("data/european.json"),
     d3.csv("data/oscars_df.csv")
 ];
 
@@ -15,10 +16,10 @@ Promise.all(promises)
 
 function createVis(data) {    
     let movieList = data[0];
-    let oscarsDF = data[1];
+    let european = data[1]
+    let oscarsDF = data[2];
 
-    console.log(data);
+    console.log(data[1]);
     // Create visualization instances
-    let hemisphere = new Hemisphere("hemisphere");
-
+    let hemisphere = new Hemisphere("hemisphere", european)
 }

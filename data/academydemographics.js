@@ -5,23 +5,33 @@ const PERCENT_URM_2021 = 0.19;
 const NUMBER_VOTERS_2022 = 9579;
 const NUMBER_VOTERS_2012 = 5765;
 // source: https://www.thewrap.com/academy-membership-grows-oscar-voters-9500/ 
-let branchsizes_2022 = {
-    "Actors": 1302,
-    "Casting Directors": 154,
-    "Cinematographers": 290,
-    "Costume Designers": 169,
-    "Directors": 573,
-    "Documentary": 648,
-    "Executives": 694,
-    "Film Editors": 376,
-    "Makeup Artists and Hairstylists": 236,
-    "Marketing and Public Relations": 614,
-    "Music": 388,
-    "Producers": 648,
-    "Production Design": 390,
-    "Short Films and Feature Animation": 867,
-    "Sound": 549,
-    "Visual Effects": 615,
-    "Writers": 510,
-    "Members-at-Large": 556
-}
+let branchsizes_2022 = [
+    {"id": "Actors", "seats": 1302},
+    {"id": "Casting Directors", "seats": 154},
+    {"id": "Cinematographers", "seats": 290},
+    {"id": "Costume Designers", "seats": 169},
+    {"id": "Directors", "seats": 573},
+    {"id": "Documentary", "seats": 648},
+    {"id": "Executives", "seats": 694},
+    {"id": "Film Editors", "seats": 376},
+    {"id": "Makeup Artists and Hairstylists", "seats": 236},
+    {"id": "Marketing and Public Relations", "seats": 614},
+    {"id": "Music", "seats": 388},
+    {"id": "Producers", "seats": 648},
+    {"id": "Production Design", "seats": 390},
+    {"id": "Short Films and Feature Animation", "seats": 867},
+    {"id": "Sound", "seats": 549},
+    {"id": "Visual Effects", "seats": 615},
+    {"id": "Writers", "seats": 510},
+    {"id": "Members-at-Large", "seats": 556}
+];
+
+let genderproportions_2022 = [
+    {"id": "Women", "seats": 3161}, //9579 * 0.33 rounded down
+    {"id": "Men", "seats": 6418}
+]
+
+let raceproportions_2022 = [
+    {"id": "People of Color", "seats": 1820}, //9579 * 0.19 rounded down
+    {"id": "White", "seats": 6418}
+]
