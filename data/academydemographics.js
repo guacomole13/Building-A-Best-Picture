@@ -26,6 +26,7 @@ let branchsizes_2022 = [
     {"id": "Members-at-Large", "seats": 556}
 ];
 
+
 let genderproportions_2022 = [
     {"id": "Women", "seats": 3161}, //9579 * 0.33 rounded down
     {"id": "Men", "seats": 6418}
@@ -33,5 +34,5 @@ let genderproportions_2022 = [
 
 let raceproportions_2022 = [
     {"id": "People of Color", "seats": 1820}, //9579 * 0.19 rounded down
-    {"id": "White", "seats": 6418}
+    {"id": "White", "seats": 7759}
 ]

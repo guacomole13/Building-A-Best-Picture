@@ -21,5 +21,5 @@ function createVis(data) {
 
     console.log(data[1]);
     // Create visualization instances
-    let hemisphere = new Hemisphere("hemisphere", european)
+    let hemisphere = new Hemisphere("hemisphere", branchsizes_2022)
 }
