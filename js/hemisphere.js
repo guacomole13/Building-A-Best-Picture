@@ -23,14 +23,16 @@ class Hemisphere {
 			.append("g")
 			.attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
-        vis.getIds = (array) => array.map(item => item.id);
-        vis.colors = ["#cccccc", "#f0ede5", "#849eaf", "#d9c193", "#232323",
-        "#444444", "#7a52ad", "#352557", "#876c56", "#d7b498", "#6e4747", "#3a2b2b",
-        "#b0251a", "#e77b25", "#ff8d08", "#ffd400", "#93252a", "#076767"]
+        vis.getLegend = (array) => array.map(item => item.legend);
+
+        vis.colors = ["red", "orange", "yellow", "green", "blue", 
+        "indigo", "violet", "pink", "teal", 
+        "black", "brown", "fuchsia", "greenyellow", "NavajoWhite", 
+        "coral", "magenta", "blueviolet", "grey"]
         
         // create legend
         vis.scale = d3.scaleOrdinal()
-            .domain(vis.getIds(vis.data))
+            .domain(vis.getLegend(vis.data))
             .range(vis.colors)
 
         vis.svg.append("g")
@@ -43,7 +45,6 @@ class Hemisphere {
         vis.svg.select(".legendOrdinal")
             .call(vis.legendOrdinal);
         
-          
         vis.wrangleData();
     }
 
@@ -75,21 +76,19 @@ class Hemisphere {
         // parliament.on("mouseover", function(d) { console.log("mouse on " + d ); });
         // parliament.on("mouseout", function(d) { console.log("mouse out of " + d ); });
 
-        console.log("before")
-
         /* add the parliament to the page */
         
         vis.svg.datum(vis.displayData).call(parliament);
         vis.svg.selectAll(".parliament")
-            .attr("transform", `translate(${vis.width * 0.6},${vis.height*0.66})`);
+            .attr("transform", `translate(${vis.width * 0.66},${vis.height*0.66})`);
 
         console.log(vis.scale.domain())
 
         // create a loop to color all
-        vis.scale.domain().forEach((element, index) => {
-            vis.svg.selectAll("." + element).style("fill", vis.scale.range()[index])            
+        vis.data.forEach((element, index) => {
+            vis.svg.selectAll("." + element.id).style("fill", vis.scale.range()[index])            
         });
 
-        console.log("after");
+        // TO-DO: Highlight all circles in a group on hover
     }
 }

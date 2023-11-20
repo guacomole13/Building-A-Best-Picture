@@ -6,33 +6,34 @@ const NUMBER_VOTERS_2022 = 9579;
 const NUMBER_VOTERS_2012 = 5765;
 // source: https://www.thewrap.com/academy-membership-grows-oscar-voters-9500/ 
 let branchsizes_2022 = [
-    {"id": "Actors", "seats": 1302},
-    {"id": "Casting Directors", "seats": 154},
-    {"id": "Cinematographers", "seats": 290},
-    {"id": "Costume Designers", "seats": 169},
-    {"id": "Directors", "seats": 573},
-    {"id": "Documentary", "seats": 648},
-    {"id": "Executives", "seats": 694},
-    {"id": "Film Editors", "seats": 376},
-    {"id": "Makeup Artists and Hairstylists", "seats": 236},
-    {"id": "Marketing and Public Relations", "seats": 614},
-    {"id": "Music", "seats": 388},
-    {"id": "Producers", "seats": 648},
-    {"id": "Production Design", "seats": 390},
-    {"id": "Short Films and Feature Animation", "seats": 867},
-    {"id": "Sound", "seats": 549},
-    {"id": "Visual Effects", "seats": 615},
-    {"id": "Writers", "seats": 510},
-    {"id": "Members-at-Large", "seats": 556}
+    {"id": "Actors", "seats": 1302, "legend": "Actors", "name": "Actors"},
+    {"id": "CastingDirectors", "seats": 154, "legend": "Casting Directors", "name": "Casting Directors"},
+    {"id": "Cinematographers", "seats": 290, "legend": "Cinematographers", "name": "Cinematographers"},
+    {"id": "CostumeDesigners", "seats": 169, "legend": "Costume Designers", "name": "Costume Designers"},
+    {"id": "Directors", "seats": 573, "legend": "Directors", "name": "Directors"},
+    {"id": "Documentary", "seats": 648, "legend": "Documentary", "name": "Documentary"},
+    {"id": "Executives", "seats": 694, "legend": "Executives", "name": "Executives"},
+    {"id": "FilmEditors", "seats": 376, "legend": "Film Editors", "name": "Film Editors"},
+    {"id": "MakeupArtists", "seats": 236, "legend": "Makeup Artists and Hairstylists", "name": "Makeup Artists and Hairstylists"},
+    {"id": "MarketingPR", "seats": 614, "legend": "Marketing and Public Relations", "name": "Marketing and Public Relations"},
+    {"id": "Music", "seats": 388, "legend": "Music", "name": "Music"},
+    {"id": "Producers", "seats": 648, "legend": "Producers", "name": "Producers"},
+    {"id": "ProductionDesign", "seats": 390, "legend": "Production Design", "name": "Production Design"},
+    {"id": "ShortFilms", "seats": 867, "legend": "Short Films and Feature Animation", "name": "Short Films and Feature Animation"},
+    {"id": "Sound", "seats": 549, "legend": "Sound", "name": "Sound"},
+    {"id": "VisualEffects", "seats": 615, "legend": "Visual Effects", "name": "Visual Effects"},
+    {"id": "Writers", "seats": 510, "legend": "Writers", "name": "Writers"},
+    {"id": "MembersAtLarge", "seats": 556, "legend": "Members-at-Large", "name": "Members-at-Large"}
 ];
 
 
 let genderproportions_2022 = [
-    {"id": "Women", "seats": 3161}, //9579 * 0.33 rounded down
-    {"id": "Men", "seats": 6418}
-]
+    {"id": "Women", "seats": 3161, "legend": "Women", "name": "Women"}, //9579 * 0.33 rounded down
+    {"id": "Men", "seats": 6418, "legend": "Men", "name": "Men"}
+];
 
 let raceproportions_2022 = [
-    {"id": "People of Color", "seats": 1820}, //9579 * 0.19 rounded down
-    {"id": "White", "seats": 7759}
-]
+    {"id": "PeopleOfColor", "seats": 1820, "legend": "People of Color", "name": "People of Color"}, //9579 * 0.19 rounded down
+    {"id": "White", "seats": 7759, "legend": "White", "name": "White"}
+];
+
