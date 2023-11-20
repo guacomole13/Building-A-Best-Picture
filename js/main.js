@@ -1,4 +1,3 @@
-
 // (1) Load data with promises
 
 let promises = [
@@ -24,7 +23,7 @@ function createVis(data) {
 
     console.log(data);
     // Create visualization instances
-    // let hemisphere = new Hemisphere("hemisphere");
+    let hemisphere = new Hemisphere("hemisphere");
     let rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
 
 }
