@@ -12,3 +12,22 @@ var setData = function(d) {
 d3.json("data/european.json", setData);
 
 setTimeout(function() { d3.json("data/french.json", setData); }, 5000)
+
+
+let consensus;
+
+// load csv data
+d3.csv("data/oscars_df.csv").then(data => {
+
+    console.log(data);
+
+    //  Convert strings to date objects
+    // data.forEach(d => {
+    //     d.survey = parseDate(d.survey);
+    // });
+
+
+    //  New consensus plot object
+    consensus = new ConsensusPlot("consensus", data)
+
+});
