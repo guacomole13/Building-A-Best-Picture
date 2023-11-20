@@ -6,6 +6,9 @@ let promises = [
     d3.csv("data/oscars_df.csv")
 ];
 
+// Initialize consensus plot variable
+let consensus;
+
 Promise.all(promises)
     .then(function (data) {
         createVis(data)
@@ -23,3 +26,14 @@ function createVis(data) {
     // Create visualization instances
     let hemisphere = new Hemisphere("hemisphere", european)
 }
+
+
+// Load csv data for consensus plot (Sketch 12: "Is there consensus between Best Picture winners’ critic and audience ratings on Rotten Tomatoes?")
+d3.csv("data/oscars_df.csv").then(data => {
+
+    console.log(data);
+
+    //  New consensus plot object
+    consensus = new ConsensusPlot("consensus", data)
+
+});
