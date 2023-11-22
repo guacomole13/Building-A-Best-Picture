@@ -15,6 +15,9 @@ let promises = [
     d3.csv("data/oscars_df.csv")
 ];
 
+// Initialize consensus plot variable
+let consensus;
+
 Promise.all(promises)
     .then(function (data) {
         createVis(data)
@@ -30,5 +33,5 @@ function createVis(data) {
     console.log(data[1]);
     // Create visualization instances
     myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
+    consensus = new ConsensusPlot("consensus", data[1])
 }
-
