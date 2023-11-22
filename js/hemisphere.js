@@ -1,18 +1,28 @@
 class Hemisphere {
 
-    constructor(_parentElement, _data) {
+    constructor(_parentElement, _initialKey, _datasets) {
         this.parentElement = _parentElement;
-        this.data = _data;
+        // Store the initial key and data references
+        this.key = _initialKey;
+        this.datasets = _datasets;
+        this.data = this.getDataByKey(this.key);
 
+        //render vis
         this.initVis();
+    }
+
+    // updates data based on dropdown menu
+    getDataByKey(key) {
+        // Return the dataset associated with the current key or empty array
+        return this.datasets[key] || []; 
     }
 
     initVis() {
         // Method to initialize the visualization
         let vis = this;
 
+        // svg dimensions
 		vis.margin = { top: 40, right: 0, bottom: 60, left: 60 };
-
 		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
 		vis.height = 800 - vis.margin.top - vis.margin.bottom;
 
@@ -23,11 +33,21 @@ class Hemisphere {
 			.append("g")
 			.attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
-        vis.getLegend = (array) => array.map(item => item.legend);
+        // initialize parliament layout
+        vis.parliament = d3.parliament().width(850).height(500).innerRadiusCoef(0.4);
+        vis.parliament.enter.fromCenter(true).smallToBig(true);
+        vis.parliament.exit.toCenter(false).bigToSmall(true);
 
+        // call parliament layout
+        vis.svg.datum(this.getDataByKey(vis.key)).call(vis.parliament);
+        vis.svg.selectAll(".parliament")
+            .attr("transform", `translate(${0},${0})`);
+        
+        // helpers to create legend
+        vis.getLegend = (array) => array.map(item => item.legend);
         vis.colors = ["red", "orange", "yellow", "green", "blue", 
-        "indigo", "violet", "pink", "teal", 
-        "black", "brown", "fuchsia", "greenyellow", "NavajoWhite", 
+        "indigo", "violet", "pink", "teal",  "black", "brown", 
+        "fuchsia", "greenyellow", "NavajoWhite", 
         "coral", "magenta", "blueviolet", "grey"]
         
         // create legend
@@ -45,49 +65,47 @@ class Hemisphere {
         vis.svg.select(".legendOrdinal")
             .call(vis.legendOrdinal);
         
-        vis.wrangleData();
-    }
-
-    wrangleData() {
-        // Method to wrangle the data
-        let vis = this;
-
-        // TO DO *****
-        // turns display data into whatever is selected by the menu
-        vis.displayData = vis.data;
-
-        console.log(vis.displayData);
-
         vis.updateVis();
     }
 
     updateVis() {
         // Method to update the visualization
         let vis = this;
-
-        /* set up the parliament */
-        var parliament = d3.parliament();
-        parliament.width(850).height(500).innerRadiusCoef(0.4);
-        parliament.enter.fromCenter(true).smallToBig(true);
-        parliament.exit.toCenter(false).bigToSmall(true);
-
-        /* register event listeners */
-        // parliament.on("click", function(d) { alert("You clicked on a seat of " + d ); });
-        // parliament.on("mouseover", function(d) { console.log("mouse on " + d ); });
-        // parliament.on("mouseout", function(d) { console.log("mouse out of " + d ); });
-
-        /* add the parliament to the page */
+        let currentData = vis.getDataByKey(vis.key);
         
-        vis.svg.datum(vis.displayData).call(parliament);
-        vis.svg.selectAll(".parliament")
-            .attr("transform", `translate(${vis.width * 0.66},${vis.height*0.66})`);
+        // update data based on selection
+        vis.svg.datum(currentData).call(vis.parliament);
 
-        console.log(vis.scale.domain())
+        // // create a loop to color all
+        // vis.data.forEach((element, index) => {
+        //     vis.svg.selectAll("." + element.id).style("fill", vis.scale.range()[index])            
+        // });
 
-        // create a loop to color all
-        vis.data.forEach((element, index) => {
-            vis.svg.selectAll("." + element.id).style("fill", vis.scale.range()[index])            
-        });
+        // TO-DO: Update legend
+        vis.scale.domain(vis.getLegend(currentData))
+            .range(vis.colors);
+        vis.svg.select(".legendOrdinal").call(vis.legendOrdinal);
+
+        setTimeout(() => {
+            // Select all the circle elements and update fill
+            vis.svg.selectAll("circle.seat")
+                // .attr("class", function() {
+                //     // Get the current circle's class (which contains its 'id')
+                //     let currentClass = d3.select(this).attr("class");
+                //     let currentId = currentClass.split(" ")[1]; // Assuming 'seat Actors' format
+                //     // Return the updated class
+                //     return `seat ${currentId}`;
+                // })
+                .transition()
+                .duration(500)
+                .style("fill", function() {
+                    // Get the current circle's class to find the 'id'
+                    let currentClass = d3.select(this).attr("class");
+                    let currentId = currentClass.split(" ")[1]; // Assuming 'seat Actors' format
+                    // Return the color based on the 'id'
+                    return vis.scale(currentId);
+                });
+        }, 0);
 
         // TO-DO: Highlight all circles in a group on hover
     }
