@@ -39,32 +39,41 @@ class Hemisphere {
         vis.parliament.exit.toCenter(false).bigToSmall(true);
 
         // call parliament layout
-        vis.svg.datum(this.getDataByKey(vis.key)).call(vis.parliament);
+        vis.svg.datum(vis.getDataByKey(vis.key)).call(vis.parliament);
+
         vis.svg.selectAll(".parliament")
-            .attr("transform", `translate(${0},${0})`);
+            .attr("transform", `translate(${vis.width * 0.75},${vis.height * 0.75})`);
         
-        // helpers to create legend
-        vis.getLegend = (array) => array.map(item => item.legend);
+        // helpers to get ID and legend
+        vis.getID = (array) => array.map(item => item.id);
+
+        // colors for visualization
         vis.colors = ["red", "orange", "yellow", "green", "blue", 
         "indigo", "violet", "pink", "teal",  "black", "brown", 
         "fuchsia", "greenyellow", "NavajoWhite", 
         "coral", "magenta", "blueviolet", "grey"]
         
         // create legend
+
+        // generates scale
         vis.scale = d3.scaleOrdinal()
-            .domain(vis.getLegend(vis.data))
+            .domain(vis.getID(vis.data))
             .range(vis.colors)
 
+        // creates legend group
         vis.svg.append("g")
             .attr("class", "legendOrdinal")
             .attr("transform", "translate(0,20)");
 
+       // renders proper legend text
         vis.legendOrdinal = d3.legendColor()
-            .scale(vis.scale);
-            
+            .scale(vis.scale)
+            .labels(vis.data.map(d => d.legend));
+
+        // calls & renders legend
         vis.svg.select(".legendOrdinal")
             .call(vis.legendOrdinal);
-        
+            
         vis.updateVis();
     }
 
@@ -76,14 +85,11 @@ class Hemisphere {
         // update data based on selection
         vis.svg.datum(currentData).call(vis.parliament);
 
-        // // create a loop to color all
-        // vis.data.forEach((element, index) => {
-        //     vis.svg.selectAll("." + element.id).style("fill", vis.scale.range()[index])            
-        // });
-
-        // TO-DO: Update legend
-        vis.scale.domain(vis.getLegend(currentData))
-            .range(vis.colors);
+        // Update legend
+        vis.scale.domain(vis.getID(currentData))
+            .range(vis.colors.slice(0, currentData.length));
+        vis.legendOrdinal.labels(currentData.map(d => d.legend));
+        
         vis.svg.select(".legendOrdinal").call(vis.legendOrdinal);
 
         setTimeout(() => {
