@@ -21,7 +21,7 @@ class ConsensusPlot {
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = 200 - vis.margin.top - vis.margin.bottom;
+        vis.height = 1000 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -33,13 +33,13 @@ class ConsensusPlot {
 
         // Scales and axes
         vis.x = d3.scaleLinear()
-            .domain([-1, 10]) // TODO: CHANGE THE DOMAIN TO REFLECT THE BOUNDS OF OUR VARIABLE
+            .domain([0, 100])
             .range([ 0, vis.width]);
 
-        // TODO: MAKE THE Y-AXIS REFLECT THE NAMES OF THE MOVIES
+        // Y-axis should be the names of the films
         vis.y = d3.scaleBand()
             .range([ 0, vis.height ])
-            .domain(vis.displayData.map(function(d) { return d.group; }))
+            .domain(vis.displayData.map(d => d.Film))
             .padding(1);
 
         vis.xAxis = d3.axisBottom()
@@ -55,14 +55,20 @@ class ConsensusPlot {
         vis.svg.append("g")
             .attr("class", "y-axis axis");
 
-        // Axis title
-        vis.svg.append("text") // TODO: CHECK IF NEED TO KEEP / EDIT AXIS TITLE
-            .attr("x", -50)
-            .attr("y", -8)
-            .text("Movies");
+        // X-axis label
+        vis.svg.append("text")
+            .attr("x", vis.width / 2)
+            .attr("y", vis.height + vis.margin.bottom)
+            .style("text-anchor", "middle")
+            .text("Difference between Rotten Tomatoes audience and critic ratings");
 
-        // TODO: add x-axis label: "difference between Rotten Tomatoes audience and critic ratings"
-
+        // Graph title
+        vis.svg.append("text")
+            .attr("x", vis.width / 2)
+            .attr("y", -vis.margin.top)
+            .style("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("Is there consensus between Best Picture winners’ critic and audience ratings on Rotten Tomatoes?");
 
         // (Filter, aggregate, modify data)
         vis.wrangleData();
@@ -91,37 +97,54 @@ class ConsensusPlot {
         let vis = this;
 
         // Lines connecting the 2 dots for each movie
+
+        // vis.svg.selectAll(".line")
+        //     .data(vis.displayData)
+        //     .join("line")
+        //     .attr("x1", function(d) { return vis.x(d.value1); })
+        //     .attr("x2", function(d) { return vis.x(d.value2); })
+        //     .attr("y1", function(d) { return vis.y(d.group); })
+        //     .attr("y2", function(d) { return vis.y(d.group); })
+        //     .attr("stroke", "black")
+        //     .attr("stroke-width", "1px")
+
+        // TODO: UPDATE THE X1 AND X2 ATTRIBUTES TO REMOVE THE SUBTRACTION?
         vis.svg.selectAll(".line")
             .data(vis.displayData)
-            .join("line")
-            .attr("x1", function(d) { return x(d.value1); }) // TODO: EDIT DATASET SO THAT VALUE1, VALUE2, AND GROUP HAVE MEANING
-            .attr("x2", function(d) { return x(d.value2); })
-            .attr("y1", function(d) { return y(d.group); })
-            .attr("y2", function(d) { return y(d.group); })
+            .enter()
+            .append("line")
+            .attr("class", "line")
+            .attr("x1", d => vis.x(d.CriticRating - d.AudienceRating))
+            .attr("x2", d => vis.x(d.CriticRating - d.AudienceRating))
+            .attr("y1", d => vis.y(d.Film))
+            .attr("y2", d => vis.y(d.Film))
             .attr("stroke", "black")
-            .attr("stroke-width", "1px")
+            .attr("stroke-width", "1px");
+
 
         // Circles for Critic Ratings
         vis.svg.selectAll(".criticCircle")
             .data(vis.displayData)
-            .enter().append("circle")
+            .enter()
+            .append("circle")
             .attr("class", "criticCircle")
-            .attr("cx", function(d) { return x(parseFloat(d.TomatometerRating)); }) // TODO: Replace TomatometerRating with appropriate field
-            .attr("cy", function(d) { return y(d.Film); }) // TODO: Replace with movie title field
+            .attr("cx", d => vis.x(d.CriticRating))
+            .attr("cy", d => vis.y(d.Film))
             .attr("r", "6")
             .style("fill", "green"); // TODO: make this reflect whether it was a rotten or fresh rating using tomatoes
 
         // Circles for Audience Ratings
         vis.svg.selectAll(".audienceCircle")
             .data(vis.displayData)
-            .enter().append("circle")
+            .enter()
+            .append("circle")
             .attr("class", "audienceCircle")
-            .attr("cx", function(d) { return x(parseFloat(d.AudienceRating)); }) // TODO: Replace AudienceRating with appropriate field
-            .attr("cy", function(d) { return y(d.Film); }) // TODO: Replace with  movie title field
+            .attr("cx", d => vis.x(d.AudienceRating))
+            .attr("cy", d => vis.y(d.Film))
             .attr("r", "6")
             .style("fill", "blue"); // TODO: make this reflect whether it was a good or bad rating using spilled/upright popcorn
 
-        // TODO: add "if" conditions to handle when to use what icons representing good/bad critic and audience reviews
+        // TODO: add conditions to handle when to use what icons representing good/bad critic and audience reviews
 
         // Call axis function
         vis.svg.select(".x-axis").call(vis.xAxis);

@@ -65,10 +65,12 @@ d3.csv("data/oscars_df.csv").then(data => {
         movie.AudienceRating = parseInt(movie.AudienceRating, 10);
     });
 
+    // TODO: ONLY DISPLAY THE MOST RECENT BEST PICTURE WINNERS? GRAPH DISPLAYS TOO MANY MOVIES TO FIT ON SCREEN
+
     // Output the updated array
     console.log(displayData);
 
-    //  New consensus plot object
+    // New consensus plot object
     consensus = new ConsensusPlot("consensus", displayData);
 
 });
