@@ -4,7 +4,7 @@ let promises = [
     d3.json("data/movies_list.json"),
     d3.csv("data/oscars_df.csv"),
     d3.csv("data/film_budget_data.csv"),
-    d3.json("data/cleanerdata.json")
+    d3.json("data/cleanestdata.json")
 ];
 
 Promise.all(promises)
@@ -22,6 +22,7 @@ function createVis(data) {
     let squeakyCleanData = data[3]
 
     console.log(data);
+    console.log(squeakyCleanData)
     // Create visualization instances
     let hemisphere = new Hemisphere("hemisphere");
     let rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
