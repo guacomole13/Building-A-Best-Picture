@@ -1,11 +1,9 @@
 
 class ConsensusPlot {
 
-    constructor(_parentElement, _data) {
-        this.parentElement = _parentElement;
-        this.data = _data;
-
-        this.filteredData = this.data;
+    constructor(parentElement, displayData) {
+        this.parentElement = parentElement;
+        this.displayData = displayData;
 
         this.initVis();
     }
@@ -41,7 +39,7 @@ class ConsensusPlot {
         // TODO: MAKE THE Y-AXIS REFLECT THE NAMES OF THE MOVIES
         vis.y = d3.scaleBand()
             .range([ 0, vis.height ])
-            .domain(data.map(function(d) { return d.group; }))
+            .domain(vis.displayData.map(function(d) { return d.group; }))
             .padding(1);
 
         vis.xAxis = d3.axisBottom()
@@ -93,8 +91,8 @@ class ConsensusPlot {
         let vis = this;
 
         // Lines connecting the 2 dots for each movie
-        svg.selectAll(".line")
-            .data(vis.data)
+        vis.svg.selectAll(".line")
+            .data(vis.displayData)
             .join("line")
             .attr("x1", function(d) { return x(d.value1); }) // TODO: EDIT DATASET SO THAT VALUE1, VALUE2, AND GROUP HAVE MEANING
             .attr("x2", function(d) { return x(d.value2); })
@@ -104,8 +102,8 @@ class ConsensusPlot {
             .attr("stroke-width", "1px")
 
         // Circles for Critic Ratings
-        svg.selectAll(".criticCircle")
-            .data(data)
+        vis.svg.selectAll(".criticCircle")
+            .data(vis.displayData)
             .enter().append("circle")
             .attr("class", "criticCircle")
             .attr("cx", function(d) { return x(parseFloat(d.TomatometerRating)); }) // TODO: Replace TomatometerRating with appropriate field
@@ -114,8 +112,8 @@ class ConsensusPlot {
             .style("fill", "green"); // TODO: make this reflect whether it was a rotten or fresh rating using tomatoes
 
         // Circles for Audience Ratings
-        svg.selectAll(".audienceCircle")
-            .data(data)
+        vis.svg.selectAll(".audienceCircle")
+            .data(vis.displayData)
             .enter().append("circle")
             .attr("class", "audienceCircle")
             .attr("cx", function(d) { return x(parseFloat(d.AudienceRating)); }) // TODO: Replace AudienceRating with appropriate field
