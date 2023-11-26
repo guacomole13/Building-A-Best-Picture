@@ -17,11 +17,11 @@ class ConsensusPlot {
         let vis = this;
 
         // Define svg
-        vis.margin = {top: 15, right: 35, bottom: 15, left: 50};
+        vis.margin = {top: 40, right: 35, bottom: 100, left: 250}; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = 1000 - vis.margin.top - vis.margin.bottom;
+        vis.height = 1700 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -29,7 +29,6 @@ class ConsensusPlot {
             .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
             .append("g")
             .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
-
 
         // Scales and axes
         vis.x = d3.scaleLinear()
@@ -58,14 +57,14 @@ class ConsensusPlot {
         // X-axis label
         vis.svg.append("text")
             .attr("x", vis.width / 2)
-            .attr("y", vis.height + vis.margin.bottom)
+            .attr("y", vis.height + 0.5 * vis.margin.bottom )
             .style("text-anchor", "middle")
             .text("Difference between Rotten Tomatoes audience and critic ratings");
 
         // Graph title
         vis.svg.append("text")
             .attr("x", vis.width / 2)
-            .attr("y", -vis.margin.top)
+            .attr("y", vis.margin.top - 60) // Adjust height of title
             .style("text-anchor", "middle")
             .style("font-size", "16px")
             .text("Is there consensus between Best Picture winners’ critic and audience ratings on Rotten Tomatoes?");
@@ -97,54 +96,47 @@ class ConsensusPlot {
         let vis = this;
 
         // Lines connecting the 2 dots for each movie
-
-        // vis.svg.selectAll(".line")
-        //     .data(vis.displayData)
-        //     .join("line")
-        //     .attr("x1", function(d) { return vis.x(d.value1); })
-        //     .attr("x2", function(d) { return vis.x(d.value2); })
-        //     .attr("y1", function(d) { return vis.y(d.group); })
-        //     .attr("y2", function(d) { return vis.y(d.group); })
-        //     .attr("stroke", "black")
-        //     .attr("stroke-width", "1px")
-
-        // TODO: UPDATE THE X1 AND X2 ATTRIBUTES TO REMOVE THE SUBTRACTION?
         vis.svg.selectAll(".line")
             .data(vis.displayData)
             .enter()
             .append("line")
             .attr("class", "line")
-            .attr("x1", d => vis.x(d.CriticRating - d.AudienceRating))
-            .attr("x2", d => vis.x(d.CriticRating - d.AudienceRating))
+            .attr("x1", d => vis.x(d.CriticRating))
+            .attr("x2", d => vis.x(d.AudienceRating))
             .attr("y1", d => vis.y(d.Film))
             .attr("y2", d => vis.y(d.Film))
             .attr("stroke", "black")
             .attr("stroke-width", "1px");
 
-
-        // Circles for Critic Ratings
-        vis.svg.selectAll(".criticCircle")
+        // Icons for critic reviews
+        vis.svg.selectAll(".criticIcon")
             .data(vis.displayData)
             .enter()
-            .append("circle")
-            .attr("class", "criticCircle")
-            .attr("cx", d => vis.x(d.CriticRating))
-            .attr("cy", d => vis.y(d.Film))
-            .attr("r", "6")
-            .style("fill", "green"); // TODO: make this reflect whether it was a rotten or fresh rating using tomatoes
+            .append("svg:image")
+            .attr("class", "criticIcon")
+            .attr("xlink:href", function(d) {
+                // Check if the CriticRating is fresh or rotten and use the appropriate icon/image path
+                return d.CriticRating >= 60 ? "img/fresh_critic.png" : "img/rotten_critic.png";
+            })
+            .attr("x", d => vis.x(d.CriticRating) - 2) // Adjust horizontal position of icon
+            .attr("y", d => vis.y(d.Film) - 6) // Adjust vertical position of icon
+            .attr("width", 13) // Width of the icon
+            .attr("height", 13); // Height of the icon
 
-        // Circles for Audience Ratings
-        vis.svg.selectAll(".audienceCircle")
+        // Icons for audience reviews
+        vis.svg.selectAll(".audienceIcon")
             .data(vis.displayData)
             .enter()
-            .append("circle")
-            .attr("class", "audienceCircle")
-            .attr("cx", d => vis.x(d.AudienceRating))
-            .attr("cy", d => vis.y(d.Film))
-            .attr("r", "6")
-            .style("fill", "blue"); // TODO: make this reflect whether it was a good or bad rating using spilled/upright popcorn
-
-        // TODO: add conditions to handle when to use what icons representing good/bad critic and audience reviews
+            .append("svg:image")
+            .attr("class", "audienceIcon")
+            .attr("xlink:href", function(d) {
+                // Check if the AudienceRating is fresh or rotten and use the appropriate icon/image path
+                return d.AudienceRating >= 60 ? "img/fresh_audience.png" : "img/rotten_audience.png";
+            })
+            .attr("x", d => vis.x(d.AudienceRating) - 2) // Adjust horizontal position of icon
+            .attr("y", d => vis.y(d.Film) - 6) // Adjust vertical position of icon
+            .attr("width", 13) // Width of the icon
+            .attr("height", 13); // Height of the icon
 
         // Call axis function
         vis.svg.select(".x-axis").call(vis.xAxis);
