@@ -60,7 +60,7 @@ class ConsensusPlot {
             .attr("x", vis.width / 2)
             .attr("y", vis.height + 0.5 * vis.margin.bottom )
             .style("text-anchor", "middle")
-            .text("Difference between Rotten Tomatoes audience and critic ratings");
+            .text("Rotten Tomatoes audience and critic ratings (%)");
 
         // Graph title
         vis.svg.append("text")
@@ -142,6 +142,8 @@ class ConsensusPlot {
         // Call axis function
         vis.svg.select(".x-axis").call(vis.xAxis);
         vis.svg.select(".y-axis").call(vis.yAxis);
+
+        // TODO: ADD LEGEND FOR ICONS AND THE LINE
 
         // TODO: ADD SELECT BOX TO FILTER DECADES
 
