@@ -142,20 +142,5 @@ class ConsensusPlot {
         vis.svg.select(".x-axis").call(vis.xAxis);
         vis.svg.select(".y-axis").call(vis.yAxis);
 
-
-
-        // // TODO: adjust axis labels
-        // vis.svg.select(".x-axis").call(vis.xAxis)
-        //     .selectAll("text")
-        //     .text(function(d, i){
-        //         return (i+1) + ") " + vis.metaData["choices"][100 + i]
-        //     })
-        //     .style("text-anchor", "end")
-        //     .attr("dx", "-.8em")
-        //     .attr("dy", ".15em")
-        //     .attr("transform", function (d) {
-        //         return "rotate(-45)"
-        //     });
-
     }
 }
