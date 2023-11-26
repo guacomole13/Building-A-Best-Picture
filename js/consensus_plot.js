@@ -143,11 +143,5 @@ class ConsensusPlot {
         vis.svg.select(".x-axis").call(vis.xAxis);
         vis.svg.select(".y-axis").call(vis.yAxis);
 
-        // TODO: ADD SELECT BOX TO FILTER DECADES
-
-
-
-        // TODO: ADD TOOLTIPS THAT APPEAR WHEN USER HOVERS OVER AN ICON (DISPLAY EXACT RATINGS)
-
     }
 }
