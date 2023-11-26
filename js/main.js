@@ -1,5 +1,5 @@
 // declare global variables for visualization
-let myHemisphere;
+let myHemisphere, consensus, rankchart, myClusterplot;
 let initialHemisphereCat = document.getElementById('hemisphereCat').value;
 
 // regulates dropbox for hemisphere
@@ -17,8 +17,6 @@ let promises = [
     d3.json("data/cleanestdata.json")
 ];
 
-// Initialize consensus plot variable
-let consensus;
 
 Promise.all(promises)
     .then(function (data) {
@@ -36,8 +34,8 @@ function createVis(data) {
 
 //     console.log(data[1]);
     // Create visualization instances
-    myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
-    consensus = new ConsensusPlot("consensus", data[1])
-    let rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
+    // myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
+    // consensus = new ConsensusPlot("consensus", data[1])
+    rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
 
 }
