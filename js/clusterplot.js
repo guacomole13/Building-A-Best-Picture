@@ -49,14 +49,39 @@ class ClusterPlot {
             .attr('class', 'legendOrdinal')
             .attr('transform', `translate(${vis.width * 2.5 / 4}, ${vis.height*0.9})`)
 
-        // draw initial cluster of dots
+        // draw initial cluster of dots - ???
 
         vis.wrangleData();
     }
 
     wrangleData() {
         let vis = this;
-        console.log("wrangleData");
+        
+        // simplifies data into properties that will be used for tooltip and clusters 
+        vis.displayData = vis.data.map(d => {
+            return {
+                Title: d.Title,
+                Year: d.Year,
+                Winner: d.winner,
+                Genre: d.Genre.split(', '),
+                Director: d.Director,
+                Plot: d.Plot,
+                Poster: d.Poster
+            };
+        });
+
+        function getUniqueGenres(data) {
+            let allGenres = [];
+            data.forEach(d => {
+                allGenres.push(...d.Genre);
+            });
+            let uniqueGenres = [...new Set(allGenres)];
+            return uniqueGenres;
+        }
+        
+        let uniqueGenres = getUniqueGenres(vis.displayData);
+        console.log(uniqueGenres);
+
         vis.updateVis();
     }
 
