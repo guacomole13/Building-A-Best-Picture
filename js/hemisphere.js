@@ -1,6 +1,7 @@
 class Hemisphere {
 
     constructor(_parentElement, _initialKey, _datasets) {
+        
         this.parentElement = _parentElement;
         // Store the initial key and data references
         this.key = _initialKey;
@@ -103,7 +104,7 @@ class Hemisphere {
                 //     return `seat ${currentId}`;
                 // })
                 .transition()
-                .duration(500)
+                .duration(400)
                 .style("fill", function() {
                     // Get the current circle's class to find the 'id'
                     let currentClass = d3.select(this).attr("class");
