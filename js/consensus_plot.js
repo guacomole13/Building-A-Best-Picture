@@ -17,7 +17,7 @@ class ConsensusPlot {
         let vis = this;
 
         // Define svg
-        vis.margin = {top: 40, right: 35, bottom: 100, left: 250}; // Adjust margins to allow axes / labels to fit
+        vis.margin = {top: 40, right: 40, bottom: 100, left: 250}; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -42,7 +42,8 @@ class ConsensusPlot {
             .padding(1);
 
         vis.xAxis = d3.axisBottom()
-            .scale(vis.x);
+            .scale(vis.x)
+            .tickFormat(d => d + "%");   // Append "%" symbol to the tick values
 
         vis.yAxis = d3.axisLeft()
             .scale(vis.y);
@@ -141,6 +142,12 @@ class ConsensusPlot {
         // Call axis function
         vis.svg.select(".x-axis").call(vis.xAxis);
         vis.svg.select(".y-axis").call(vis.yAxis);
+
+        // TODO: ADD SELECT BOX TO FILTER DECADES
+
+
+
+        // TODO: ADD TOOLTIPS THAT APPEAR WHEN USER HOVERS OVER AN ICON (DISPLAY EXACT RATINGS)
 
     }
 }
