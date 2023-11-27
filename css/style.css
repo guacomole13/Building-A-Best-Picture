@@ -1,3 +1,11 @@
+body {
+    font-family: "Montserrat", sans-serif;
+}
+
+.axis {
+    font-family: "Montserrat", sans-serif;
+}
+
 .legend {
     font-size: 12px;
 }
