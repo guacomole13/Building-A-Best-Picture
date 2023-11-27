@@ -23,7 +23,7 @@ class ClusterPlot {
 		vis.height = 600 - vis.margin.top - vis.margin.bottom;
         vis.padding = 1.5; // separation b/w same color circles
         vis.clusterPadding = 30; // separation b/w diff color circles
-        vis.constantRadius = vis.height*0.1; // size of circles
+        vis.constantRadius = vis.height*0.01; // size of circles
 
 		// SVG drawing area
 		vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -86,6 +86,7 @@ class ClusterPlot {
                 allGenres.push(...d.Genre);
             });
             let uniqueGenres = [...new Set(allGenres)];
+            vis.uniqueGenres = uniqueGenres;
             let indexedGenres = {}
             uniqueGenres.forEach((genre, index) => {
                 indexedGenres[genre] = index + 1;
@@ -108,6 +109,13 @@ class ClusterPlot {
             }
         });
 
+        // updates clusters array to keep track of largest node(s) in each cluster
+        vis.displayData.forEach(node => {
+            if (!vis.clusters[node.cluster] || node.radius > vis.clusters[node.cluster].radius) {
+                vis.clusters[node.cluster] = node;
+            }
+        });
+
         console.log(vis.displayData);
 
         vis.updateVis();
@@ -116,33 +124,120 @@ class ClusterPlot {
     updateVis() {
         let vis = this;
 
+        console.log(vis.uniqueGenres);
         vis.scale.domain(vis.uniqueGenres);
-
-        vis.force = d3.layout.force()
-            .nodes(vis.displayData)
-            .size([vis.width, vis.width])
-            .gravity(.02)
-            .charge(0)
-            .on("tick", tick)
-            .start();
 
         vis.circles = vis.svg.append('g')
             .datum(vis.displayData)
-            .enter()
-            .append("circle")
-            .attr("r", (d) => d.radius)
-            .style("fill", (d) => vis.scale(d.genre))
-            .call(vis.force.drag);
+            .selectAll('.circle')
+            .data(d => d)
+            .enter().append('circle')
+            .attr('r', (d) => d.radius)
+            .attr('fill', (d) => vis.scale(d.cluster))
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended))
+        // // add tooltips to each circle
+        // .on("mouseover", function(d) {
+        //     div.transition()    
+        //         .duration(200)    
+        //         .style("opacity", .9);    
+        //     div.html("Director:" + d.Director + "</br>" + "Genre:" + d.Genre)  
+        //         .style("left", (d3.event.pageX) + "px")   
+        //         .style("top", (d3.event.pageY - 28) + "px");  
+        //     })          
+        // .on("mouseout", function(d) {   
+        //     div.transition()    
+        //         .duration(500)    
+        //         .style("opacity", 0); 
+        // });
 
-        function tick(e) {
-            circle
-                .each(cluster(10 * e.alpha * e.alpha))
-                .each(collide(.5))
-                .attr("cx", (d) => d.x)
-                .attr("cy", (d) => d.y)
+         // create the clustering/collision force simulation
+        vis.simulation = d3.forceSimulation(vis.displayData)
+            .velocityDecay(0.2)
+            .force("x", d3.forceX().strength(.0005))
+            .force("y", d3.forceY().strength(.0005))
+            .force("collide", collide)
+            .force("cluster", clustering)
+            .on("tick", ticked);
+
+        function ticked() {
+            vis.circles
+                .attr('cx', (d) => d.x)
+                .attr('cy', (d) => d.y);
         }
 
-        // move d to be adjacent to cluster node
+        // Drag functions used for interactivity
+        function dragstarted(d) {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+            if (!d3.event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        // These are implementations of the custom forces.
+        function clustering(alpha) {
+            vis.displayData.forEach(function(d) {
+                var cluster = vis.clusters[d.cluster];
+                if (cluster === d) return;
+                var x = d.x - cluster.x,
+                    y = d.y - cluster.y,
+                    l = Math.sqrt(x * x + y * y),
+                    r = d.radius + cluster.radius;
+                if (l !== r) {
+                    l = (l - r) / l * alpha;
+                    d.x -= x *= l;
+                    d.y -= y *= l;
+                    cluster.x += x;
+                    cluster.y += y;
+                }
+            });
+        }
+
+        function collide(alpha) {
+            var quadtree = d3.quadtree()
+                .x((d) => d.x)
+                .y((d) => d.y)
+                .addAll(vis.displayData);
+
+            vis.displayData.forEach(function(d) {
+                var r = d.radius + vis.constantRadius + Math.max(vis.padding, vis.clusterPadding),
+                    nx1 = d.x - r,
+                    nx2 = d.x + r,
+                    ny1 = d.y - r,
+                    ny2 = d.y + r;
+                quadtree.visit(function(quad, x1, y1, x2, y2) {
+
+                    if (quad.data && (quad.data !== d)) {
+                        var x = d.x - quad.data.x,
+                            y = d.y - quad.data.y,
+                            l = Math.sqrt(x * x + y * y),
+                            r = d.radius + quad.data.r + (d.cluster === quad.data.cluster ? vis.padding : vis.clusterPadding);
+                        if (l < r) {
+                            l = (l - r) / l * alpha;
+                            d.x -= x *= l;
+                            d.y -= y *= l;
+                            quad.data.x += x;
+                            quad.data.y += y;
+                        }
+                    }
+                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+                });
+            });
+        }
 
         console.log("updateVis");
     }
