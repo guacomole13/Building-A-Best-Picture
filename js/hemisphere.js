@@ -1,3 +1,5 @@
+// TO-DO: Tooltips on Hover that highlight dots and define academy roles/show percentage, rearrange, each dot corresponds to a voter, title
+
 class Hemisphere {
 
     constructor(_parentElement, _initialKey, _datasets) {
