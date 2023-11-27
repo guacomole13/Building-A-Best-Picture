@@ -40,8 +40,8 @@ class StudioBubbles {
             .attr("height", vis.height);
 
         // Set up force simulation
-        vis.simulation = d3.forceSimulation()
-            .on("tick", () => vis.updateVis());
+        // vis.simulation = d3.forceSimulation()
+        //     .on("tick", () => vis.updateVis());
         vis.simulation = d3.forceSimulation()
             .force("collide", d3.forceCollide().radius(2))  // Adjust the collide force radius
             .on("tick", () => vis.updateVis());

@@ -29,7 +29,7 @@ class RankChart {
         vis.svg.append('g')
             .attr('class', 'title')
             .append('text')
-            .text('Box Office and Budget Rank of Winners vs Nominees')
+            // .text('Box Office and Budget Rank of Winners vs Nominees')
             .attr('transform', `translate(${vis.width / 2}, -20)`)
             .attr("font-size", 20)
             .attr('text-anchor', 'middle');
