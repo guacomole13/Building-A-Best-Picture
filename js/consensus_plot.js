@@ -17,7 +17,7 @@ class ConsensusPlot {
         let vis = this;
 
         // Define svg
-        vis.margin = {top: 40, right: 40, bottom: 100, left: 250}; // Adjust margins to allow axes / labels to fit
+        vis.margin = {top: 40, right: 300, bottom: 100, left: 250}; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -153,7 +153,82 @@ class ConsensusPlot {
             .text("Note: Each line connecting the icons denotes the difference between a film's Rotten Tomatoes critic rating and Rotten Tomatoes audience rating.");
 
 
-        // TODO: ADD LEGEND FOR ICONS AND THE LINE
+        //////// ADD LEGEND ////////
+
+        // Append a group element for the legend
+        const legend = vis.svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${vis.width + 20}, 20)`); // Position the legend to the right of the graph
+
+        // Append a rectangle as the background for the legend box
+        const legendBox = legend.append("rect")
+            .attr("width", 230) // Width of the legend box
+            .attr("height", 180) // Height of the legend box
+            .attr("fill", "white") // Background color of the legend box
+            .attr("stroke", "black"); // Border color of the legend box
+
+        // Append text as the title of the legend
+        legend.append("text")
+            .attr("x", 10) // Adjust title position within the legend box
+            .attr("y", 30) // Adjust title position within the legend box
+            .text("Legend")
+            .style("font-weight", "bold"); // Style the title text
+
+        // Append fresh critic icon in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/fresh_critic.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 50) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for fresh critic rating
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 65) // Adjust label position relative to the star image
+            .text("Fresh Critic Rating (>= 60%)");
+
+        // Append rotten critic icon in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/rotten_critic.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 80) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for rotten critic rating
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 95) // Adjust label position relative to the star image
+            .text("Rotten Critic Rating (<60%)");
+
+        // Append fresh audience icon in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/fresh_audience.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 110) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for fresh audience rating
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 125) // Adjust label position relative to the star image
+            .text("Fresh Audience Rating (>=60%)");
+
+        // Append rotten audience icon in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/rotten_audience.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 140) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for rotten audience rating
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 155) // Adjust label position relative to the star image
+            .text("Rotten Audience Rating (<60%)");
 
         // TODO: ADD SELECT BOX TO FILTER DECADES
 

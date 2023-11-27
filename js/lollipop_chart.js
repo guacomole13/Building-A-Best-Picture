@@ -14,7 +14,7 @@ class LollipopChart {
         let vis = this;
 
         // Define svg
-        vis.margin = { top: 40, right: 40, bottom: 100, left: 50 }; // Adjust margins to allow axes / labels to fit
+        vis.margin = { top: 40, right: 180, bottom: 100, left: 50 }; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -130,27 +130,38 @@ class LollipopChart {
         vis.svg.select(".y-axis")
             .call(vis.yAxis);
 
-        // Append images of lines for winner lollipops
-        vis.svg.selectAll(".winnerLollipop")
-            .data(vis.nestedData)
-            .join("image")
-            .attr("class", "winnerLollipop")
-            .attr("xlink:href", "img/winner_squiggles.png")
-            .attr("x", d => vis.x(d.key) + barWidth / 2 - padding) // Position image
-            .attr("y", d => vis.y(0) - 65)
-            .attr("width", 7)
-            .attr("height", 100);
+        // Create clipping path: make a rectangle the size of the SVG (vis.width and vis.height) and uses it to
+        // hide the parts of the image of the lines that extend beyond its boundaries
+        vis.svg
+            .append("defs")
+            .append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", vis.width)
+            .attr("height", vis.height);
 
-        // Append images for nominee lollipops
-        vis.svg.selectAll(".nomineeLollipop")
+        vis.svg.selectAll(".winnerSquiggle")
             .data(vis.nestedData)
             .join("image")
-            .attr("class", "nomineeLollipop")
-            .attr("xlink:href", "img/nominee_squiggles.png")
-            .attr("x", d => vis.x(d.key) + barWidth / 2 + padding) // Position image
-            .attr("y", d => vis.y(0) - 65)
-            .attr("width", 7)
-            .attr("height", 100);
+            .attr("class", "winnerSquiggle")
+            .attr("xlink:href", "img/winner_squiggle.png")
+            .attr("x", d => vis.x(d.key) + barWidth / 2 - padding - 7) // Position image
+            .attr("y", d => vis.y(d.value.winnerAvg) - 3) // Adjust image position based on star image dimensions
+            .attr("width", 14) // Adjust image width
+            .attr("height", vis.y(0)) // Adjust image height dynamically
+            .attr("clip-path", "url(#clip)");
+
+
+        vis.svg.selectAll(".nomineeSquiggle")
+            .data(vis.nestedData)
+            .join("image")
+            .attr("class", "nomineeSquiggle")
+            .attr("xlink:href", "img/nominee_squiggle.png")
+            .attr("x", d => vis.x(d.key) + barWidth / 2 + padding - 5) // Position image
+            .attr("y", d => vis.y(d.value.nomineeAvg) - 1) // Adjust image position based on star image dimensions
+            .attr("width", 13) // Adjust image width
+            .attr("height", vis.y(0)) // Adjust image height dynamically
+            .attr("clip-path", "url(#clip)");
 
         // // Winner Lines
         // vis.svg.selectAll(".winnerLine")
@@ -206,7 +217,55 @@ class LollipopChart {
             .style("font-size", "12px")
             .text("Note: Each decade captures 10 years of Academy Awards ceremonies. Year of ceremony is the year displayed, not the year in which the movie was released.");
 
-        // TODO: ADD LEGEND
+        //////// ADD LEGEND ////////
+
+        // Append a group element for the legend
+        const legend = vis.svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${vis.width + 20}, 20)`); // Position the legend to the right of the graph
+
+        // Append a rectangle as the background for the legend box
+        const legendBox = legend.append("rect")
+            .attr("width", 100) // Width of the legend box
+            .attr("height", 115) // Height of the legend box
+            .attr("fill", "white") // Background color of the legend box
+            .attr("stroke", "black"); // Border color of the legend box
+
+        // Append text as the title of the legend
+        legend.append("text")
+            .attr("x", 10) // Adjust title position within the legend box
+            .attr("y", 30) // Adjust title position within the legend box
+            .text("Legend")
+            .style("font-weight", "bold"); // Style the title text
+
+        // Append winner star image in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/winner_star.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 50) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for winner star
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 65) // Adjust label position relative to the star image
+            .text("Winner");
+
+        // Append nominee star image in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/nominee_star.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 80) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for nominee star
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 95) // Adjust label position relative to the star image
+            .text("Nominee");
+
 
         // TODO: ADD TOOLTIP ON HOVER
     }
