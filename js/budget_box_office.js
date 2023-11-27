@@ -107,6 +107,7 @@ class RankChart {
             .attr("x", vis.width / 2)
             .attr("y", vis.margin.top - 60) // Adjust height of title
             .style("text-anchor", "middle")
+            .style("font-weight", "bold")
             .style("font-size", "16px")
             .text("What is the typical box office performance of Best Picture winners?");
 

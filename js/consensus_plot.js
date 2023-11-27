@@ -67,6 +67,7 @@ class ConsensusPlot {
             .attr("x", vis.width / 2)
             .attr("y", vis.margin.top - 60) // Adjust height of title
             .style("text-anchor", "middle")
+            .style("font-weight", "bold")
             .style("font-size", "16px")
             .text("Is there consensus between Best Picture winners’ critic and audience ratings on Rotten Tomatoes?");
 
