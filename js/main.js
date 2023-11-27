@@ -36,8 +36,11 @@ function createVis(data) {
     // myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
     rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
 
+
+    /////// PREPARE DATA FOR CONSENSUS PLOT ////////
+
     // Filter the data to get only the movies that are winners of Best Picture Award
-    const winners = data[1].filter(movie => movie.Award === "Winner");
+    const winners = oscarsDF.filter(movie => movie.Award === "Winner");
 
     // Initialize an empty array to store the display data
     let displayData = [];
@@ -102,5 +105,30 @@ function createVis(data) {
 
     // New consensus plot object
     consensus = new ConsensusPlot("consensus", displayData);
+
+
+    /////// PREPARE DATA FOR LOLLIPOP CHART ////////
+
+    // Create empty array to store IMDB data
+    const imdbData = [];
+
+    oscarsDF.forEach((movie) => {
+        // Extract 'Award', 'Oscar Year', and 'IMDB Rating' columns
+        const { Film, Award, 'Oscar Year': OscarYear, 'IMDB Rating': IMDBRating } = movie;
+
+        // Push an object with the extracted values to imdbData array
+        imdbData.push({ Film, Award, OscarYear, IMDBRating });
+    });
+
+    // Change string value numbers to floats
+    imdbData.forEach(movie => {
+        movie.OscarYear = parseFloat(movie.OscarYear) + 1;
+        movie.IMDBRating = parseFloat(movie.IMDBRating);
+    });
+
+    console.log(imdbData); // Check the content of imdbData array
+
+    // New lollipop chart object
+    lollipop = new LollipopChart("lollipop", imdbData);
 
 }
