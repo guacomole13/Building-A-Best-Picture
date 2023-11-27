@@ -97,7 +97,7 @@ class ClusterPlot {
         
         vis.indexedGenres = getGenreIndex(vis.displayData);
 
-        // assigns clusters
+        // assigns clusters and random x, y starting points  
         vis.displayData.forEach(d => {
             if (d.Genre.length > 0) {
                 // Find the first genre in the indexedGenres mapping
@@ -114,6 +114,8 @@ class ClusterPlot {
             if (!vis.clusters[node.cluster] || node.radius > vis.clusters[node.cluster].radius) {
                 vis.clusters[node.cluster] = node;
             }
+            node.x = Math.random() * vis.width;
+            node.y = Math.random() * vis.height;
         });
 
         console.log(vis.displayData);
@@ -158,10 +160,10 @@ class ClusterPlot {
          // create the clustering/collision force simulation
         vis.simulation = d3.forceSimulation(vis.displayData)
             .velocityDecay(0.2)
-            .force("x", d3.forceX().strength(.0005))
-            .force("y", d3.forceY().strength(.0005))
-            .force("collide", collide)
-            .force("cluster", clustering)
+            .force("x", d3.forceX(vis.width / 2).strength(0.05))
+            .force("y", d3.forceY(vis.height / 2).strength(0.05))
+            .force("collide", d3.forceCollide().radius((d) => d.radius + vis.padding).iterations(2))
+            .force("charge", d3.forceManyBody().strength(-30))
             .on("tick", ticked);
 
         function ticked() {
@@ -172,7 +174,7 @@ class ClusterPlot {
 
         // Drag functions used for interactivity
         function dragstarted(d) {
-            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            if (!d3.event.active) vis.simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
             d.fy = d.y;
         }
@@ -183,7 +185,7 @@ class ClusterPlot {
         }
 
         function dragended(d) {
-            if (!d3.event.active) simulation.alphaTarget(0);
+            if (!d3.event.active) vis.simulation.alphaTarget(0);
             d.fx = null;
             d.fy = null;
         }
