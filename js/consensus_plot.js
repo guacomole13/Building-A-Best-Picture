@@ -97,6 +97,7 @@ class ConsensusPlot {
         let vis = this;
 
         // Lines connecting the 2 dots for each movie
+        // TODO: ADD TRANSITIONS SO IT APPEARS ON SCREEN NICELY
         vis.svg.selectAll(".line")
             .data(vis.displayData)
             .enter()
@@ -142,6 +143,15 @@ class ConsensusPlot {
         // Call axis function
         vis.svg.select(".x-axis").call(vis.xAxis);
         vis.svg.select(".y-axis").call(vis.yAxis);
+
+        // Append a text element for the note
+        vis.svg.append("text")
+            .attr("x", vis.width / 2)  // Position the text in the center of the SVG
+            .attr("y", vis.height + vis.margin.bottom - 20)  // Adjust the y-coordinate to position the text below the chart
+            .style("text-anchor", "middle")
+            .style("font-size", "12px")
+            .text("Note: Each line connecting the icons denotes the difference between a film's Rotten Tomatoes critic rating and Rotten Tomatoes audience rating.");
+
 
         // TODO: ADD LEGEND FOR ICONS AND THE LINE
 

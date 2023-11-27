@@ -1,5 +1,6 @@
 // Variable for the visualization instance
 let consensus;
+let lollipop;
 
 // Load csv data
 d3.csv("data/oscars_df.csv").then(data => {
@@ -72,5 +73,28 @@ d3.csv("data/oscars_df.csv").then(data => {
 
     // New consensus plot object
     consensus = new ConsensusPlot("consensus", displayData);
+
+
+    // Create empty array to store IMDB data
+    const imdbData = [];
+
+    data.forEach((movie) => {
+        // Extract 'Award', 'Oscar Year', and 'IMDB Rating' columns
+        const { Film, Award, 'Oscar Year': OscarYear, 'IMDB Rating': IMDBRating } = movie;
+
+        // Push an object with the extracted values to imdbData array
+        imdbData.push({ Film, Award, OscarYear, IMDBRating });
+    });
+
+    // Change string value numbers to floats
+    imdbData.forEach(movie => {
+        movie.OscarYear = parseFloat(movie.OscarYear) + 1;
+        movie.IMDBRating = parseFloat(movie.IMDBRating);
+    });
+
+    console.log(imdbData); // Check the content of imdbData array
+
+    // New lollipop chart object
+    lollipop = new LollipopChart("lollipop", imdbData);
 
 });
