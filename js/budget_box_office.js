@@ -26,12 +26,12 @@ class RankChart {
             .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
         // clip path
-        vis.svg.append('g')
-            .attr('class', 'title')
-            .append('text')
-            .text('Box Office Performance of Winners')
-            .attr('transform', `translate(${vis.width / 2}, 20)`)
-            .attr('text-anchor', 'middle');
+        // vis.svg.append('g')
+        //     .attr('class', 'title')
+        //     .append('text')
+        //     .text('Box Office Performance of Winners')
+        //     .attr('transform', `translate(${vis.width / 2}, 20)`)
+        //     .attr('text-anchor', 'middle');
 
 
 
@@ -102,6 +102,13 @@ class RankChart {
         //     .append('path')
         //     .attr("class", "pathTwo");
 
+        // Graph title
+        vis.svg.append("text")
+            .attr("x", vis.width / 2)
+            .attr("y", vis.margin.top - 60) // Adjust height of title
+            .style("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("What is the typical box office performance of Best Picture winners?");
 
         vis.wrangleData();
     }
