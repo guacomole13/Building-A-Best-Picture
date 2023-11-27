@@ -14,7 +14,8 @@ let promises = [
     d3.json("data/movies_list.json"),
     d3.csv("data/oscars_df.csv"),
     d3.csv("data/film_budget_data.csv"),
-    d3.json("data/cleanestdata.json")
+    d3.json("data/cleanestdata.json"),
+    d3.json("data/cleanestdata2.json")
 ];
 
 
@@ -31,10 +32,14 @@ function createVis(data) {
     let oscarsDF = data[1];
     let budgetData = data[2];
     let squeakyCleanData = data[3];
+    let squeakyCleanData2 = data[4];
 
     // Create visualization instances
     // myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
+
     rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
+    let studiovis = new StudioVis("studiovis", squeakyCleanData2)
+    let studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
 
 
     /////// PREPARE DATA FOR CONSENSUS PLOT ////////
