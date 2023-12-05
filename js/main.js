@@ -1,5 +1,5 @@
 // declare global variables for visualization
-let myHemisphere, consensus, rankchart, myClusterplot;
+let myHemisphere, consensus, rankchart, myClusterplot, studiovis, studiobubbles;
 let initialHemisphereCat = document.getElementById('hemisphereCat').value;
 
 // regulates dropbox for hemisphere
@@ -38,8 +38,8 @@ function createVis(data) {
     // myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
 
     rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
-    let studiovis = new StudioVis("studiovis", squeakyCleanData2)
-    let studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
+    studiovis = new StudioVis("studiovis", squeakyCleanData2)
+    studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
 
 
     /////// PREPARE DATA FOR CONSENSUS PLOT ////////
