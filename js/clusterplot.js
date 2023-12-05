@@ -2,7 +2,6 @@ class ClusterPlot {
     constructor(_parentElement, _data) {
         this.parentElement = _parentElement;
         this.data = _data;
-        this.clusters = [];
         this.displayData = [];
         this.colors = ["#ffd700", "#ffb14e", "#ea5f94", "#fa8775",
         "#cd34b5", "#9d02d7", "#0000ff", "#df2020", "#b67c58",
@@ -18,7 +17,7 @@ class ClusterPlot {
         console.log("initVis");
 
         // svg dimensions
-		vis.margin = { top: 40, right: 40, bottom: 60, left: 60 };
+		vis.margin = { top: 60, right: 40, bottom: 60, left: 80 };
 		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
 		vis.height = 600 - vis.margin.top - vis.margin.bottom;
         vis.padding = 1.5; // separation b/w same color circles
@@ -65,9 +64,10 @@ class ClusterPlot {
     wrangleData() {
         let vis = this;
         
-        // simplifies data into properties that will be used for tooltip and clusters 
-        vis.displayData = vis.data.map(d => {
+        // simplifies data into properties 
+        vis.displayData = vis.data.map((d, index) => {
             return {
+                MovieId: index,
                 Title: d.Title,
                 Year: d.Year,
                 Winner: d.winner,
@@ -79,48 +79,154 @@ class ClusterPlot {
             };
         });
 
-        // returns object with indexed, unique genres
-        function getGenreIndex (data) {
-            let allGenres = [];
-            data.forEach(d => {
-                allGenres.push(...d.Genre);
-            });
-            let uniqueGenres = [...new Set(allGenres)];
-            vis.uniqueGenres = uniqueGenres;
-            let indexedGenres = {}
-            uniqueGenres.forEach((genre, index) => {
-                indexedGenres[genre] = index + 1;
-            });
-            
-            return indexedGenres;
-        }
-        
-        vis.indexedGenres = getGenreIndex(vis.displayData);
-
-        // assigns clusters and random x, y starting points  
-        vis.displayData.forEach(d => {
-            if (d.Genre.length > 0) {
-                // Find the first genre in the indexedGenres mapping
-                var genreClusterId = vis.indexedGenres[d.Genre[0]];
-                // If the genre is found in the mapping, assign the corresponding cluster ID
-                if (genreClusterId !== undefined) {
-                    d.cluster = genreClusterId;
+        // Grouping movies by each of their genres
+        vis.moviesByGenre = new Map();
+        vis.displayData.forEach(movie => {
+            movie.Genre.forEach(genre => {
+                if (!vis.moviesByGenre.has(genre)) {
+                    vis.moviesByGenre.set(genre, []);
                 }
-            }
+                vis.moviesByGenre.get(genre).push(movie);
+            });
         });
 
-        // updates clusters array to keep track of largest node(s) in each cluster
-        vis.displayData.forEach(node => {
-            if (!vis.clusters[node.cluster] || node.radius > vis.clusters[node.cluster].radius) {
-                vis.clusters[node.cluster] = node;
-            }
-            node.x = Math.random() * vis.width;
-            node.y = Math.random() * vis.height;
+        // Forming the structured data with genre names as keys
+        vis.groupedData = Array.from(vis.moviesByGenre, ([genre, movies]) => ({ [genre]: movies }));
+
+        // create list of unique genres for domain
+        let allGenres = vis.groupedData.map(genreObject => Object.keys(genreObject)[0]);
+        vis.uniqueGenres = [...new Set(allGenres)];
+
+        // Flattening the data so each movie is represented with a movie-genre pair
+        vis.flattenedNodes = [];
+        vis.groupedData.forEach(genreGroup => {
+            let genre = Object.keys(genreGroup)[0]; // get genre name
+            genreGroup[genre].forEach(movie => {
+                vis.flattenedNodes.push({...movie, currentGenre: genre}) // get genre within this group
+            });
         });
 
-        console.log(vis.displayData);
+        console.log(vis.moviesbyGenre);
+        console.log(vis.groupedData);
+        console.log(vis.flattenedNodes);
+
+        /// Define the pack layout
+        vis.pack = d3.pack()
+            .size([vis.width, vis.height])
+            .padding(1);
+
+        // Create hierarchical data
+        let root = d3.hierarchy({ children: vis.flattenedNodes })
+            .sum(d => d.radius);  
+
+        // Apply the pack layout to the hierarchical data
+        vis.pack(root);
+
+        // Extract the leaves
+        vis.nodes = root.leaves();
+        console.log(vis.nodes);
 
         vis.updateVis();
+    }
+
+    forceCluster(nodes) {
+        let vis = this;
+        const strength = 2;
+      
+        function force(alpha) {
+          const centroids = d3.rollup(nodes, vis.centroid, d => d.data.currentGenre);
+          const l = alpha * strength;
+          for (const d of nodes) {
+            const {x: cx, y: cy} = centroids.get(d.data.currentGenre);
+            d.vx -= (d.x - cx) * l * 0.5;
+            d.vy -= (d.y - cy) * l;
+          }
+        }
+      
+        force.initialize = _ => nodes = _;
+
+        // calculates centers of clusters
+        vis.centers = new Map();
+        vis.uniqueGenres.forEach(genre => {
+            let genreNodes = vis.nodes.filter(d => d.data.currentGenre === genre);
+            let x = d3.mean(genreNodes, d => d.x);
+            let y = d3.mean(genreNodes, d => d.y);
+            vis.centers.set(genre, {x: x, y: y});
+        });
+      
+        return force;
+    }
+
+    forceCollide(nodes) {
+        const alpha = 0.4; // fixed for greater rigidity!
+        const padding1 = 0.5; // separation between same-color nodes
+        const padding2 = 4; // separation between different-color nodes
+        let maxRadius;
+      
+        function force() {
+          const quadtree = d3.quadtree(nodes, d => d.x, d => d.y);
+          for (const d of nodes) {
+            const r = d.r + maxRadius;
+            const nx1 = d.x - r, ny1 = d.y - r;
+            const nx2 = d.x + r, ny2 = d.y + r;
+            quadtree.visit((q, x1, y1, x2, y2) => {
+              if (!q.length) do {
+                if (q.data !== d) {
+                  const r = d.r + q.data.r + (d.data.currentGenre === q.data.currentGenre ? padding1 : padding2);
+                  let x = d.x - q.data.x, y = d.y - q.data.y, l = Math.hypot(x, y);
+                  if (l < r) {
+                    l = (l - r) / l * alpha;
+                    d.x -= x *= l, d.y -= y *= l;
+                    q.data.x += x, q.data.y += y;
+                  }
+                }
+              } while (q = q.next);
+              return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+            });
+          }
+        }
+      
+        force.initialize = _ => maxRadius = d3.max(nodes = _, d => d.r) + Math.max(padding1, padding2);
+      
+        return force;
+    }
+
+    centroid(nodes) {
+        let x = 0;
+        let y = 0;
+        let z = 0;
+        for (const d of nodes) {
+          let k = d.r ** 2;
+          x += d.x * k;
+          y += d.y * k;
+          z += k;
+        }
+        return {x: x / z, y: y / z};
+    }
+
+    forceBoundingCircle(nodes) {
+        let vis = this;
+        let radius = 150; // Radius of the bounding circle
+        function force(alpha) {
+            for (let node of nodes) {
+                let center = vis.centers.get(node.data.currentGenre);
+                let dx = node.x - center.x;
+                let dy = node.y - center.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let strength = alpha * 0.1;
+    
+                if (distance > radius) {
+                    node.vx -= dx / distance * strength;
+                    node.vy -= dy / distance * strength;
+                }
+            }
+        }
+    
+        force.initialize = function(_) {
+            nodes = _;
+        };
+    
+        return force;
     }
 
     updateVis() {
@@ -129,19 +235,49 @@ class ClusterPlot {
         console.log(vis.uniqueGenres);
         vis.scale.domain(vis.uniqueGenres);
 
-        vis.circles = vis.svg.append('g')
-            .datum(vis.displayData)
+        const simulation = d3.forceSimulation(vis.nodes)
+            .force("x", d3.forceX((vis.width + vis.margin.left) / 2).strength(0.01))
+            .force("y", d3.forceY((vis.height + vis.margin.top) / 2).strength(0.07))
+            .force("cluster", vis.forceCluster(vis.nodes))
+            .force("collide", vis.forceCollide(vis.nodes))
+            .force("bounding", vis.forceBoundingCircle(vis.nodes));
+
+        const drag = simulation => {
+  
+                function dragstarted(event, d) {
+                  if (!event.active) simulation.alphaTarget(0.3).restart();
+                  d.fx = d.x;
+                  d.fy = d.y;
+                }
+                
+                function dragged(event, d) {
+                  d.fx = event.x;
+                  d.fy = event.y;
+                }
+                
+                function dragended(event, d) {
+                  if (!event.active) simulation.alphaTarget(0);
+                  d.fx = null;
+                  d.fy = null;
+                }
+                
+                return d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended);
+            }    
+
+        vis.node = vis.svg.append('g')
             .selectAll('.circle')
-            .data(d => d)
-            .enter().append('circle')
+            .data(vis.nodes)
+            .join("circle")
+            .attr("class", "node")
+            .attr("id", (d) => `movie_${d.data.MovieId}`)
             .attr('r', (d) => d.radius)
-            .attr('fill', (d) => vis.scale(d.cluster))
-            .attr('stroke', 'black')
-            .attr('stroke-width', 1)
-            .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended))
+            .attr('fill', (d) => vis.scale(d.data.currentGenre))
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .call(drag(simulation));        
         // // add tooltips to each circle
         // .on("mouseover", function(d) {
         //     div.transition()    
@@ -157,89 +293,22 @@ class ClusterPlot {
         //         .style("opacity", 0); 
         // });
 
-         // create the clustering/collision force simulation
-        vis.simulation = d3.forceSimulation(vis.displayData)
-            .velocityDecay(0.2)
-            .force("x", d3.forceX(vis.width / 2).strength(0.05))
-            .force("y", d3.forceY(vis.height / 2).strength(0.05))
-            .force("collide", d3.forceCollide().radius((d) => d.radius + vis.padding).iterations(2))
-            .force("charge", d3.forceManyBody().strength(-30))
-            .on("tick", ticked);
-
-        function ticked() {
-            vis.circles
-                .attr('cx', (d) => d.x)
-                .attr('cy', (d) => d.y);
-        }
-
-        // Drag functions used for interactivity
-        function dragstarted(d) {
-            if (!d3.event.active) vis.simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
-        }
-
-        function dragged(d) {
-            d.fx = d3.event.x;
-            d.fy = d3.event.y;
-        }
-
-        function dragended(d) {
-            if (!d3.event.active) vis.simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
-        }
-
-        // These are implementations of the custom forces.
-        function clustering(alpha) {
-            vis.displayData.forEach(function(d) {
-                var cluster = vis.clusters[d.cluster];
-                if (cluster === d) return;
-                var x = d.x - cluster.x,
-                    y = d.y - cluster.y,
-                    l = Math.sqrt(x * x + y * y),
-                    r = d.radius + cluster.radius;
-                if (l !== r) {
-                    l = (l - r) / l * alpha;
-                    d.x -= x *= l;
-                    d.y -= y *= l;
-                    cluster.x += x;
-                    cluster.y += y;
-                }
+        vis.node.transition()
+            .delay((d, i) => Math.random() * 500)
+            .duration(500)
+            .attrTween("r", d => {
+                const i = d3.interpolate(0, d.r);
+                return t => d.r = i(t);
             });
-        }
+        
+        
+        simulation.on("tick", () => {
+            vis.node
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y);
+        });
 
-        function collide(alpha) {
-            var quadtree = d3.quadtree()
-                .x((d) => d.x)
-                .y((d) => d.y)
-                .addAll(vis.displayData);
-
-            vis.displayData.forEach(function(d) {
-                var r = d.radius + vis.constantRadius + Math.max(vis.padding, vis.clusterPadding),
-                    nx1 = d.x - r,
-                    nx2 = d.x + r,
-                    ny1 = d.y - r,
-                    ny2 = d.y + r;
-                quadtree.visit(function(quad, x1, y1, x2, y2) {
-
-                    if (quad.data && (quad.data !== d)) {
-                        var x = d.x - quad.data.x,
-                            y = d.y - quad.data.y,
-                            l = Math.sqrt(x * x + y * y),
-                            r = d.radius + quad.data.r + (d.cluster === quad.data.cluster ? vis.padding : vis.clusterPadding);
-                        if (l < r) {
-                            l = (l - r) / l * alpha;
-                            d.x -= x *= l;
-                            d.y -= y *= l;
-                            quad.data.x += x;
-                            quad.data.y += y;
-                        }
-                    }
-                    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-                });
-            });
-        }
+        //invalidation.then(() => simulation.stop());
 
         console.log("updateVis");
     }
