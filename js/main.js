@@ -35,11 +35,11 @@ function createVis(data) {
     let squeakyCleanData2 = data[4];
 
     // Create visualization instances
-    // myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
-
+    myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
     rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
     studiovis = new StudioVis("studiovis", squeakyCleanData2)
     studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
+    myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
 
 
     /////// PREPARE DATA FOR CONSENSUS PLOT ////////
