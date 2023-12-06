@@ -225,7 +225,7 @@ class ConsensusPlot {
             .attr("width", 20)
             .attr("height", 20);
 
-        // Append text label for rotten audience rating
+        // Append text label for rotten tomatoes audience rating
         legend.append("text")
             .attr("x", 35) // Adjust label position relative to the star image
             .attr("y", 155) // Adjust label position relative to the star image
