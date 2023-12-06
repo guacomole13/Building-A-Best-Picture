@@ -34,9 +34,9 @@ function createVis(data) {
 
 //     console.log(data[1]);
     // Create visualization instances
-    // myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
+    myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
     // consensus = new ConsensusPlot("consensus", data[1])
     // rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
-    myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
+    // myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
 
 }
