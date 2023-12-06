@@ -2,6 +2,10 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+.header {
+    color: white;
+}
+
 .axis {
     font-family: "Montserrat", sans-serif;
 }
@@ -9,3 +13,5 @@ body {
 .legend {
     font-size: 12px;
 }
+
+

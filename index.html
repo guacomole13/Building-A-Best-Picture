@@ -11,60 +11,67 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/fullpage.css" />
+
 
 </head>
 <body>
+    <!--Fullpage.js layout-->
+    <div id="fullpage">
 
-    <!--A single column within a container and six rows within that column. Each row contains a single column that holds content-->
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="row" id="sketch1">
-                    <div class="col">
-                        <p>Sketch 1 - Content</p>
-                        <select id='hemisphereCat' class="custom-select align-self-center" style="width: 50%" onchange="hemisphereCatChange()">
-                            <option value="guild" selected>Academy Branches</option>
-                            <option value="race">Race and Ethnicity</option>
-                            <option value="gender">Gender</option>
-                        </select>
-                        <div id="hemisphere"></div>
-                    </div>
-                </div>
+        <!-- Testing -->
+        <div class="section text-center">
+            <p class="header">We love movies.</p>
+            <p class="header">Every year, the Academy meets to choose the movies most worthy of a Best Picture Award.</p>
+            <p class="header">What makes a Best Picture, and most of all... is the Academy right?</p>
+
+            <img src="img/oscars-logo.png" alt="Oscars Logo">
+        </div>
+
+        <!-- Academy Demographics -->
+        <div class="section">
+            <select id='hemisphereCat' class="custom-select align-self-center" style="width: 50%" onchange="hemisphereCatChange()">
+                <option value="guild" selected>Academy Branches</option>
+                <option value="race">Race and Ethnicity</option>
+                <option value="gender">Gender</option>
+            </select>
+            <div id="hemisphere"></div>
+        </div>
+
+        <!-- Top Studios -->
+        <div class="section">
+            <div class="container">
                 <div class="row">
                     <div class="col-6">
-                        <p>Sketch 2 - Content</p>
-                        <p>Rank Chart Here</p>
                         <div id="studiobubbles"></div>
                     </div>
                     <div class="col-6">
-                        <p>Sketch 2 - Content</p>
-                        <p>Rank Chart Here</p>
                         <div id="studiovis"></div>
-                    </div>
-                </div>
-                <div class="row" id="consensus">
-                    <div class="col">
-                        <p>Sketch 12</p>
-                    </div>
-                </div>
-                <div class="row" id="lollipop">
-                    <div class="col">
-                        <p>Sketch 13</p>
-                    </div>
-                </div>
-                <div class="row" id="rankchart">
-                    <div class="col">
-                        <p>Sketch 5 - Content</p>
-                    </div>
-                </div>
-                <div class="row" id="sketch6">
-                    <div class="col">
-                        <p>Sketch 6 - Content</p>
-                        <div id="clusterplot"> </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Rotten Tomatoes Consensus -->
+        <div class="section">
+            <div id="consensus"></div>
+        </div>
+
+        <!-- IMDB Ratings -->
+        <div class="section">
+            <div id="lollipop"></div>
+        </div>
+
+        <!-- Box Office Performance -->
+        <div class="section">
+            <div id="rankchart"></div>
+        </div>
+
+        <!-- Oscar-Nominated Films by Genre  -->
+        <div class="section">
+            <div id="clusterplot"></div>
+        </div>
+
     </div>
 
     <!-- Load JS libraries -->
@@ -95,6 +102,20 @@
     <script src="js/studiobubbles.js"></script>
     <script src="js/clusterplot.js"></script>
 
+    <!-- Fullpage.js files-->
+    <!-- This following line is optional. Only necessary if you use the option css3:false and you want to use other easing effects rather than "easeInOutCubic". -->
+    <script src="js/easings.min.js"></script>
+    <script src="js/fullpage.js"></script>
+
+    <!-- Initialize Fullpage.js -->
+    <script type="text/javascript">
+        new fullpage('#fullpage', {
+            sectionsColor: ['#000000', '#f2f2f2', '#EBAB47', 'whitesmoke', '#ccddff'],
+            licenseKey: 'gplv3-license',
+            // autoScrolling:true,
+            // scrollHorizontally: true
+        });
+    </script>
 
     <script src="js/main.js"></script>
 
