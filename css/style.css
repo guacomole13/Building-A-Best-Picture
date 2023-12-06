@@ -2,9 +2,18 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+h1 {
+    font-size: 30px;
+}
+
+img {
+    margin: 15px;
+}
+
 .header {
     color: white;
 }
+
 
 .axis {
     font-family: "Montserrat", sans-serif;
