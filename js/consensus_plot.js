@@ -1,11 +1,9 @@
 
 class ConsensusPlot {
 
-    constructor(_parentElement, _data) {
-        this.parentElement = _parentElement;
-        this.data = _data;
-
-        this.filteredData = this.data;
+    constructor(parentElement, displayData) {
+        this.parentElement = parentElement;
+        this.displayData = displayData;
 
         this.initVis();
     }
@@ -19,11 +17,11 @@ class ConsensusPlot {
         let vis = this;
 
         // Define svg
-        vis.margin = {top: 15, right: 35, bottom: 15, left: 50};
+        vis.margin = {top: 40, right: 300, bottom: 100, left: 250}; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = 200 - vis.margin.top - vis.margin.bottom;
+        vis.height = 1700 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -32,20 +30,20 @@ class ConsensusPlot {
             .append("g")
             .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
-
         // Scales and axes
         vis.x = d3.scaleLinear()
-            .domain([-1, 10]) // TODO: CHANGE THE DOMAIN TO REFLECT THE BOUNDS OF OUR VARIABLE
+            .domain([0, 100])
             .range([ 0, vis.width]);
 
-        // TODO: MAKE THE Y-AXIS REFLECT THE NAMES OF THE MOVIES
+        // Y-axis should be the names of the films
         vis.y = d3.scaleBand()
             .range([ 0, vis.height ])
-            .domain(data.map(function(d) { return d.group; }))
+            .domain(vis.displayData.map(d => d.Film))
             .padding(1);
 
         vis.xAxis = d3.axisBottom()
-            .scale(vis.x);
+            .scale(vis.x)
+            .tickFormat(d => d + "%");   // Append "%" symbol to the tick values
 
         vis.yAxis = d3.axisLeft()
             .scale(vis.y);
@@ -57,14 +55,21 @@ class ConsensusPlot {
         vis.svg.append("g")
             .attr("class", "y-axis axis");
 
-        // Axis title
-        vis.svg.append("text") // TODO: CHECK IF NEED TO KEEP / EDIT AXIS TITLE
-            .attr("x", -50)
-            .attr("y", -8)
-            .text("Movies");
+        // X-axis label
+        vis.svg.append("text")
+            .attr("x", vis.width / 2)
+            .attr("y", vis.height + 0.5 * vis.margin.bottom )
+            .style("text-anchor", "middle")
+            .text("Rotten Tomatoes audience and critic ratings (%)");
 
-        // TODO: add x-axis label: "difference between Rotten Tomatoes audience and critic ratings"
-
+        // Graph title
+        vis.svg.append("text")
+            .attr("x", vis.width / 2)
+            .attr("y", vis.margin.top - 60) // Adjust height of title
+            .style("text-anchor", "middle")
+            .style("font-weight", "bold")
+            .style("font-size", "16px")
+            .text("Is there consensus between Best Picture winners’ critic and audience ratings on Rotten Tomatoes?");
 
         // (Filter, aggregate, modify data)
         vis.wrangleData();
@@ -93,56 +98,138 @@ class ConsensusPlot {
         let vis = this;
 
         // Lines connecting the 2 dots for each movie
-        svg.selectAll(".line")
-            .data(vis.data)
-            .join("line")
-            .attr("x1", function(d) { return x(d.value1); }) // TODO: EDIT DATASET SO THAT VALUE1, VALUE2, AND GROUP HAVE MEANING
-            .attr("x2", function(d) { return x(d.value2); })
-            .attr("y1", function(d) { return y(d.group); })
-            .attr("y2", function(d) { return y(d.group); })
+        // TODO: ADD TRANSITIONS SO IT APPEARS ON SCREEN NICELY
+        vis.svg.selectAll(".line")
+            .data(vis.displayData)
+            .enter()
+            .append("line")
+            .attr("class", "line")
+            .attr("x1", d => vis.x(d.CriticRating))
+            .attr("x2", d => vis.x(d.AudienceRating))
+            .attr("y1", d => vis.y(d.Film))
+            .attr("y2", d => vis.y(d.Film))
             .attr("stroke", "black")
-            .attr("stroke-width", "1px")
+            .attr("stroke-width", "1px");
 
-        // Circles for Critic Ratings
-        svg.selectAll(".criticCircle")
-            .data(data)
-            .enter().append("circle")
-            .attr("class", "criticCircle")
-            .attr("cx", function(d) { return x(parseFloat(d.TomatometerRating)); }) // TODO: Replace TomatometerRating with appropriate field
-            .attr("cy", function(d) { return y(d.Film); }) // TODO: Replace with movie title field
-            .attr("r", "6")
-            .style("fill", "green"); // TODO: make this reflect whether it was a rotten or fresh rating using tomatoes
+        // Icons for critic reviews
+        vis.svg.selectAll(".criticIcon")
+            .data(vis.displayData)
+            .enter()
+            .append("svg:image")
+            .attr("class", "criticIcon")
+            .attr("xlink:href", function(d) {
+                // Check if the CriticRating is fresh or rotten and use the appropriate icon/image path
+                return d.CriticRating >= 60 ? "img/fresh_critic.png" : "img/rotten_critic.png";
+            })
+            .attr("x", d => vis.x(d.CriticRating) - 2) // Adjust horizontal position of icon
+            .attr("y", d => vis.y(d.Film) - 6) // Adjust vertical position of icon
+            .attr("width", 13) // Width of the icon
+            .attr("height", 13); // Height of the icon
 
-        // Circles for Audience Ratings
-        svg.selectAll(".audienceCircle")
-            .data(data)
-            .enter().append("circle")
-            .attr("class", "audienceCircle")
-            .attr("cx", function(d) { return x(parseFloat(d.AudienceRating)); }) // TODO: Replace AudienceRating with appropriate field
-            .attr("cy", function(d) { return y(d.Film); }) // TODO: Replace with  movie title field
-            .attr("r", "6")
-            .style("fill", "blue"); // TODO: make this reflect whether it was a good or bad rating using spilled/upright popcorn
-
-        // TODO: add "if" conditions to handle when to use what icons representing good/bad critic and audience reviews
+        // Icons for audience reviews
+        vis.svg.selectAll(".audienceIcon")
+            .data(vis.displayData)
+            .enter()
+            .append("svg:image")
+            .attr("class", "audienceIcon")
+            .attr("xlink:href", function(d) {
+                // Check if the AudienceRating is fresh or rotten and use the appropriate icon/image path
+                return d.AudienceRating >= 60 ? "img/fresh_audience.png" : "img/rotten_audience.png";
+            })
+            .attr("x", d => vis.x(d.AudienceRating) - 2) // Adjust horizontal position of icon
+            .attr("y", d => vis.y(d.Film) - 6) // Adjust vertical position of icon
+            .attr("width", 13) // Width of the icon
+            .attr("height", 13); // Height of the icon
 
         // Call axis function
         vis.svg.select(".x-axis").call(vis.xAxis);
         vis.svg.select(".y-axis").call(vis.yAxis);
 
+        // Append a text element for the note
+        vis.svg.append("text")
+            .attr("x", vis.width / 2)  // Position the text in the center of the SVG
+            .attr("y", vis.height + vis.margin.bottom - 20)  // Adjust the y-coordinate to position the text below the chart
+            .style("text-anchor", "middle")
+            .style("font-size", "12px")
+            .text("Note: Each line connecting the icons denotes the difference between a film's Rotten Tomatoes critic rating and Rotten Tomatoes audience rating.");
 
 
-        // // TODO: adjust axis labels
-        // vis.svg.select(".x-axis").call(vis.xAxis)
-        //     .selectAll("text")
-        //     .text(function(d, i){
-        //         return (i+1) + ") " + vis.metaData["choices"][100 + i]
-        //     })
-        //     .style("text-anchor", "end")
-        //     .attr("dx", "-.8em")
-        //     .attr("dy", ".15em")
-        //     .attr("transform", function (d) {
-        //         return "rotate(-45)"
-        //     });
+        //////// ADD LEGEND ////////
+
+        // Append a group element for the legend
+        const legend = vis.svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${vis.width + 20}, 20)`); // Position the legend to the right of the graph
+
+        // Append a rectangle as the background for the legend box
+        const legendBox = legend.append("rect")
+            .attr("width", 230) // Width of the legend box
+            .attr("height", 180) // Height of the legend box
+            .attr("fill", "white") // Background color of the legend box
+            .attr("stroke", "black"); // Border color of the legend box
+
+        // Append text as the title of the legend
+        legend.append("text")
+            .attr("x", 10) // Adjust title position within the legend box
+            .attr("y", 30) // Adjust title position within the legend box
+            .text("Legend")
+            .style("font-weight", "bold"); // Style the title text
+
+        // Append fresh critic icon in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/fresh_critic.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 50) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for fresh critic rating
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 65) // Adjust label position relative to the star image
+            .text("Fresh Critic Rating (>= 60%)");
+
+        // Append rotten critic icon in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/rotten_critic.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 80) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for rotten critic rating
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 95) // Adjust label position relative to the star image
+            .text("Rotten Critic Rating (<60%)");
+
+        // Append fresh audience icon in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/fresh_audience.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 110) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for fresh audience rating
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 125) // Adjust label position relative to the star image
+            .text("Fresh Audience Rating (>=60%)");
+
+        // Append rotten audience icon in the legend
+        legend.append("image")
+            .attr("xlink:href", "img/rotten_audience.png")
+            .attr("x", 10) // Adjust position within the legend box
+            .attr("y", 140) // Adjust position within the legend box
+            .attr("width", 20)
+            .attr("height", 20);
+
+        // Append text label for rotten audience rating
+        legend.append("text")
+            .attr("x", 35) // Adjust label position relative to the star image
+            .attr("y", 155) // Adjust label position relative to the star image
+            .text("Rotten Audience Rating (<60%)");
 
     }
 }
