@@ -4,6 +4,7 @@ class ConsensusPlot {
     constructor(parentElement, displayData) {
         this.parentElement = parentElement;
         this.displayData = displayData;
+        this.parseYear = d3.timeParse('%Y');
 
         this.initVis();
     }
@@ -21,7 +22,9 @@ class ConsensusPlot {
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = 1700 - vis.margin.top - vis.margin.bottom;
+        // vis.height = 1700 - vis.margin.top - vis.margin.bottom;
+        vis.height = 550 - vis.margin.top - vis.margin.bottom;
+
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -83,7 +86,32 @@ class ConsensusPlot {
     wrangleData() {
         let vis = this;
 
+        // Set the default year range for the consensus plot prior to brushing as 2010 to 2020
+        // let selectedTimeRange = [
+        //     new Date('2010-01-01'), // January 1, 2010
+        //     new Date('2020-12-31')  // December 31, 2020
+        // ];
 
+        // Check if there's a brushed selection
+        if (selectedTimeRange.length !== 0) {
+
+            console.log(selectedTimeRange);
+
+            // Extract the year part from the selectedTimeRange
+            const startYear = selectedTimeRange[0].getFullYear();
+            const endYear = selectedTimeRange[1].getFullYear();
+
+            // Filter the displayData based on the year part of OscarYear
+            vis.filteredData = vis.displayData.filter(d => {
+                const filmYear = d.OscarYear.getFullYear();
+                return filmYear >= startYear && filmYear <= endYear;
+            });
+
+        } else {
+            vis.filteredData = vis.displayData;
+        }
+
+        console.log(vis.filteredData);
 
         // Update the visualization
         vis.updateVis();
@@ -97,13 +125,94 @@ class ConsensusPlot {
     updateVis() {
         let vis = this;
 
-        // Lines connecting the 2 dots for each movie
-        // TODO: ADD TRANSITIONS SO IT APPEARS ON SCREEN NICELY
-        vis.svg.selectAll(".line")
-            .data(vis.displayData)
-            .enter()
+        // // Lines connecting the 2 dots for each movie
+        // // TODO: ADD TRANSITIONS SO IT APPEARS ON SCREEN NICELY
+        // vis.svg.selectAll(".line")
+        //     .data(vis.filteredData)
+        //     .enter()
+        //     .append("line")
+        //     .attr("class", "line")
+        //     .attr("x1", d => vis.x(d.CriticRating))
+        //     .attr("x2", d => vis.x(d.AudienceRating))
+        //     .attr("y1", d => vis.y(d.Film))
+        //     .attr("y2", d => vis.y(d.Film))
+        //     .attr("stroke", "black")
+        //     .attr("stroke-width", "1px");
+        //
+        // // Icons for critic reviews
+        // vis.svg.selectAll(".criticIcon")
+        //     .data(vis.filteredData)
+        //     .enter()
+        //     .append("svg:image")
+        //     .attr("class", "criticIcon")
+        //     .attr("xlink:href", function(d) {
+        //         // Check if the CriticRating is fresh or rotten and use the appropriate icon/image path
+        //         return d.CriticRating >= 60 ? "img/fresh_critic.png" : "img/rotten_critic.png";
+        //     })
+        //     .attr("x", d => vis.x(d.CriticRating) - 2) // Adjust horizontal position of icon
+        //     .attr("y", d => vis.y(d.Film) - 6) // Adjust vertical position of icon
+        //     .attr("width", 13) // Width of the icon
+        //     .attr("height", 13); // Height of the icon
+        //
+        // // Icons for audience reviews
+        // vis.svg.selectAll(".audienceIcon")
+        //     .data(vis.filteredData)
+        //     .enter()
+        //     .append("svg:image")
+        //     .attr("class", "audienceIcon")
+        //     .attr("xlink:href", function(d) {
+        //         // Check if the AudienceRating is fresh or rotten and use the appropriate icon/image path
+        //         return d.AudienceRating >= 60 ? "img/fresh_audience.png" : "img/rotten_audience.png";
+        //     })
+        //     .attr("x", d => vis.x(d.AudienceRating) - 2) // Adjust horizontal position of icon
+        //     .attr("y", d => vis.y(d.Film) - 6) // Adjust vertical position of icon
+        //     .attr("width", 13) // Width of the icon
+        //     .attr("height", 13); // Height of the icon
+        //
+        // // Call axis function
+        // vis.svg.select(".x-axis").call(vis.xAxis);
+        // vis.svg.select(".y-axis").call(vis.yAxis);
+
+
+        // // Update SVG height based on the number of filtered films
+        // const numOfFilms = vis.filteredData.length;
+        // const newHeight = numOfFilms * 10; // Adjust this constant to suit your layout
+        //
+        // // Update SVG height
+        // vis.svg.attr("height", newHeight + vis.margin.top + vis.margin.bottom);
+
+        // Update the x domain based on filteredData
+        vis.x.domain([
+            d3.min(vis.filteredData, d => Math.min(d.CriticRating, d.AudienceRating)) - 10,
+            d3.max(vis.filteredData, d => Math.max(d.CriticRating, d.AudienceRating))
+        ]);
+
+        // Update the x-axis scale
+        vis.svg.select(".x-axis")
+            .transition().duration(400)
+            .call(vis.xAxis);
+
+        // Update the y domain based on filteredData
+        vis.y.domain(vis.filteredData.map(d => d.Film)); // Update domain with the films in filteredData
+
+        // Update the y-axis scale
+        vis.svg.select(".y-axis")
+            .transition().duration(400)
+            .call(vis.yAxis);
+
+        // Select all existing lines and bind filteredData
+        let lines = vis.svg.selectAll(".line")
+            .data(vis.filteredData, d => d.Film);
+
+        // Remove lines that don't have data anymore
+        lines.exit().remove();
+
+        // Append new lines for new data
+        lines.enter()
             .append("line")
             .attr("class", "line")
+            .merge(lines) // Merge enter and update selections
+            .transition().duration(800) // Apply transitions
             .attr("x1", d => vis.x(d.CriticRating))
             .attr("x2", d => vis.x(d.AudienceRating))
             .attr("y1", d => vis.y(d.Film))
@@ -111,39 +220,47 @@ class ConsensusPlot {
             .attr("stroke", "black")
             .attr("stroke-width", "1px");
 
-        // Icons for critic reviews
-        vis.svg.selectAll(".criticIcon")
-            .data(vis.displayData)
-            .enter()
+        // Select all existing critic icons and bind filteredData
+        let criticIcons = vis.svg.selectAll(".criticIcon")
+            .data(vis.filteredData, d => d.Film);
+
+        // Remove icons that don't have data anymore
+        criticIcons.exit().remove();
+
+        // Append new critic icons for new data
+        criticIcons.enter()
             .append("svg:image")
             .attr("class", "criticIcon")
-            .attr("xlink:href", function(d) {
-                // Check if the CriticRating is fresh or rotten and use the appropriate icon/image path
-                return d.CriticRating >= 60 ? "img/fresh_critic.png" : "img/rotten_critic.png";
-            })
-            .attr("x", d => vis.x(d.CriticRating) - 2) // Adjust horizontal position of icon
-            .attr("y", d => vis.y(d.Film) - 6) // Adjust vertical position of icon
-            .attr("width", 13) // Width of the icon
-            .attr("height", 13); // Height of the icon
+            .merge(criticIcons) // Merge enter and update selections
+            .attr("xlink:href", d => d.CriticRating >= 60 ? "img/fresh_critic.png" : "img/rotten_critic.png")
+            .attr("x", d => vis.x(d.CriticRating) - 2)
+            .attr("y", d => vis.y(d.Film) - 6)
+            .attr("width", 13)
+            .attr("height", 13);
 
-        // Icons for audience reviews
-        vis.svg.selectAll(".audienceIcon")
-            .data(vis.displayData)
-            .enter()
+        // Select all existing audience icons and bind filteredData
+        let audienceIcons = vis.svg.selectAll(".audienceIcon")
+            .data(vis.filteredData, d => d.Film);
+
+        // Remove icons that don't have data anymore
+        audienceIcons.exit().remove();
+
+        // Append new audience icons for new data
+        audienceIcons.enter()
             .append("svg:image")
             .attr("class", "audienceIcon")
-            .attr("xlink:href", function(d) {
-                // Check if the AudienceRating is fresh or rotten and use the appropriate icon/image path
-                return d.AudienceRating >= 60 ? "img/fresh_audience.png" : "img/rotten_audience.png";
-            })
-            .attr("x", d => vis.x(d.AudienceRating) - 2) // Adjust horizontal position of icon
-            .attr("y", d => vis.y(d.Film) - 6) // Adjust vertical position of icon
-            .attr("width", 13) // Width of the icon
-            .attr("height", 13); // Height of the icon
+            .merge(audienceIcons) // Merge enter and update selections
+            .attr("xlink:href", d => d.AudienceRating >= 60 ? "img/fresh_audience.png" : "img/rotten_audience.png")
+            .attr("x", d => vis.x(d.AudienceRating) - 2)
+            .attr("y", d => vis.y(d.Film) - 6)
+            .attr("width", 13)
+            .attr("height", 13);
 
-        // Call axis function
+        // Update axes
         vis.svg.select(".x-axis").call(vis.xAxis);
         vis.svg.select(".y-axis").call(vis.yAxis);
+
+
 
         // Append a text element for the note
         vis.svg.append("text")
@@ -230,8 +347,6 @@ class ConsensusPlot {
             .attr("x", 35) // Adjust label position relative to the star image
             .attr("y", 155) // Adjust label position relative to the star image
             .text("Rotten Audience Rating (<60%)");
-
-        // TODO: ADD TIMELINE BRUSHING
 
     }
 }
