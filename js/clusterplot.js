@@ -17,9 +17,9 @@ class ClusterPlot {
         console.log("initVis");
 
         // svg dimensions
-		vis.margin = { top: 60, right: 40, bottom: 60, left: 80 };
+		vis.margin = { top: 60, right: 100, bottom: 60, left: 100 };
 		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-		vis.height = 600 - vis.margin.top - vis.margin.bottom;
+		vis.height = 1000 - vis.margin.top - vis.margin.bottom;
         vis.padding = 1.5; // separation b/w same color circles
         vis.clusterPadding = 30; // separation b/w diff color circles
         vis.constantRadius = vis.height*0.01; // size of circles
@@ -30,8 +30,6 @@ class ClusterPlot {
 			.attr("height", vis.height + vis.margin.top + vis.margin.bottom)
 			.append("g")
 			.attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
-
-        console.log(vis.data);
 
         // add title
         vis.svg.append('g')
@@ -55,8 +53,6 @@ class ClusterPlot {
         vis.legend = vis.svg.append("g")
             .attr('class', 'legendOrdinal')
             .attr('transform', `translate(${vis.width * 2.5 / 4}, ${vis.height*0.9})`)
-
-        // draw initial cluster of dots - ???
 
         vis.wrangleData();
     }
@@ -106,14 +102,10 @@ class ClusterPlot {
             });
         });
 
-        console.log(vis.moviesbyGenre);
-        console.log(vis.groupedData);
-        console.log(vis.flattenedNodes);
-
         /// Define the pack layout
         vis.pack = d3.pack()
             .size([vis.width, vis.height])
-            .padding(1);
+            .padding(1.5);
 
         // Create hierarchical data
         let root = d3.hierarchy({ children: vis.flattenedNodes })
@@ -131,7 +123,7 @@ class ClusterPlot {
 
     forceCluster(nodes) {
         let vis = this;
-        const strength = 2;
+        const strength = 1;
       
         function force(alpha) {
           const centroids = d3.rollup(nodes, vis.centroid, d => d.data.currentGenre);
@@ -159,8 +151,8 @@ class ClusterPlot {
 
     forceCollide(nodes) {
         const alpha = 0.4; // fixed for greater rigidity!
-        const padding1 = 0.5; // separation between same-color nodes
-        const padding2 = 4; // separation between different-color nodes
+        const padding1 = 1; // separation between same-color nodes
+        const padding2 = 4.5; // separation between different-color nodes
         let maxRadius;
       
         function force() {
@@ -232,7 +224,7 @@ class ClusterPlot {
     updateVis() {
         let vis = this;
 
-        console.log(vis.uniqueGenres);
+        console.log(vis.width, vis.height)
         vis.scale.domain(vis.uniqueGenres);
 
         const simulation = d3.forceSimulation(vis.nodes)
@@ -245,15 +237,28 @@ class ClusterPlot {
         const drag = simulation => {
   
                 function dragstarted(event, d) {
-                  if (!event.active) simulation.alphaTarget(0.3).restart();
-                  d.fx = d.x;
-                  d.fy = d.y;
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
                 }
                 
                 function dragged(event, d) {
-                  d.fx = event.x;
-                  d.fy = event.y;
-                }
+                    // Update the fixed position of the dragged node
+                    d.fx = event.x;
+                    d.fy = event.y;
+
+                    // Calculate the delta (change) in x and y
+                    let dx = event.x - d.x;
+                    let dy = event.y - d.y;
+
+                    // Update the position of all other nodes based on the delta, maintaining their relative positions
+                    vis.nodes.forEach(node => {
+                        if (node !== d) {
+                            node.x += dx;
+                            node.y += dy;
+                        }
+                    });
+                }                
                 
                 function dragended(event, d) {
                   if (!event.active) simulation.alphaTarget(0);
@@ -278,20 +283,6 @@ class ClusterPlot {
             .attr("cx", d => d.x)
             .attr("cy", d => d.y)
             .call(drag(simulation));        
-        // // add tooltips to each circle
-        // .on("mouseover", function(d) {
-        //     div.transition()    
-        //         .duration(200)    
-        //         .style("opacity", .9);    
-        //     div.html("Director:" + d.Director + "</br>" + "Genre:" + d.Genre)  
-        //         .style("left", (d3.event.pageX) + "px")   
-        //         .style("top", (d3.event.pageY - 28) + "px");  
-        //     })          
-        // .on("mouseout", function(d) {   
-        //     div.transition()    
-        //         .duration(500)    
-        //         .style("opacity", 0); 
-        // });
 
         vis.node.transition()
             .delay((d, i) => Math.random() * 500)
@@ -301,15 +292,16 @@ class ClusterPlot {
                 return t => d.r = i(t);
             });
         
-        
         simulation.on("tick", () => {
             vis.node
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y);
+                .attr("cx", d => {
+                    return Math.max(d.r, Math.min(vis.width - d.r, d.x));
+                })
+                .attr("cy", d => {
+                    return Math.max(d.r, Math.min(vis.height - d.r, d.y));
+                });
         });
-
-        //invalidation.then(() => simulation.stop());
-
+                              
         console.log("updateVis");
     }
 }
