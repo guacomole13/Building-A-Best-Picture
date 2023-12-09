@@ -15,11 +15,11 @@ class Timeline {
     initVis(){
         let vis = this;
 
-        vis.margin = {top: 60, right: 50, bottom: 50, left: 50};
+        vis.margin = {top: 60, right: 50, bottom: 35, left: 50};
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         // vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
-        vis.height = 200 - vis.margin.top - vis.margin.bottom;
+        vis.height = 180 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -41,6 +41,7 @@ class Timeline {
             .attr('class', 'title')
             .append('text')
             .text("Timeline of Best Picture Winners' Critic Ratings on Rotten Tomatoes")
+            .style("font-weight", "bold")
             .attr('transform', `translate(${vis.width / 2}, -20)`)
             .attr('text-anchor', 'middle');
 
@@ -73,6 +74,10 @@ class Timeline {
                 return vis.y(d.CriticRating);
             });
 
+        // Display the years of the entire dataset before brushing
+        vis.dateRange = d3.select("#selectedYears").text("Selected Years: 2010 to 2020");
+
+
         // init brushGroup:
         vis.brushGroup = vis.svg.append("g")
             .attr("class", "brush");
@@ -80,10 +85,37 @@ class Timeline {
         // init brush
         vis.brush = d3.brushX()
             .extent([[0, 0], [vis.width, vis.height]])
-            .on("brush end", function (event) {
-                selectedTimeRange = [vis.x.invert(event.selection[0]), vis.x.invert(event.selection[1])];
 
-                // brushing should trigger wrangleData() method for the consensus plot
+            // // No limit on brushed selection
+            // .on("brush end", function (event) {
+            //     selectedTimeRange = [vis.x.invert(event.selection[0]), vis.x.invert(event.selection[1])];
+            //
+            //     // brushing should trigger wrangleData() method for the consensus plot
+            //     myConsensus.wrangleData();
+            // });
+
+            // Limits the brushed selection to a maximum of 25 years
+            .on("brush end", function (event) {
+                const selectionRange = event.selection.map(vis.x.invert);
+                const [startDate, endDate] = selectionRange;
+
+                const maxAllowedYears = 25;
+
+                // Calculate the difference in years between the start and end dates
+                const diffYears = endDate.getFullYear() - startDate.getFullYear();
+
+                // Limit the brushed selection to a maximum of 25 years
+                if (diffYears > maxAllowedYears) {
+                    const newStartDate = new Date(endDate.getFullYear() - maxAllowedYears, endDate.getMonth(), endDate.getDate());
+                    vis.brushGroup.call(vis.brush.move, [vis.x(newStartDate), vis.x(endDate)]);
+                }
+
+                selectedTimeRange = [startDate, endDate];
+
+                // After the user changes the selection (brush) the selected years should be updated immediately
+                vis.dateRange = d3.select("#selectedYears").text("Selected Years: " + dateFormatter(startDate) + " to " + dateFormatter(endDate));
+
+                // Update the consensus plot based on the selectedTimeRange
                 myConsensus.wrangleData();
             });
 
@@ -94,11 +126,17 @@ class Timeline {
     wrangleData(){
         let vis = this;
 
-        // Loop through the displayData array and convert OscarYear to Date objects
-        vis.displayData.forEach(d => {
-            // Convert OscarYear integer to a Date object
-            d.OscarYear = vis.parseYear(`${d.OscarYear}`);
-        });
+        // // Loop through the displayData array and convert OscarYear to Date objects
+        // vis.displayData.forEach(d => {
+        //     // Convert OscarYear integer to a Date object
+        //     d.OscarYear = vis.parseYear(`${d.OscarYear}`);
+        // });
+
+        // // Convert OscarYear to Date objects
+        // vis.displayData.forEach(d => {
+        //     // Convert the float to an integer representing the year and create a Date object for January 1 of that year
+        //     d.OscarYear = new Date(Math.floor(d.OscarYear), 0, 1);
+        // });
 
         // Update the visualization
         vis.updateVis();

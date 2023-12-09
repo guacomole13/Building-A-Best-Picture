@@ -18,7 +18,7 @@ class ConsensusPlot {
         let vis = this;
 
         // Define svg
-        vis.margin = {top: 40, right: 300, bottom: 100, left: 250}; // Adjust margins to allow axes / labels to fit
+        vis.margin = {top: 40, right: 300, bottom: 100, left: 300}; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -86,6 +86,12 @@ class ConsensusPlot {
     wrangleData() {
         let vis = this;
 
+        // // Convert OscarYear to Date objects
+        // vis.displayData.forEach(d => {
+        //     // Convert the float to an integer representing the year and create a Date object for January 1 of that year
+        //     d.OscarYear = new Date(Math.floor(d.OscarYear), 0, 1);
+        // });
+
         // Set the default year range for the consensus plot prior to brushing as 2010 to 2020
         // let selectedTimeRange = [
         //     new Date('2010-01-01'), // January 1, 2010
@@ -93,7 +99,7 @@ class ConsensusPlot {
         // ];
 
         // Check if there's a brushed selection
-        if (selectedTimeRange.length !== 0) {
+        if (selectedTimeRange.length === 2) {
 
             console.log(selectedTimeRange);
 
@@ -108,7 +114,11 @@ class ConsensusPlot {
             });
 
         } else {
-            vis.filteredData = vis.displayData;
+            // Set the default year range for the consensus plot prior to brushing as 2010 to 2020
+            vis.filteredData = vis.displayData.filter(d => {
+                const filmYear = d.OscarYear.getFullYear();
+                return filmYear >= 2010 && filmYear <= 2020;
+            });
         }
 
         console.log(vis.filteredData);

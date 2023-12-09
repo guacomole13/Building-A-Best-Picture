@@ -2,6 +2,8 @@
 let myHemisphere, myConsensus, rankchart, myClusterplot, studiovis, studiobubbles, myTimeline;
 let initialHemisphereCat = document.getElementById('hemisphereCat').value;
 let selectedTimeRange = [];
+let parseYear = d3.timeParse('%Y'); // Convert OscarYear integer to a Date object
+let dateFormatter = d3.timeFormat("%Y"); // Function to convert date objects to strings or reverse
 
 // regulates dropbox for hemisphere
 function hemisphereCatChange() {
@@ -100,11 +102,15 @@ function createVis(data) {
     // Change string value numbers for critic and audience ratings to integers
     displayData.forEach(movie => {
         movie.OscarYear = parseFloat(movie.OscarYear) + 1;
+        movie.OscarYear = parseYear(`${movie.OscarYear}`);
         movie.CriticRating = parseInt(movie.CriticRating, 10);
         movie.AudienceRating = parseInt(movie.AudienceRating, 10);
     });
 
-    // TODO: ONLY DISPLAY THE MOST RECENT BEST PICTURE WINNERS? GRAPH DISPLAYS TOO MANY MOVIES
+    // displayData.forEach(movie => {
+    //     // Convert OscarYear integer to a Date object
+    //     movie.OscarYear = parseYear(`${movie.OscarYear}`);
+    // });
 
     // Output the updated array
     console.log(displayData);

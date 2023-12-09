@@ -23,4 +23,10 @@ img {
     font-size: 12px;
 }
 
+#selectedYears {
+    font-size: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
 
