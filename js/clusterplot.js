@@ -3,11 +3,11 @@ class ClusterPlot {
         this.parentElement = _parentElement;
         this.data = _data;
         this.displayData = [];
-        this.colors = ["#ffd700", "#ffb14e", "#ea5f94", "#fa8775",
-        "#cd34b5", "#9d02d7", "#0000ff", "#df2020", "#b67c58",
-        "#3cd42f", "#35e2d9", "#89a7be", "#1096ff", "#bb8ff3",
-        "#ff91fd", "#c8fa96", "#175676", "#74001b", "#fbf5af",
-        "#b8fffe", "#ff00f2"]
+        this.colors = ["#ffd700", "#1d632f", "#ffb14e", "#ea5f94", 
+        "#fa8775", "#cd34b5", "#9d02d7", "#0000ff", "#df2020", 
+        "#b67c58", "#ff00f2", "#3cd42f", "#35e2d9", "#89a7be", 
+        "#1096ff", "#bb8ff3", "#ff91fd", "#b9ff77", 
+        "#071c54", "#74001b", "#c0c918", "#b8fffe"]
 
         this.initVis();
     }
@@ -41,7 +41,7 @@ class ClusterPlot {
             .attr('text-anchor', 'middle');
 
         // TO-DO - tooltip
-        vis.tooltip = d3.select("body").append("div")
+        vis.svg.tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .attr("id", "clusterTooltip")
 
@@ -116,7 +116,6 @@ class ClusterPlot {
 
         // Extract the leaves
         vis.nodes = root.leaves();
-        console.log(vis.nodes);
 
         vis.updateVis();
     }
@@ -224,7 +223,6 @@ class ClusterPlot {
     updateVis() {
         let vis = this;
 
-        console.log(vis.width, vis.height)
         vis.scale.domain(vis.uniqueGenres);
 
         const simulation = d3.forceSimulation(vis.nodes)
@@ -279,9 +277,47 @@ class ClusterPlot {
             .attr("class", "node")
             .attr("id", (d) => `movie_${d.data.MovieId}`)
             .attr('r', (d) => d.radius)
-            .attr('fill', (d) => vis.scale(d.data.currentGenre))
+            .style('fill', (d) => vis.scale(d.data.currentGenre))
+            .style('stroke', (d) => d.data.Winner ? '#000000' : 'none')
+            .style('stroke-width', (d) => d.data.Winner ? '1.5px' : '0px')
             .attr("cx", d => d.x)
             .attr("cy", d => d.y)
+            .on("mouseover", function(event, d) {
+                console.log(d.data);
+                // change colors
+                d3.selectAll(`#movie_${d.data.MovieId}`)
+                    .attr("r", d.r * 2)
+                    .style('stroke-width', '2px')
+                    .style("stroke", "#000000")
+                    .style("fill", "#E3AE00");
+                vis.svg.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + 20 + "px")
+                    .style("top", event.pageY + "px")
+                    .html(`
+                    <div style="display: flex; flex-direction: row; align-items: center; border: thin solid grey; border-radius: 5px; background: ${d.data.Winner ? 'linear-gradient(#c5b358, #FCF6BA, #d4af37, #FBF5B7)' : '#841b2d'}; padding: 7.5px; width: 600px;">
+                        <img src="${d.data.Poster}" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-right: 10px;"></img>
+                        <div style="text-align: center; ${d.data.Winner ? '' : 'color: white;'}">
+                            <h3>${d.data.Title} (${d.data.Year})</h3>
+                            <h4>Genres: ${d.data.Genre.join(', ')}</h4>
+                            <h6>Director: ${d.data.Director}</h6>
+                            <p>Plot: ${d.data.Plot}</p>
+                        </div>
+                    </div>`)
+            })
+            .on("mouseout", function(event, d) {
+                d3.selectAll(`#movie_${d.data.MovieId}`)
+                    .transition()  
+                    .duration(350)  
+                    .attr("r", d.r)  
+                    .style("stroke", "none")
+                    .style("fill", (d) => vis.scale(d.data.currentGenre));
+                vis.svg.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
+            })
             .call(drag(simulation));        
 
         vis.node.transition()

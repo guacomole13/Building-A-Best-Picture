@@ -1,4 +1,4 @@
-// TO-DO:, rearrange, each dot corresponds to a voter, title
+// TO-DO: make interactive legend
 
 class Hemisphere {
 
