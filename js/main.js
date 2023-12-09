@@ -1,16 +1,8 @@
 // declare global variables for visualization
-let myHemisphere, myConsensus, rankchart, myClusterplot, studiovis, studiobubbles, myTimeline;
-let initialHemisphereCat = document.getElementById('hemisphereCat').value;
+let branchHemisphere, raceHemisphere, genderHemisphere, myConsensus, myTimeline, rankchart, myClusterplot, studiovis, studiobubbles;
 let selectedTimeRange = [];
 let parseYear = d3.timeParse('%Y'); // Convert OscarYear integer to a Date object
 let dateFormatter = d3.timeFormat("%Y"); // Function to convert date objects to strings or reverse
-
-// regulates dropbox for hemisphere
-function hemisphereCatChange() {
-    myHemisphere.key = document.getElementById('hemisphereCat').value;
-    console.log(myHemisphere.key)
-    myHemisphere.updateVis();
- }
  
 // Load data with promises
 let promises = [
@@ -38,10 +30,12 @@ function createVis(data) {
     let squeakyCleanData2 = data[4];
 
     // Create visualization instances
-    myHemisphere = new Hemisphere("hemisphere", initialHemisphereCat, parliamentDatasets);
-    rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
-    studiovis = new StudioVis("studiovis", squeakyCleanData2)
-    studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
+    branchHemisphere = new Hemisphere("branchHemisphere", branchsizes_2022);
+    raceHemisphere = new Hemisphere("raceHemisphere", raceproportions_2022);
+    genderHemisphere = new Hemisphere("genderHemisphere", genderproportions_2022);
+    // rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
+    // studiovis = new StudioVis("studiovis", squeakyCleanData2)
+    // studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
     myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
 
     /////// PREPARE DATA FOR CONSENSUS PLOT ////////

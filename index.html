@@ -29,13 +29,10 @@
         </div>
 
         <!-- Academy Demographics -->
-        <div class="section">
-            <select id='hemisphereCat' class="custom-select align-self-center" style="width: 50%" onchange="hemisphereCatChange()">
-                <option value="guild" selected>Academy Branches</option>
-                <option value="race">Race and Ethnicity</option>
-                <option value="gender">Gender</option>
-            </select>
-            <div id="hemisphere"></div>
+        <div class="section" id="section1">
+            <div class="slide"><div id="branchHemisphere"></div></div>
+            <div class="slide"><div id="raceHemisphere"></div></div>
+            <div class="slide"><div id="genderHemisphere"></div></div>
         </div>
 
         <!-- Top Studios -->
@@ -95,20 +92,10 @@
     <!-- Load JS files -->
     <script src="data/academydemographics.js"></script>
 
-    <!-- Load visualization objects -->
-    <script src="js/hemisphere.js"></script>
-    <script src="js/budget_box_office.js"></script>
-    <script src="js/consensus_plot.js"></script>
-    <script src="js/lollipop_chart.js"></script>
-    <script src="js/moviestudio.js"></script>
-    <script src="js/studiobubbles.js"></script>
-    <script src="js/clusterplot.js"></script>
-    <script src="js/timeline.js"></script>
-
     <!-- Fullpage.js files-->
     <!-- This following line is optional. Only necessary if you use the option css3:false and you want to use other easing effects rather than "easeInOutCubic". -->
-    <script src="js/easings.min.js"></script>
-    <script src="js/fullpage.js"></script>
+    <script src="js/fullpage/easings.js"></script>
+    <script src="js/fullpage/fullpage.js"></script>
 
     <!-- Initialize Fullpage.js -->
     <script type="text/javascript">
@@ -118,6 +105,16 @@
             navigation: true // Vertical navigation bar with dots on the right of screen
         });
     </script>
+
+    <!-- Load visualization objects -->
+    <script src="js/hemisphere.js"></script>
+    <script src="js/budget_box_office.js"></script>
+    <script src="js/consensus_plot.js"></script>
+    <script src="js/lollipop_chart.js"></script>
+    <script src="js/moviestudio.js"></script>
+    <script src="js/studiobubbles.js"></script>
+    <script src="js/clusterplot.js"></script>
+    <script src="js/timeline.js"></script>
 
     <script src="js/main.js"></script>
 

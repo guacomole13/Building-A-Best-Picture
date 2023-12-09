@@ -1,23 +1,15 @@
-// TO-DO:, rearrange, each dot corresponds to a voter, title
+// TO-DO: make interactive legend
 
 class Hemisphere {
 
-    constructor(_parentElement, _initialKey, _datasets) {
+    constructor(_parentElement, _dataset) {
         
         this.parentElement = _parentElement;
         // Store the initial key and data references
-        this.key = _initialKey;
-        this.datasets = _datasets;
-        this.data = this.getDataByKey(this.key);
+        this.data = _dataset
 
         //render vis
         this.initVis();
-    }
-
-    // updates data based on dropdown menu
-    getDataByKey(key) {
-        // Return the dataset associated with the current key or empty array
-        return this.datasets[key] || []; 
     }
 
     initVis() {
@@ -25,8 +17,8 @@ class Hemisphere {
         let vis = this;
 
         // svg dimensions
-		vis.margin = { top: 40, right: 0, bottom: 60, left: 60 };
-		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
+		vis.margin = { top: 40, right: 40, bottom: 60, left: 60 };
+		vis.width = 1600 - vis.margin.left - vis.margin.right;
 		vis.height = 800 - vis.margin.top - vis.margin.bottom;
 
 		// SVG drawing area
@@ -37,15 +29,15 @@ class Hemisphere {
 			.attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
         // initialize parliament layout
-        vis.parliament = d3.parliament().width(850).height(500).innerRadiusCoef(0.4);
+        vis.parliament = d3.parliament().width(900).height(500).innerRadiusCoef(0.4);
         vis.parliament.enter.fromCenter(true).smallToBig(true);
         vis.parliament.exit.toCenter(false).bigToSmall(true);
 
         // call parliament layout
-        vis.svg.datum(vis.getDataByKey(vis.key)).call(vis.parliament);
+        vis.svg.datum(vis.data).call(vis.parliament);
 
         vis.svg.selectAll(".parliament")
-            .attr("transform", `translate(${vis.width * 0.75},${vis.height * 0.75})`);
+            .attr("transform", `translate(${vis.width * 0.5},${vis.height * 0.75})`);
         
         // helpers to get ID and legend
         vis.getID = (array) => array.map(item => item.id);
@@ -56,6 +48,10 @@ class Hemisphere {
         "fuchsia", "greenyellow", "NavajoWhite", 
         "coral", "magenta", "blueviolet", "grey"]
         
+        ///////////
+        // TO-DO //
+        ///////////
+
         // colors for other visualizations
         let colorMapping = {
             "People of Color": "brown",
@@ -94,15 +90,10 @@ class Hemisphere {
     updateVis() {
         // Method to update the visualization
         let vis = this;
-        let currentData = vis.getDataByKey(vis.key);
 
-        // update data based on selection
-        vis.svg.datum(currentData).call(vis.parliament);
-        
         // event listeners
         vis.parliament.on("mouseover", function(event, d) {
             // Highlight the hovered section
-            console.log(this.__data__)
             d3.selectAll(`circle.${this.__data__.party.id}`)
                 .style('stroke-width', '2px')
                 .style("stroke", "#000000")
@@ -138,22 +129,15 @@ class Hemisphere {
         });
 
         // Update legend
-        vis.scale.domain(vis.getID(currentData))
-            .range(vis.colors.slice(0, currentData.length));
-        vis.legendOrdinal.labels(currentData.map(d => d.name));
+        vis.scale.domain(vis.getID(vis.data))
+            .range(vis.colors.slice(0, vis.data.length));
+        vis.legendOrdinal.labels(vis.data.map(d => d.name));
         
         vis.svg.select(".legendOrdinal").call(vis.legendOrdinal);
 
         setTimeout(() => {
             // Select all the circle elements and update fill
             vis.svg.selectAll("circle.seat")
-                // .attr("class", function() {
-                //     // Get the current circle's class (which contains its 'id')
-                //     let currentClass = d3.select(this).attr("class");
-                //     let currentId = currentClass.split(" ")[1]; // Assuming 'seat Actors' format
-                //     // Return the updated class
-                //     return `seat ${currentId}`;
-                // })
                 .transition()
                 .duration(400)
                 .style("fill", function() {
@@ -164,21 +148,6 @@ class Hemisphere {
                     return vis.scale(currentId);
                 })
                 .style("stroke-width", "0px")
-                // .on("mouseout", function(event,d){
-                //     // resets bar and map
-                //     d3.select(`#bar-${d.properties.name.replace(/\s/g, '-')}`)
-                //         .attr('stroke-width', '0px')
-                //         .attr("stroke", "#818589")
-                //         .style("fill", "#96DED1");
-                //     d3.select(this)
-                //         .attr('stroke-width', '1px')
-                //         .attr("stroke", "#818589")
-                //         .style("fill", "#E5E4E2");
-                //     mapObject.tooltip
-                //         .style("opacity", 0)
-                //         .style("left", 0)
-                //         .style("top", 0)
-                //         .html(``);
         }, 0);
     }
 }
