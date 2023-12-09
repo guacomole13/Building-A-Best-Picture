@@ -1,5 +1,5 @@
 // declare global variables for visualization
-let branchHemisphere, raceHemisphere, genderHemisphere, myConsensus, myTimeline, rankchart, myClusterplot, studiovis, studiobubbles;
+let branchHemisphere, raceHemisphere, genderHemisphere, myConsensus, myTimeline, myLollipop, rankchart, myClusterplot, studiovis, studiobubbles;
 let selectedTimeRange = [];
 let parseYear = d3.timeParse('%Y'); // Convert OscarYear integer to a Date object
 let dateFormatter = d3.timeFormat("%Y"); // Function to convert date objects to strings or reverse
@@ -138,6 +138,6 @@ function createVis(data) {
     console.log(imdbData); // Check the content of imdbData array
 
     // New lollipop chart object
-    lollipop = new LollipopChart("lollipop", imdbData);
+    myLollipop = new LollipopChart("lollipop", imdbData);
 
 }
