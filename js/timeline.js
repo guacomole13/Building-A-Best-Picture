@@ -19,7 +19,7 @@ class Timeline {
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         // vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
-        vis.height = 180 - vis.margin.top - vis.margin.bottom;
+        vis.height = 165 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -41,7 +41,6 @@ class Timeline {
             .attr('class', 'title')
             .append('text')
             .text("Timeline of Best Picture Winners' Critic Ratings on Rotten Tomatoes")
-            .style("font-weight", "bold")
             .attr('transform', `translate(${vis.width / 2}, -20)`)
             .attr('text-anchor', 'middle');
 
@@ -50,11 +49,18 @@ class Timeline {
         vis.y = d3.scaleLinear().range([vis.height, 0]);
 
         // init x & y axis
+        // vis.xAxis = vis.svg.append("g")
+        //     .attr("class", "axis axis--x")
+        //     .attr("transform", "translate(0," + vis.height + ")");
+        // vis.yAxis = vis.svg.append("g")
+        //     .attr("class", "axis axis--y");
+
         vis.xAxis = vis.svg.append("g")
-            .attr("class", "axis axis--x")
+            .attr("class", "x-axis axis")
             .attr("transform", "translate(0," + vis.height + ")");
+
         vis.yAxis = vis.svg.append("g")
-            .attr("class", "axis axis--y");
+            .attr("class", "y-axis axis");
 
         // init pathGroup
         vis.pathGroup = vis.svg.append('g').attr('class', 'pathGroup');
@@ -155,7 +161,7 @@ class Timeline {
 
         // draw x & y axis
         vis.xAxis.transition().duration(400).call(d3.axisBottom(vis.x));
-        vis.yAxis.transition().duration(400).call(d3.axisLeft(vis.y).ticks(5));
+        vis.yAxis.transition().duration(400).call(d3.axisLeft(vis.y).ticks(5).tickFormat(d => d + "%"));
 
         // draw path (area chart)
         vis.path.datum(vis.displayData)
