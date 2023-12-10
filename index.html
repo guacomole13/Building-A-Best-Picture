@@ -21,11 +21,28 @@
 
         <!-- Testing -->
         <div class="section text-center">
-            <h1 class="header">We love movies.</h1>
-            <h1 class="header">Every year, the Academy meets to choose the movies most worthy of a Best Picture Award.</h1>
-            <h1 class="header">What makes a Best Picture, and most of all... is the Academy right?</h1>
+<!--            <h1 class="header">We love movies.</h1>-->
+<!--            <h1 class="header">Every year, the Academy meets to choose the movies most worthy of a Best Picture Award.</h1>-->
+<!--            <h1 class="header">What makes a Best Picture, and most of all... is the Academy right?</h1>-->
 
             <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">
+            <h1 class="header">An Interactive Data Visualization</h1>
+            <h2 class="header">by</h2>
+            <h1 class="header">Libby Wu, Michael Omole, and Timothy Fargiano</h1>
+        </div>
+
+        <div class="section text-center">
+            <h1 id="1" class="main">For every year since 1929, a select group of Hollywood insiders has met</h1>
+            <h1 id="2" class="main endtext">to recognize outstanding achievements in the film industry.</h1>
+            <h1 id="3" class="main hidden">This committee, known as The Academy, gives out a series of annual awards</h1>
+            <h1 id="4" class="main endtext hidden"> known as <b>Academy Awards</b>, or <b>Oscars</b>.</h1>
+            <h1 id="5" class="main hidden">Among these awards, the most prestigious honor a film can receive</h1>
+            <h1 id="6" class="main endtext hidden">is the Academy Award for <b>Best Picture</b>.</h1>
+            <button id="showbtn" onclick="showNextLine()">Next</button>
+            <button id="resetbtn" class="hidden" onclick="showNextLine()">Restart</button>
+
+
+            <!--            <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">-->
         </div>
 
         <!-- Academy Demographics -->
@@ -101,6 +118,7 @@
     <script src="js/moviestudio.js"></script>
     <script src="js/studiobubbles.js"></script>
     <script src="js/clusterplot.js"></script>
+    <script src="js/textreveal.js"></script>
 
     <!-- Fullpage.js files-->
     <!-- This following line is optional. Only necessary if you use the option css3:false and you want to use other easing effects rather than "easeInOutCubic". -->
