@@ -69,7 +69,6 @@ class LollipopChart {
             .attr("x", vis.width / 2)
             .attr("y", vis.margin.top - 60) // Adjust height of title
             .style("text-anchor", "middle")
-            .style("font-weight", "bold")
             .style("font-size", "16px")
             .text("How do average IMDB ratings for Best Picture winners vs. nominees compare throughout the years?");
 
@@ -141,6 +140,7 @@ class LollipopChart {
             .attr("width", vis.width)
             .attr("height", vis.height);
 
+        // Winner Squiggle
         vis.svg.selectAll(".winnerSquiggle")
             .data(vis.nestedData)
             .join("image")
@@ -152,7 +152,7 @@ class LollipopChart {
             .attr("height", vis.y(0)) // Adjust image height dynamically
             .attr("clip-path", "url(#clip)");
 
-
+        // Nominee Squiggle
         vis.svg.selectAll(".nomineeSquiggle")
             .data(vis.nestedData)
             .join("image")
@@ -163,30 +163,6 @@ class LollipopChart {
             .attr("width", 13) // Adjust image width
             .attr("height", vis.y(0)) // Adjust image height dynamically
             .attr("clip-path", "url(#clip)");
-
-        // // Winner Lines
-        // vis.svg.selectAll(".winnerLine")
-        //     .data(vis.nestedData)
-        //     .join("line")
-        //     .attr("class", "winnerLine")
-        //     .attr("x1", d => vis.x(d.key) + barWidth / 2 - padding) // Start line (from x position)
-        //     .attr("x2", d => vis.x(d.key) + barWidth / 2 - padding) // End line (to x position)
-        //     .attr("y1", d => vis.y(d.value.winnerAvg)) // Y-position at winner average
-        //     .attr("y2", d => vis.y(0)) // Connect line to x-axis
-        //     .attr("stroke", "green")
-        //     .attr("stroke-width", 2);
-
-        // // Nominee Lines
-        // vis.svg.selectAll(".nomineeLine")
-        //     .data(vis.nestedData)
-        //     .join("line")
-        //     .attr("class", "nomineeLine")
-        //     .attr("x1", d => vis.x(d.key) + barWidth / 2 + padding) // Start line (from x position)
-        //     .attr("x2", d => vis.x(d.key) + barWidth / 2 + padding) // End line (to x position)
-        //     .attr("y1", d => vis.y(d.value.nomineeAvg)) // Y-position at nominee average
-        //     .attr("y2", d => vis.y(0)) // Connect line to x-axis
-        //     .attr("stroke", "blue")
-        //     .attr("stroke-width", 2);
 
         // Winner Stars
         vis.svg.selectAll(".winnerStar")
