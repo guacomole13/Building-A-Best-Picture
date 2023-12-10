@@ -23,12 +23,16 @@ img {
     font-size: 12px;
 }
 
-div#clusterMovieInformation {
+.vertical-center {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+div#clusterMovieInformation {
+    margin: auto;
+    position: absolute;
     border: thin solid black;
     border-radius: 5px;
     padding: 7.5px;
-    width: 600px;
 }

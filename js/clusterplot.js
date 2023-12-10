@@ -16,13 +16,13 @@ class ClusterPlot {
         let vis = this;
         console.log("initVis");
 
-        // svg dimensions
-		vis.margin = { top: 60, right: 100, bottom: 60, left: 100 };
+        // svg dimension
+		vis.margin = { top: 5, right: 5, bottom: 15, left: 5 };
 		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-		vis.height = 1000 - vis.margin.top - vis.margin.bottom;
+		vis.height = window.innerHeight - vis.margin.top - vis.margin.bottom;
         vis.padding = 1.5; // separation b/w same color circles
         vis.clusterPadding = 45; // separation b/w diff color circles
-        vis.constantRadius = vis.width*0.005; // size of circles
+        vis.constantRadius = vis.width*0.01; // size of circles
 
 		// SVG drawing area
 		vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -40,10 +40,10 @@ class ClusterPlot {
             .attr('transform', `translate(${vis.width / 2}, 20)`)
             .attr('text-anchor', 'middle');
 
-        // TO-DO - tooltip
+        // tooltip
         vis.svg.tooltip = d3.select("#clusterMovieInformation")
 
-        // TO-DO - color scale
+        // color scale
         vis.scale = d3.scaleOrdinal()
             .range(vis.colors);
 
@@ -111,25 +111,25 @@ class ClusterPlot {
 
         /// Define the pack layout
         vis.pack = d3.pack()
-            .size([vis.width, vis.height])
+            .size([vis.width * 0.95, vis.height * 0.75])
             .padding(1.5);
 
         // Create hierarchical data
-        let root = d3.hierarchy({ children: vis.flattenedNodes })
+        vis.root = d3.hierarchy({ children: vis.flattenedNodes })
             .sum(d => d.radius);  
 
         // Apply the pack layout to the hierarchical data
-        vis.pack(root);
+        vis.pack(vis.root);
 
         // Extract the leaves
-        vis.nodes = root.leaves();
+        vis.nodes = vis.root.leaves();
 
         vis.updateVis();
     }
 
     forceCluster(nodes) {
         let vis = this;
-        const strength = 1.65;
+        const strength = 1.75;
       
         function force(alpha) {
           const centroids = d3.rollup(nodes, vis.centroid, d => d.data.currentGenre);
@@ -208,11 +208,11 @@ class ClusterPlot {
         vis.scale.domain(vis.uniqueGenres);
 
         const simulation = d3.forceSimulation(vis.nodes)
-            .force("x", d3.forceX((vis.width + vis.margin.left) * 0.25).strength(0.03))
-            .force("y", d3.forceY((vis.height + vis.margin.top) * 0.25).strength(0.07))
+            .force("x", d3.forceX((vis.width + vis.margin.left) * 0.25).strength(0.04))
+            .force("y", d3.forceY((vis.height + vis.margin.top) * 0.25).strength(0.09))
             .force("cluster", vis.forceCluster(vis.nodes))
             .force("collide", vis.forceCollide(vis.nodes))
-            .force("center", d3.forceCenter(vis.width/2, vis.height/2).strength(0.03));
+            .force("center", d3.forceCenter(vis.width/2, vis.height/2).strength(0.015));
 
         const drag = simulation => {
   
@@ -258,7 +258,7 @@ class ClusterPlot {
             .join("circle")
             .attr("class", "node")
             .attr("id", (d) => `movie_${d.data.MovieId}`)
-            .attr('r', (d) => d.radius)
+            .attr("r", d => d.r)
             .style('fill', (d) => vis.scale(d.data.currentGenre))
             .style('stroke', (d) => d.data.Winner ? '#000000' : 'none')
             .style('stroke-width', (d) => d.data.Winner ? '1.5px' : '0px')
@@ -274,8 +274,8 @@ class ClusterPlot {
                     .style("fill", "#E3AE00");
                 vis.svg.tooltip
                     .html(`
-                    <div style="display: flex; flex-direction: row; align-items: center; border: thin solid grey; border-radius: 5px; background: ${d.data.Winner ? 'linear-gradient(#c5b358, #FCF6BA, #d4af37, #FBF5B7)' : '#841b2d'}; padding: 7.5px; width: 600px;">
-                        <img src="${d.data.Poster}" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-right: 10px;"></img>
+                    <div style="display: flex; flex-direction: column; align-items: center; border: thin solid grey; border-radius: 5px; background: ${d.data.Winner ? 'linear-gradient(#c5b358, #FCF6BA, #d4af37, #FBF5B7)' : '#841b2d'}; padding: 7.5px;">
+                        <img src="${d.data.Poster}" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-bottom: 10px;"></img>
                         <div style="text-align: center; ${d.data.Winner ? '' : 'color: white;'}">
                             <h3><b>${d.data.Title} (${d.data.Year})</b></h3>
                             <h4>Genres: ${d.data.Genre.join(', ')}</h4>
@@ -285,7 +285,7 @@ class ClusterPlot {
                     </div>`)
             })
             .on("click", function (event, d) {
-                console.log("I clicked" + d.data.Movi)
+                console.log("I clicked" + d.data)
             })
             .on("mouseout", function(event, d) {
                 d3.selectAll(`#movie_${d.data.MovieId}`)
