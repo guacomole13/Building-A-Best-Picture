@@ -14,7 +14,7 @@ class LollipopChart {
         let vis = this;
 
         // Define svg
-        vis.margin = { top: 40, right: 180, bottom: 100, left: 50 }; // Adjust margins to allow axes / labels to fit
+        vis.margin = { top: 40, right: 180, bottom: 100, left: 100 }; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -58,7 +58,7 @@ class LollipopChart {
         // Y-axis label
         vis.svg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - vis.margin.left)
+            .attr("y", 40 - vis.margin.left) // Adjusted y-coordinate
             .attr("x", 0 - (vis.height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
@@ -130,39 +130,46 @@ class LollipopChart {
         vis.svg.select(".y-axis")
             .call(vis.yAxis);
 
-        // Create clipping path: make a rectangle the size of the SVG (vis.width and vis.height) and uses it to
-        // hide the parts of the image of the lines that extend beyond its boundaries
-        vis.svg
-            .append("defs")
-            .append("clipPath")
-            .attr("id", "clip")
+        // Create the mask element
+        vis.svg.append("mask")
+            .attr("id", "clip-mask")
             .append("rect")
             .attr("width", vis.width)
-            .attr("height", vis.height);
+            .attr("height", vis.height)
+            .attr("fill", "white"); // Change to black to hide, white to show
+
+        // make a rectangle the size of the SVG (vis.width and vis.height) and use it to
+        // hide the parts of the image of the lines that extend beyond its boundaries
+        vis.svg.append("rect")
+            .attr("x", -vis.margin.left)
+            .attr("y", -vis.margin.top)
+            .attr("width", vis.width + vis.margin.left + vis.margin.right)
+            .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+            .attr("fill", "url(#clip-mask)");
 
         // Winner Squiggle
         vis.svg.selectAll(".winnerSquiggle")
             .data(vis.nestedData)
             .join("image")
             .attr("class", "winnerSquiggle")
-            .attr("xlink:href", "img/winner_squiggle.png")
+            .attr("xlink:href", "img/winner_squiggle_2.png")
             .attr("x", d => vis.x(d.key) + barWidth / 2 - padding - 7) // Position image
             .attr("y", d => vis.y(d.value.winnerAvg) - 3) // Adjust image position based on star image dimensions
             .attr("width", 14) // Adjust image width
             .attr("height", vis.y(0)) // Adjust image height dynamically
-            .attr("clip-path", "url(#clip)");
+            .attr("mask", "url(#clip-mask)");
 
         // Nominee Squiggle
         vis.svg.selectAll(".nomineeSquiggle")
             .data(vis.nestedData)
             .join("image")
             .attr("class", "nomineeSquiggle")
-            .attr("xlink:href", "img/nominee_squiggle.png")
+            .attr("xlink:href", "img/nominee_squiggle_2.png")
             .attr("x", d => vis.x(d.key) + barWidth / 2 + padding - 5) // Position image
             .attr("y", d => vis.y(d.value.nomineeAvg) - 1) // Adjust image position based on star image dimensions
             .attr("width", 13) // Adjust image width
             .attr("height", vis.y(0)) // Adjust image height dynamically
-            .attr("clip-path", "url(#clip)");
+            .attr("mask", "url(#clip-mask)");
 
         // Winner Stars
         vis.svg.selectAll(".winnerStar")
