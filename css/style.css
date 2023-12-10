@@ -27,6 +27,26 @@ img {
     font-size: 12px;
 }
 
+.title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.tooltip h3 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.tooltip h3,h4 {
+    text-align: left;
+}
 .main{
     color: black;
 }
@@ -56,4 +76,22 @@ button{
 
 .visible {
     opacity: 1;
+}
+.tooltip h4 {
+    font-size: 12px;
+}
+
+#selectedYears {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #136D70;
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px;
+    width: fit-content;
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    left: 45%;
 }

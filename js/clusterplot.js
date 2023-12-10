@@ -3,11 +3,11 @@ class ClusterPlot {
         this.parentElement = _parentElement;
         this.data = _data;
         this.displayData = [];
-        this.colors = ["#ffd700", "#ffb14e", "#ea5f94", "#fa8775",
-        "#cd34b5", "#9d02d7", "#0000ff", "#df2020", "#b67c58",
-        "#3cd42f", "#35e2d9", "#89a7be", "#1096ff", "#bb8ff3",
-        "#ff91fd", "#c8fa96", "#175676", "#74001b", "#fbf5af",
-        "#b8fffe", "#ff00f2"]
+        this.colors = ["#ffd700", "#1d632f", "#ffb14e", "#ea5f94", 
+        "#fa8775", "#cd34b5", "#9d02d7", "#0000ff", "#df2020", 
+        "#b67c58", "#ff00f2", "#3cd42f", "#35e2d9", "#89a7be", 
+        "#1096ff", "#bb8ff3", "#ff91fd", "#b9ff77", 
+        "#071c54", "#74001b", "#c0c918", "#b8fffe"]
 
         this.initVis();
     }
@@ -17,9 +17,9 @@ class ClusterPlot {
         console.log("initVis");
 
         // svg dimensions
-		vis.margin = { top: 60, right: 40, bottom: 60, left: 80 };
+		vis.margin = { top: 60, right: 100, bottom: 60, left: 100 };
 		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-		vis.height = 600 - vis.margin.top - vis.margin.bottom;
+		vis.height = 1000 - vis.margin.top - vis.margin.bottom;
         vis.padding = 1.5; // separation b/w same color circles
         vis.clusterPadding = 30; // separation b/w diff color circles
         vis.constantRadius = vis.height*0.01; // size of circles
@@ -31,8 +31,6 @@ class ClusterPlot {
 			.append("g")
 			.attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
-        console.log(vis.data);
-
         // add title
         vis.svg.append('g')
             .attr('class', 'title')
@@ -43,7 +41,7 @@ class ClusterPlot {
             .attr('text-anchor', 'middle');
 
         // TO-DO - tooltip
-        vis.tooltip = d3.select("body").append("div")
+        vis.svg.tooltip = d3.select("body").append("div")
             .attr("class", "tooltip")
             .attr("id", "clusterTooltip")
 
@@ -55,8 +53,6 @@ class ClusterPlot {
         vis.legend = vis.svg.append("g")
             .attr('class', 'legendOrdinal')
             .attr('transform', `translate(${vis.width * 2.5 / 4}, ${vis.height*0.9})`)
-
-        // draw initial cluster of dots - ???
 
         vis.wrangleData();
     }
@@ -106,14 +102,10 @@ class ClusterPlot {
             });
         });
 
-        console.log(vis.moviesbyGenre);
-        console.log(vis.groupedData);
-        console.log(vis.flattenedNodes);
-
         /// Define the pack layout
         vis.pack = d3.pack()
             .size([vis.width, vis.height])
-            .padding(1);
+            .padding(1.5);
 
         // Create hierarchical data
         let root = d3.hierarchy({ children: vis.flattenedNodes })
@@ -124,14 +116,13 @@ class ClusterPlot {
 
         // Extract the leaves
         vis.nodes = root.leaves();
-        console.log(vis.nodes);
 
         vis.updateVis();
     }
 
     forceCluster(nodes) {
         let vis = this;
-        const strength = 2;
+        const strength = 1;
       
         function force(alpha) {
           const centroids = d3.rollup(nodes, vis.centroid, d => d.data.currentGenre);
@@ -159,8 +150,8 @@ class ClusterPlot {
 
     forceCollide(nodes) {
         const alpha = 0.4; // fixed for greater rigidity!
-        const padding1 = 0.5; // separation between same-color nodes
-        const padding2 = 4; // separation between different-color nodes
+        const padding1 = 1; // separation between same-color nodes
+        const padding2 = 4.5; // separation between different-color nodes
         let maxRadius;
       
         function force() {
@@ -232,7 +223,6 @@ class ClusterPlot {
     updateVis() {
         let vis = this;
 
-        console.log(vis.uniqueGenres);
         vis.scale.domain(vis.uniqueGenres);
 
         const simulation = d3.forceSimulation(vis.nodes)
@@ -245,15 +235,28 @@ class ClusterPlot {
         const drag = simulation => {
   
                 function dragstarted(event, d) {
-                  if (!event.active) simulation.alphaTarget(0.3).restart();
-                  d.fx = d.x;
-                  d.fy = d.y;
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
                 }
                 
                 function dragged(event, d) {
-                  d.fx = event.x;
-                  d.fy = event.y;
-                }
+                    // Update the fixed position of the dragged node
+                    d.fx = event.x;
+                    d.fy = event.y;
+
+                    // Calculate the delta (change) in x and y
+                    let dx = event.x - d.x;
+                    let dy = event.y - d.y;
+
+                    // Update the position of all other nodes based on the delta, maintaining their relative positions
+                    vis.nodes.forEach(node => {
+                        if (node !== d) {
+                            node.x += dx;
+                            node.y += dy;
+                        }
+                    });
+                }                
                 
                 function dragended(event, d) {
                   if (!event.active) simulation.alphaTarget(0);
@@ -274,24 +277,48 @@ class ClusterPlot {
             .attr("class", "node")
             .attr("id", (d) => `movie_${d.data.MovieId}`)
             .attr('r', (d) => d.radius)
-            .attr('fill', (d) => vis.scale(d.data.currentGenre))
+            .style('fill', (d) => vis.scale(d.data.currentGenre))
+            .style('stroke', (d) => d.data.Winner ? '#000000' : 'none')
+            .style('stroke-width', (d) => d.data.Winner ? '1.5px' : '0px')
             .attr("cx", d => d.x)
             .attr("cy", d => d.y)
+            .on("mouseover", function(event, d) {
+                console.log(d.data);
+                // change colors
+                d3.selectAll(`#movie_${d.data.MovieId}`)
+                    .attr("r", d.r * 2)
+                    .style('stroke-width', '2px')
+                    .style("stroke", "#000000")
+                    .style("fill", "#E3AE00");
+                vis.svg.tooltip
+                    .style("opacity", 1)
+                    .style("left", event.pageX + 20 + "px")
+                    .style("top", event.pageY + "px")
+                    .html(`
+                    <div style="display: flex; flex-direction: row; align-items: center; border: thin solid grey; border-radius: 5px; background: ${d.data.Winner ? 'linear-gradient(#c5b358, #FCF6BA, #d4af37, #FBF5B7)' : '#841b2d'}; padding: 7.5px; width: 600px;">
+                        <img src="${d.data.Poster}" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-right: 10px;"></img>
+                        <div style="text-align: center; ${d.data.Winner ? '' : 'color: white;'}">
+                            <h3>${d.data.Title} (${d.data.Year})</h3>
+                            <h4>Genres: ${d.data.Genre.join(', ')}</h4>
+                            <h6>Director: ${d.data.Director}</h6>
+                            <p>Plot: ${d.data.Plot}</p>
+                        </div>
+                    </div>`)
+            })
+            .on("mouseout", function(event, d) {
+                d3.selectAll(`#movie_${d.data.MovieId}`)
+                    .transition()  
+                    .duration(350)  
+                    .attr("r", d.r)  
+                    .style("stroke", "none")
+                    .style("fill", (d) => vis.scale(d.data.currentGenre));
+                vis.svg.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0)
+                    .html(``);
+            })
             .call(drag(simulation));        
-        // // add tooltips to each circle
-        // .on("mouseover", function(d) {
-        //     div.transition()    
-        //         .duration(200)    
-        //         .style("opacity", .9);    
-        //     div.html("Director:" + d.Director + "</br>" + "Genre:" + d.Genre)  
-        //         .style("left", (d3.event.pageX) + "px")   
-        //         .style("top", (d3.event.pageY - 28) + "px");  
-        //     })          
-        // .on("mouseout", function(d) {   
-        //     div.transition()    
-        //         .duration(500)    
-        //         .style("opacity", 0); 
-        // });
 
         vis.node.transition()
             .delay((d, i) => Math.random() * 500)
@@ -301,15 +328,16 @@ class ClusterPlot {
                 return t => d.r = i(t);
             });
         
-        
         simulation.on("tick", () => {
             vis.node
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y);
+                .attr("cx", d => {
+                    return Math.max(d.r, Math.min(vis.width - d.r, d.x));
+                })
+                .attr("cy", d => {
+                    return Math.max(d.r, Math.min(vis.height - d.r, d.y));
+                });
         });
-
-        //invalidation.then(() => simulation.stop());
-
+                              
         console.log("updateVis");
     }
 }
