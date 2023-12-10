@@ -48,7 +48,6 @@ class StudioBubbles {
 
         vis.wrangleData();
     }
-
     wrangleData() {
         let vis = this;
 
@@ -77,8 +76,6 @@ class StudioBubbles {
         vis.nodes = [];
         let clusterId = 0;
 
-
-
         vis.topStudios.forEach((studio, index) => {
             vis.studioData = vis.filteredData.filter(d => d.distributor === studio);
             vis.studioData.forEach((film, i) => {
@@ -87,11 +84,16 @@ class StudioBubbles {
                     studio: studio,
                     film: film,
                     radius: 3,
-                    x: vis.width / (vis.topStudios.length + 1) * (index + 1),
-                    y: vis.height / 2
+                    // x: vis.width / (vis.topStudios.length + 1) * (index + 1),
+                    x: (index > 2) ? vis.width / 3 + ((i-3) * vis.width / 4) : vis.width / 3 + (i * vis.width / 4),
+                    // x: vis.width / (vis.topStudios.length + 1),
+                    // y: vis.height / 2
+                    y: (index > 2) ? vis.height * 13/16 : vis.height * 5/16
+
                 });
             });
             clusterId += vis.studioData.length;
+            // console.log(vis.studioData);
         });
 
         // Create "Other" cluster
@@ -102,60 +104,18 @@ class StudioBubbles {
                 studio: "Other",
                 film: film,
                 radius: 3,
-                x: vis.width / (vis.topStudios.length + 1) * (vis.topStudios.length + 1),
-                y: vis.height / 2
+                // x: vis.width / (vis.topStudios.length + 1) * (vis.topStudios.length + 1),
+                // y: vis.height / 2
+                x: vis.width / 3 + (vis.width / 2),
+                y: vis.height * 13/16
             });
         });
 
-        // vis.nodes.push({
-        //     id: clusterId + i,
-        //     studio: studio,
-        //     film: film,
-        //     radius: 5,  // Adjust the radius to make the circles smaller
-        //     x: vis.width / (vis.topStudios.length + 1) * (index + 1),
-        //     y: vis.height / 2
-        // });
-
-        // In your initVis function
-
+        // Update force simulation with the new nodes
         vis.simulation.nodes(vis.nodes);
 
+        // Call updateVis to render the initial state
         vis.updateVis();
-        // Create nodes for each data point
-//         vis.nodes = [];
-//         let clusterId = 0;
-//
-//         vis.topStudios.forEach((studio, index) => {
-//             vis.studioData = vis.filteredData.filter(d => d.distributor === studio);
-//             vis.studioData.forEach((film, i) => {
-//                 vis.nodes.push({
-//                     id: clusterId + i,
-//                     studio: studio,
-//                     film: film,
-//                     radius: 10,
-//                     x: vis.width / 2 + (Math.random() - 0.5) * 100 * (index + 1),  // Spread out x position
-//                     y: vis.height / 2 + (Math.random() - 0.5) * 100 * (index + 1)  // Spread out y position
-//                 });
-//             });
-//             clusterId += vis.studioData.length;
-//         });
-//
-// // Create "Other" cluster
-//         vis.otherData = vis.filteredData.filter(d => vis.otherStudios.includes(d.distributor));
-//         vis.otherData.forEach((film, i) => {
-//             vis.nodes.push({
-//                 id: clusterId + i,
-//                 studio: "Other",
-//                 film: film,
-//                 radius: 10,
-//                 x: vis.width / 2 + (Math.random() - 0.5) * 100 * (vis.topStudios.length + 1),  // Spread out x position
-//                 y: vis.height / 2 + (Math.random() - 0.5) * 100 * (vis.topStudios.length + 1)  // Spread out y position
-//             });
-//         });
-//
-//         vis.simulation.nodes(vis.nodes);
-//
-//         vis.updateVis();
     }
 
     updateVis() {
@@ -164,6 +124,7 @@ class StudioBubbles {
         // Bind data to circles
         let bubbles = vis.svg.selectAll('.bubble')
             .data(vis.nodes, d => d.id);
+        console.log(vis.nodes);
 
         // Enter selection
         bubbles.enter().append('circle')
@@ -187,11 +148,30 @@ class StudioBubbles {
             .attr('text-anchor', 'middle')
             .merge(labels) // Enter + Update selection
             .text(d => d)
-            .attr('x', (d, i) => vis.width / 6 + (i * vis.width / 7))
-            .attr('y', (d, i) => vis.height / 15 + i * 20);
+            .attr('x', (d, i) => {
+                if (i > 2) {
+                    // Conditionally set y-position for i greater than 3
+                    return vis.width / 3 + ((i-3) * vis.width / 4); // Adjust someOffset as needed
+                } else {
+                    // Set default y-position for i less than or equal to 3
+                    return vis.width / 3 + (i * vis.width / 4);
+                }
+            })
+                // vis.width / 3 + (i * vis.width / 4))
+
+            // .attr('y', (d, i) => vis.height / 15 + i * 20);
+            .attr('y', (d, i) => {
+                    if (i > 2) {
+                        // Conditionally set y-position for i greater than 3
+                        return vis.height / 2; // Adjust someOffset as needed
+                    } else {
+                        // Set default y-position for i less than or equal to 3
+                        return vis.height / 16;
+                    }
+                });
             // .attr('transform', 'rotate(-45)');
             // .attr('transform', 'rotate(-45)')  // Rotate the labels by -45 degrees
-        ;
+
 
         // Exit selection
         labels.exit().remove();
@@ -284,3 +264,112 @@ class StudioBubbles {
 //         vis.simulation.alpha(0.3).restart();
 //     }
 // }
+
+//     wrangleData() {
+//         let vis = this;
+//
+//         // Calculate the total number of films for each studio
+//         vis.studioCounts = d3.rollup(
+//             vis.data,
+//             v => d3.sum(v, d => 1),
+//             d => d.distributor
+//         );
+//
+//         // Sort the studios based on the total number of films
+//         vis.sortedStudios = Array.from(vis.studioCounts, ([studio, count]) => ({ studio, count }))
+//             .sort((a, b) => b.count - a.count)
+//             .map(d => d.studio);
+//
+//         // Identify the top 5 studios
+//         vis.topStudios = vis.sortedStudios.slice(0, 5);
+//
+//         // Add "Other" category
+//         vis.otherStudios = vis.sortedStudios.slice(5);
+//         vis.topStudios.push("Other");
+//
+//         // Filter the data for the top 5 studios and "Other"
+//         vis.filteredData = vis.data.filter(d => vis.topStudios.includes(d.distributor) || vis.otherStudios.includes(d.distributor));
+//
+//         vis.nodes = [];
+//         let clusterId = 0;
+//
+//
+//
+//         vis.topStudios.forEach((studio, index) => {
+//             vis.studioData = vis.filteredData.filter(d => d.distributor === studio);
+//             vis.studioData.forEach((film, i) => {
+//                 vis.nodes.push({
+//                     id: clusterId + i,
+//                     studio: studio,
+//                     film: film,
+//                     radius: 3,
+//                     x: vis.width / (vis.topStudios.length + 1) * (index + 1),
+//                     y: vis.height / 2
+//                 });
+//             });
+//             clusterId += vis.studioData.length;
+//         });
+//
+//         // Create "Other" cluster
+//         vis.otherData = vis.filteredData.filter(d => vis.otherStudios.includes(d.distributor));
+//         vis.otherData.forEach((film, i) => {
+//             vis.nodes.push({
+//                 id: clusterId + i,
+//                 studio: "Other",
+//                 film: film,
+//                 radius: 3,
+//                 x: vis.width / (vis.topStudios.length + 1) * (vis.topStudios.length + 1),
+//                 y: vis.height / 2
+//             });
+//         });
+//
+//         // vis.nodes.push({
+//         //     id: clusterId + i,
+//         //     studio: studio,
+//         //     film: film,
+//         //     radius: 5,  // Adjust the radius to make the circles smaller
+//         //     x: vis.width / (vis.topStudios.length + 1) * (index + 1),
+//         //     y: vis.height / 2
+//         // });
+//
+//         // In your initVis function
+//
+//         vis.simulation.nodes(vis.nodes);
+//
+//         vis.updateVis();
+//         // Create nodes for each data point
+// //         vis.nodes = [];
+// //         let clusterId = 0;
+// //
+// //         vis.topStudios.forEach((studio, index) => {
+// //             vis.studioData = vis.filteredData.filter(d => d.distributor === studio);
+// //             vis.studioData.forEach((film, i) => {
+// //                 vis.nodes.push({
+// //                     id: clusterId + i,
+// //                     studio: studio,
+// //                     film: film,
+// //                     radius: 10,
+// //                     x: vis.width / 2 + (Math.random() - 0.5) * 100 * (index + 1),  // Spread out x position
+// //                     y: vis.height / 2 + (Math.random() - 0.5) * 100 * (index + 1)  // Spread out y position
+// //                 });
+// //             });
+// //             clusterId += vis.studioData.length;
+// //         });
+// //
+// // // Create "Other" cluster
+// //         vis.otherData = vis.filteredData.filter(d => vis.otherStudios.includes(d.distributor));
+// //         vis.otherData.forEach((film, i) => {
+// //             vis.nodes.push({
+// //                 id: clusterId + i,
+// //                 studio: "Other",
+// //                 film: film,
+// //                 radius: 10,
+// //                 x: vis.width / 2 + (Math.random() - 0.5) * 100 * (vis.topStudios.length + 1),  // Spread out x position
+// //                 y: vis.height / 2 + (Math.random() - 0.5) * 100 * (vis.topStudios.length + 1)  // Spread out y position
+// //             });
+// //         });
+// //
+// //         vis.simulation.nodes(vis.nodes);
+// //
+// //         vis.updateVis();
+//     }

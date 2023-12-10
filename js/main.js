@@ -1,5 +1,8 @@
 // declare global variables for visualization
-let branchHemisphere, raceHemisphere, genderHemisphere, consensus, rankchart, myClusterplot, studiovis, studiobubbles;
+let branchHemisphere, raceHemisphere, genderHemisphere, myConsensus, myTimeline, myLollipop, rankchart, myClusterplot, studiovis, studiobubbles;
+let selectedTimeRange = [];
+let parseYear = d3.timeParse('%Y'); // Convert OscarYear integer to a Date object
+let dateFormatter = d3.timeFormat("%Y"); // Function to convert date objects to strings or reverse
  
 // Load data with promises
 let promises = [
@@ -35,7 +38,6 @@ function createVis(data) {
     // studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
     myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
 
-
     /////// PREPARE DATA FOR CONSENSUS PLOT ////////
 
     // Filter the data to get only the movies that are winners of Best Picture Award
@@ -49,12 +51,12 @@ function createVis(data) {
         // Push an object with required fields into the result array
         result.push({
             Film: movie.Film, // Movie Name
+            OscarYear: movie['Oscar Year'], // Year of Oscars Ceremony
             CriticRating: movie['Tomatometer Rating'], // Tomatometer (Critic) Rating
             AudienceRating: movie['Audience Rating'] // Audience Rating
         });
         return result;
     }, []);
-
 
     // Insert the missing Tomatometer Rating and Audience Rating values
     displayData[2].CriticRating = 90;
@@ -93,17 +95,25 @@ function createVis(data) {
 
     // Change string value numbers for critic and audience ratings to integers
     displayData.forEach(movie => {
+        movie.OscarYear = parseFloat(movie.OscarYear) + 1;
+        movie.OscarYear = parseYear(`${movie.OscarYear}`);
         movie.CriticRating = parseInt(movie.CriticRating, 10);
         movie.AudienceRating = parseInt(movie.AudienceRating, 10);
     });
 
-    // TODO: ONLY DISPLAY THE MOST RECENT BEST PICTURE WINNERS? GRAPH DISPLAYS TOO MANY MOVIES
+    // displayData.forEach(movie => {
+    //     // Convert OscarYear integer to a Date object
+    //     movie.OscarYear = parseYear(`${movie.OscarYear}`);
+    // });
 
     // Output the updated array
     console.log(displayData);
 
     // New consensus plot object
-    consensus = new ConsensusPlot("consensus", displayData);
+    myConsensus = new ConsensusPlot("consensus", displayData);
+
+    // New timeline object (brushVis that links to consensus plot)
+    myTimeline = new Timeline('timeline', displayData);
 
 
     /////// PREPARE DATA FOR LOLLIPOP CHART ////////
@@ -128,6 +138,6 @@ function createVis(data) {
     console.log(imdbData); // Check the content of imdbData array
 
     // New lollipop chart object
-    lollipop = new LollipopChart("lollipop", imdbData);
+    myLollipop = new LollipopChart("lollipop", imdbData);
 
 }
