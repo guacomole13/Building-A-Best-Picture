@@ -33,81 +33,6 @@ class RankChart {
             .attr('transform', `translate(${vis.width / 2}, -20)`)
             .attr("font-size", 20)
             .attr('text-anchor', 'middle');
-        // vis.svg.append('g')
-        //     .attr('class', 'title')
-        //     .append('text')
-        //     .text('Box Office Performance of Winners')
-        //     .attr('transform', `translate(${vis.width / 2}, 20)`)
-        //     .attr('text-anchor', 'middle');
-
-
-
-        // // init scales
-        // vis.xScale = d3.scaleLinear()
-        //     .domain([d3.min(vis.data, d => d.Year), d3.max(vis.data, d => d.Year)])
-        //     .range([0, vis.width]);
-        //
-        // vis.yScale = d3.scaleLinear()
-        //     .domain([10, 1])
-        //     .range([vis.height, 0]);
-        //
-        // // init x & y axis
-        // // vis.xAxis = vis.svg.append("g")
-        // //     .attr("class", "axis axis--x")
-        // //     .attr("transform", "translate(0," + vis.height + ")");
-        // // vis.yAxis = vis.svg.append("g")
-        // //     .attr("class", "axis axis--y");
-        //
-        // vis.xAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--x")
-        //     .attr("transform", "translate(0," + vis.height + ")")
-        //     .call(d3.axisBottom(vis.xScale));
-        //
-        // vis.yAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--y")
-        //     .call(d3.axisLeft(vis.yScale));
-        //
-        // // flip axis
-        // // vis.svg.selectAll('.axis--y .tick text')
-        // //     .attr('dy', '-0.7em');
-        //
-        // vis.BOline = d3.line()
-        //     .x(d => vis.xScale(d.Year))
-        //     .y(d => vis.yScale(d.BoxOffice_Rank));
-        //
-        // vis.BUline = d3.line()
-        //     .x(d => vis.xScale(d.Year))
-        //     .y(d => vis.yScale(d.Budget_Rank));
-        //
-        // vis.svg.append("text")
-        //     .attr("transform", "translate(" + (vis.width / 2) + " ," + (vis.height + vis.margin.top + 20) + ")")
-        //     .style("text-anchor", "middle")
-        //     .text("Year");
-        //
-        // // Add y-axis label
-        // vis.svg.append("text")
-        //     .attr("transform", "rotate(-90)")
-        //     .attr("y", 0 - vis.margin.left)
-        //     .attr("x", 0 - (vis.height / 2))
-        //     .attr("dy", "1em")
-        //     .style("text-anchor", "middle")
-        //     .text("Rank");
-
-        // Filter data to include only winners
-
-
-        // // init pathGroup
-        // vis.pathGroup = vis.svg.append('g').attr('class', 'pathGroup');
-        //
-        // // init path one (average)
-        // vis.pathOne = vis.pathGroup
-        //     .append('path')
-        //     .attr("class", "pathOne");
-        //
-        // // init path two (single state)
-        // vis.pathTwo = vis.pathGroup
-        //     .append('path')
-        //     .attr("class", "pathTwo");
 
         // Graph title
         vis.svg.append("text")
@@ -147,34 +72,6 @@ class RankChart {
         vis.updateVis();
     }
 
-    // updateVis() {
-    //     // Method to update the visualization
-    //     let vis = this;
-    //
-    //     vis.xAxis.call(d3.axisBottom(vis.xScale));
-    //     vis.yAxis.call(d3.axisLeft(vis.yScale))
-    //
-    //     // Bind data to line elements
-    //     vis.svg.selectAll('.boxoffice-line')
-    //         .data([vis.filteredWinnersData])
-    //         .enter()
-    //         .append('path')
-    //         .attr('class', 'boxoffice-line')
-    //         .attr('d', vis.BOline)
-    //         .attr('fill', 'none')
-    //         .attr('stroke', 'steelblue');
-    //     // console.log("data updated");
-    //
-    //     vis.svg.selectAll('.budget-line')
-    //         .data([vis.filteredWinnersData])
-    //         .enter()
-    //         .append('path')
-    //         .attr('class', 'budget-line')
-    //         .attr('d', vis.BUline)
-    //         .attr('fill', 'none')
-    //         .attr('stroke', 'gray');
-    //     // console.log("data updated");
-    // }
     updateVis() {
         // Method to update the visualization
         let vis = this;
@@ -196,13 +93,6 @@ class RankChart {
             .domain([10, 1])
             .range([vis.height, 0]);
 
-        // init x & y axis
-        // vis.xAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--x")
-        //     .attr("transform", "translate(0," + vis.height + ")");
-        // vis.yAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--y");
-
         vis.xAxis = vis.svg.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + vis.height + ")");
@@ -213,14 +103,6 @@ class RankChart {
         vis.yAxis = vis.svg.append("g")
             .attr("class", "axis axis--y")
             .call(d3.axisLeft(vis.yScale));
-
-        // vis.xAxis.selectAll(".tick text")
-        //     .text(d => d3.format("")(d));
-
-        // flip axis
-        // vis.svg.selectAll('.axis--x .tick')
-        //     .tickFormat(d3.format("d"));
-            // .attr('dy', '-0.7em');
 
         vis.BOline = d3.line()
             .x(d => vis.xScale(d.Year))
@@ -258,7 +140,182 @@ class RankChart {
             .y(d => vis.yScale(d.Budget_Rank));
 
         // Bind data to circles for each point
-        vis.svg.selectAll('.boxoffice-circle')
+        // vis.svg.selectAll('.boxoffice-circle')
+        //     .data(vis.filteredWinnersData)
+        //     .enter()
+        //     .append('circle')
+        //     .attr('class', 'boxoffice-circle')
+        //     .attr('cx', d => vis.xScale(d.Year))
+        //     .attr('cy', d => vis.yScale(d.BoxOffice_Rank))
+        //     .attr('r', 4)
+        //     .attr('fill', 'steelblue');
+        //
+        // vis.svg.selectAll('.budget-circle')
+        //     .data(vis.filteredWinnersData)
+        //     .enter()
+        //     .append('circle')
+        //     .attr('class', 'budget-circle')
+        //     .attr('cx', d => vis.xScale(d.Year))
+        //     .attr('cy', d => vis.yScale(d.Budget_Rank))
+        //     .attr('r', 4)
+        //     .attr('fill', 'darkred');
+
+        const tooltip = vis.svg
+            .append('g')
+            .attr('class', 'tooltip')
+            .style('display', 'none');
+
+        // Append a background rectangle to the tooltip
+        tooltip
+            .append('rect')
+            .attr('width', 100)
+            .attr('height', 50)
+            .attr('fill', 'white')
+            .style('opacity', 0.8);
+
+        // Append text elements to the tooltip for displaying ranks
+        const tooltipText1 = tooltip
+            .append('text')
+            .attr('x', 10)
+            .attr('y', 20);
+
+        const tooltipText2 = tooltip
+            .append('text')
+            .attr('x', 10)
+            .attr('y', 40);
+
+        // const calculateXOffset = (d, index, data) => {
+        //     const sameRankFilms = data.filter(item => {
+        //         return (
+        //             item.Year === d.Year &&
+        //             item.BoxOffice_Rank === d.BoxOffice_Rank &&
+        //             item.Budget_Rank === d.Budget_Rank
+        //         );
+        //     });
+        //     const totalSameRank = sameRankFilms.length;
+        //     const circleWidth = vis.width * 0.77777777777 / 63; // Adjust as needed
+        //     const totalWidth = totalSameRank * circleWidth;
+        //     const xOffset = (index / (totalSameRank - 1)) * totalWidth - totalWidth / 2;
+        //     return vis.xScale(d.Year) + xOffset;
+        // };
+        //
+        // // Bind data to circles for each point
+        // vis.svg
+        //     .selectAll('.boxoffice-circle')
+        //     .data(vis.filteredWinnersData)
+        //     .enter()
+        //     .append('circle')
+        //     .attr('class', 'boxoffice-circle')
+        //     .attr('cx', (d, i) => calculateXOffset(d, i, vis.filteredWinnersData))
+        //     .attr('cy', d => vis.yScale(d.BoxOffice_Rank))
+        //     .attr('r', 4)
+        //     .attr('fill', 'steelblue')
+        //     // Add mouseover and mouseout event listeners for the circles
+        //     .on('mouseover', function (event, d) {
+        //         tooltipText1.text(`Year: ${d.Year}`);
+        //         tooltipText2.text(`Box Office Rank: ${d.BoxOffice_Rank}`);
+        //         tooltip.style('display', 'block');
+        //     })
+        //     .on('mouseout', function () {
+        //         tooltip.style('display', 'none');
+        //     });
+        //
+        // vis.svg
+        //     .selectAll('.budget-circle')
+        //     .data(vis.filteredWinnersData)
+        //     .enter()
+        //     .append('circle')
+        //     .attr('class', 'budget-circle')
+        //     .attr('cx', (d, i) => calculateXOffset(d, i, vis.filteredWinnersData))
+        //     .attr('cy', d => vis.yScale(d.Budget_Rank))
+        //     .attr('r', 4)
+        //     .attr('fill', 'darkred')
+        //     // Add mouseover and mouseout event listeners for the circles
+        //     .on('mouseover', function (event, d) {
+        //         tooltipText1.text(`Year: ${d.Year}`);
+        //         tooltipText2.text(`Budget Rank: ${d.Budget_Rank}`);
+        //         tooltip.style('display', 'block');
+        //     })
+        //     .on('mouseout', function () {
+        //         tooltip.style('display', 'none');
+        //     });
+
+        // Bind data to circles for each point
+        // vis.svg
+        //     .selectAll('.boxoffice-circle')
+        //     .data(vis.filteredWinnersData)
+        //     .enter()
+        //     .append('circle')
+        //     .attr('class', 'boxoffice-circle')
+        //     .attr('cx', d => vis.xScale(d.Year))
+        //     .attr('cy', d => vis.yScale(d.BoxOffice_Rank))
+        //     .attr('r', 4)
+        //     .attr('fill', 'steelblue')
+        //     // Add mouseover and mouseout event listeners for the circles
+        //     .on('mouseover', function (event, d) {
+        //         tooltipText1.text(`Year: ${d.Year}`);
+        //         tooltipText2.text(`Box Office Rank: ${d.BoxOffice_Rank}`);
+        //         tooltip.style('display', 'block');
+        //     })
+        //     .on('mouseout', function () {
+        //         tooltip.style('display', 'none');
+        //     });
+        //
+        // vis.svg
+        //     .selectAll('.budget-circle')
+        //     .data(vis.filteredWinnersData)
+        //     .enter()
+        //     .append('circle')
+        //     .attr('class', 'budget-circle')
+        //     .attr('cx', d => vis.xScale(d.Year))
+        //     .attr('cy', d => vis.yScale(d.Budget_Rank))
+        //     .attr('r', 4)
+        //     .attr('fill', 'darkred')
+        //     // Add mouseover and mouseout event listeners for the circles
+        //     .on('mouseover', function (event, d) {
+        //         tooltipText1.text(`Year: ${d.Year}`);
+        //         tooltipText2.text(`Budget Rank: ${d.Budget_Rank}`);
+        //         tooltip.style('display', 'block');
+        //     })
+        //     .on('mouseout', function () {
+        //         tooltip.style('display', 'none');
+        //     });
+
+        vis.svg.selectAll('.rank-line')
+            .data(vis.filteredWinnersData)
+            .enter()
+            .append('line')
+            .attr('class', 'rank-line')
+            .attr('x1', d => vis.xScale(d.Year))
+            .attr('y1', d => vis.yScale(d.BoxOffice_Rank))
+            .attr('x2', d => vis.xScale(d.Year))
+            .attr('y2', d => vis.yScale(d.Budget_Rank))
+            .attr('stroke', 'gray')
+            .attr('stroke-width', 1);
+
+        // vis.svg.selectAll('.boxoffice-circle')
+        //     .data(vis.filteredWinnersData)
+        //     .enter()
+        //     .append('circle')
+        //     .attr('class', 'boxoffice-circle')
+        //     .attr('cx', d => vis.xScale(d.Year))
+        //     .attr('cy', d => vis.yScale(d.BoxOffice_Rank))
+        //     .attr('r', 4)
+        //     .attr('fill', 'steelblue');
+        //
+        // vis.svg.selectAll('.budget-circle')
+        //     .data(vis.filteredWinnersData)
+        //     .enter()
+        //     .append('circle')
+        //     .attr('class', 'budget-circle')
+        //     .attr('cx', d => vis.xScale(d.Year))
+        //     .attr('cy', d => vis.yScale(d.Budget_Rank))
+        //     .attr('r', 4)
+        //     .attr('fill', 'darkred');
+
+        // Bind data to circles for each point
+        vis.svg
+            .selectAll('.boxoffice-circle')
             .data(vis.filteredWinnersData)
             .enter()
             .append('circle')
@@ -266,9 +323,19 @@ class RankChart {
             .attr('cx', d => vis.xScale(d.Year))
             .attr('cy', d => vis.yScale(d.BoxOffice_Rank))
             .attr('r', 4)
-            .attr('fill', 'steelblue');
+            .attr('fill', 'steelblue')
+            // Add mouseover and mouseout event listeners for the circles
+            .on('mouseover', function (event, d) {
+                tooltipText1.text(`Year: ${d.Year}`);
+                tooltipText2.text(`Box Office Rank: ${d.BoxOffice_Rank}`);
+                tooltip.style('display', 'block');
+            })
+            .on('mouseout', function () {
+                tooltip.style('display', 'none');
+            });
 
-        vis.svg.selectAll('.budget-circle')
+        vis.svg
+            .selectAll('.budget-circle')
             .data(vis.filteredWinnersData)
             .enter()
             .append('circle')
@@ -276,7 +343,19 @@ class RankChart {
             .attr('cx', d => vis.xScale(d.Year))
             .attr('cy', d => vis.yScale(d.Budget_Rank))
             .attr('r', 4)
-            .attr('fill', 'darkred');
+            .attr('fill', 'darkred')
+            // Add mouseover and mouseout event listeners for the circles
+            .on('mouseover', function (event, d) {
+                tooltipText1.text(`Year: ${d.Year}`);
+                tooltipText2.text(`Budget Rank: ${d.Budget_Rank}`);
+                tooltip.style('display', 'block');
+            })
+            .on('mouseout', function () {
+                tooltip.style('display', 'none');
+            });
+
+        // Add vertical lines between BoxOfficeRank and BudgetRank
+
 
         let legend = vis.svg.append("g")
             .attr("class", "legend")
@@ -322,20 +401,5 @@ class RankChart {
             .attr("y", 50)
             .text("Ineligible Ranks"); // Adjust text and position as needed
 
-
-        // Draw lines connecting the points for each category
-        // vis.svg.append('path')
-        //     .datum(vis.filteredWinnersData)
-        //     .attr('class', 'boxoffice-line')
-        //     .attr('d', boxOfficeLine)
-        //     .attr('fill', 'none')
-        //     .attr('stroke', 'steelblue');
-        //
-        // vis.svg.append('path')
-        //     .datum(vis.filteredWinnersData)
-        //     .attr('class', 'budget-line')
-        //     .attr('d', budgetLine)
-        //     .attr('fill', 'none')
-        //     .attr('stroke', 'gray');
     }
 }
