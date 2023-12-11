@@ -40,12 +40,8 @@ Items related to libraries will be *italicized*.
     - [genrebar.js](genrebar.js) - Shows which genres have the most Best Picture winners. Linked to clusterplot.js
     - [hemisphere.js](hemisphere.js) - Uses d3-parliament to render hemispheres showing Academy voter demographics.
     - [lollipop_chart.js](lollipop_chart.js) - Shows difference in IMDb rating for Best Picture Winners.
-    - [main.js](main.js) - Contains core website functionality including loading data, storing variables linking to visualizations, and clalling visualizations to be rendered.
+    - [main.js](main.js) - Contains core website functionality including loading data, storing variables linking to visualizations, and calling visualizations to be rendered.
     - [moviestudio.js](moviestudio.js) - Creates timeline of winners and nominees for major movie studio. Linked to studiobubbles.js.
     - [studiobubbles.js](studiobubbles.js) - Creates bubbles visually representing the number of winners and nominees for each studio.
     - [textreveal.js](textreveal.js) - Custom function to stagger text reveal to aid visual storytelling.
     - [timeline.js](timeline.js) - Brushable timeline linked to consensusplot.js.
-
-## SITE WALKTHROUGH
-
-to be added
