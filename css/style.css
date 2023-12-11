@@ -385,3 +385,7 @@ svg circle.seat.MembersAtLarge { fill: grey; stroke-width: 0px; }
     transform: translateY(0px); /* final state: visible and in normal position */
     display: block; /* make sure it's not set to none */
 }
+
+informationtext {
+    text-align: center
+}
