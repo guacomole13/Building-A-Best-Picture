@@ -14,7 +14,7 @@ class LollipopChart {
         let vis = this;
 
         // Define svg
-        vis.margin = { top: 40, right: 180, bottom: 100, left: 50 }; // Adjust margins to allow axes / labels to fit
+        vis.margin = { top: 40, right: 180, bottom: 100, left: 100 }; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -50,6 +50,7 @@ class LollipopChart {
 
         // X-axis label
         vis.svg.append("text")
+            .attr("class", "lollipop-text")
             .attr("x", vis.width / 2)
             .attr("y", vis.height + 0.5 * vis.margin.bottom)
             .style("text-anchor", "middle")
@@ -57,8 +58,9 @@ class LollipopChart {
 
         // Y-axis label
         vis.svg.append("text")
+            .attr("class", "lollipop-text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - vis.margin.left)
+            .attr("y", 40 - vis.margin.left) // Adjusted y-coordinate
             .attr("x", 0 - (vis.height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
@@ -66,12 +68,18 @@ class LollipopChart {
 
         // Graph title
         vis.svg.append("text")
+            .attr("class", "lollipop-text")
             .attr("x", vis.width / 2)
             .attr("y", vis.margin.top - 60) // Adjust height of title
             .style("text-anchor", "middle")
-            .style("font-weight", "bold")
             .style("font-size", "16px")
             .text("How do average IMDB ratings for Best Picture winners vs. nominees compare throughout the years?");
+
+        // Append tooltip
+        vis.tooltip = d3.select("body").append('div')
+            .attr('class', "tooltip")
+            .attr('id', 'consensusTooltip')
+            .style("opacity", 0);
 
         // (Filter, aggregate, modify data)
         vis.wrangleData();
@@ -108,6 +116,65 @@ class LollipopChart {
     }
 
     /*
+     * Tooltip function
+     */
+
+    displayTooltip(element, data, awardType) {
+        let vis = this;
+
+        // Store original width and height as attributes when element is created
+        d3.select(element)
+            .attr("original-width", d3.select(element).attr("width"))
+            .attr("original-height", d3.select(element).attr("height"))
+            .attr("original-x", d3.select(element).attr("x"));
+
+        element.addEventListener('mouseover', function (event) {
+            let originalWidth = +d3.select(this).attr("original-width");
+            let originalHeight = +d3.select(this).attr("original-height");
+            let originalX = +d3.select(this).attr("original-x");
+
+            d3.select(this)
+                .transition()
+                .duration(100)
+                .attr("width", originalWidth * 1.3) // Expand width to 1.2 times
+                .attr("height", originalHeight * 1.3) // Expand height to 1.2 times
+                .attr("x", originalX - 2); // Shift the element 2 units to the left
+
+            // Get the decade and average ratings from the nested data
+            const decade = data.key;
+            const winnerAvg = data.value.winnerAvg;
+            const nomineeAvg = data.value.nomineeAvg;
+
+            let averageRating = awardType === 'winner' ? winnerAvg : nomineeAvg;
+
+            // Show tooltip with updated content
+            vis.tooltip
+                .style("opacity", 1)
+                .style("left", event.pageX + 20 + "px")
+                .style("top", event.pageY - 20 + "px")
+                .html(`
+        <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
+            <h3>${decade} Best Picture ${awardType === 'winner' ? 'Winners' : 'Nominees'}</h3>
+            <h4>Average IMDB Rating: ${averageRating.toFixed(1)}</h4>
+        </div>`
+                );
+        });
+
+        element.addEventListener('mouseout', function (event) {
+            d3.select(this)
+                .transition()
+                .duration(100)
+                .attr("width", d3.select(this).attr("original-width")) // Revert to original width
+                .attr("height", d3.select(this).attr("original-height")) // Revert to original height
+                .attr("x", d3.select(this).attr("original-x")); // Revert to original x-coordinate
+
+            // Hide tooltip
+            vis.tooltip.style("opacity", 0);
+        });
+    }
+
+
+    /*
      * The drawing function
      */
     updateVis() {
@@ -131,62 +198,46 @@ class LollipopChart {
         vis.svg.select(".y-axis")
             .call(vis.yAxis);
 
-        // Create clipping path: make a rectangle the size of the SVG (vis.width and vis.height) and uses it to
-        // hide the parts of the image of the lines that extend beyond its boundaries
-        vis.svg
-            .append("defs")
-            .append("clipPath")
-            .attr("id", "clip")
+        // Create the mask element
+        vis.svg.append("mask")
+            .attr("id", "clip-mask")
             .append("rect")
             .attr("width", vis.width)
-            .attr("height", vis.height);
+            .attr("height", vis.height)
+            .attr("fill", "white"); // Change to black to hide, white to show
 
+        // make a rectangle the size of the SVG (vis.width and vis.height) and use it to
+        // hide the parts of the image of the lines that extend beyond its boundaries
+        vis.svg.append("rect")
+            .attr("x", -vis.margin.left)
+            .attr("y", -vis.margin.top)
+            .attr("width", vis.width + vis.margin.left + vis.margin.right)
+            .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+            .attr("fill", "url(#clip-mask)");
+
+        // Winner Squiggle
         vis.svg.selectAll(".winnerSquiggle")
             .data(vis.nestedData)
             .join("image")
             .attr("class", "winnerSquiggle")
-            .attr("xlink:href", "img/winner_squiggle.png")
+            .attr("xlink:href", "img/winner_squiggles.png")
             .attr("x", d => vis.x(d.key) + barWidth / 2 - padding - 7) // Position image
             .attr("y", d => vis.y(d.value.winnerAvg) - 3) // Adjust image position based on star image dimensions
             .attr("width", 14) // Adjust image width
             .attr("height", vis.y(0)) // Adjust image height dynamically
-            .attr("clip-path", "url(#clip)");
+            .attr("mask", "url(#clip-mask)");
 
-
+        // Nominee Squiggle
         vis.svg.selectAll(".nomineeSquiggle")
             .data(vis.nestedData)
             .join("image")
             .attr("class", "nomineeSquiggle")
-            .attr("xlink:href", "img/nominee_squiggle.png")
+            .attr("xlink:href", "img/nominee_squiggles.png")
             .attr("x", d => vis.x(d.key) + barWidth / 2 + padding - 5) // Position image
             .attr("y", d => vis.y(d.value.nomineeAvg) - 1) // Adjust image position based on star image dimensions
             .attr("width", 13) // Adjust image width
             .attr("height", vis.y(0)) // Adjust image height dynamically
-            .attr("clip-path", "url(#clip)");
-
-        // // Winner Lines
-        // vis.svg.selectAll(".winnerLine")
-        //     .data(vis.nestedData)
-        //     .join("line")
-        //     .attr("class", "winnerLine")
-        //     .attr("x1", d => vis.x(d.key) + barWidth / 2 - padding) // Start line (from x position)
-        //     .attr("x2", d => vis.x(d.key) + barWidth / 2 - padding) // End line (to x position)
-        //     .attr("y1", d => vis.y(d.value.winnerAvg)) // Y-position at winner average
-        //     .attr("y2", d => vis.y(0)) // Connect line to x-axis
-        //     .attr("stroke", "green")
-        //     .attr("stroke-width", 2);
-
-        // // Nominee Lines
-        // vis.svg.selectAll(".nomineeLine")
-        //     .data(vis.nestedData)
-        //     .join("line")
-        //     .attr("class", "nomineeLine")
-        //     .attr("x1", d => vis.x(d.key) + barWidth / 2 + padding) // Start line (from x position)
-        //     .attr("x2", d => vis.x(d.key) + barWidth / 2 + padding) // End line (to x position)
-        //     .attr("y1", d => vis.y(d.value.nomineeAvg)) // Y-position at nominee average
-        //     .attr("y2", d => vis.y(0)) // Connect line to x-axis
-        //     .attr("stroke", "blue")
-        //     .attr("stroke-width", 2);
+            .attr("mask", "url(#clip-mask)");
 
         // Winner Stars
         vis.svg.selectAll(".winnerStar")
@@ -210,8 +261,29 @@ class LollipopChart {
             .attr("width", 25) // Adjust image width
             .attr("height", 25); // Adjust image height
 
+        // Apply tooltip functionality to the winner squiggles
+        vis.svg.selectAll(".winnerSquiggle").each(function(d) {
+            vis.displayTooltip(this, d, 'winner');
+        });
+
+        // Apply tooltip functionality to the nominee squiggles
+        vis.svg.selectAll(".nomineeSquiggle").each(function(d) {
+            vis.displayTooltip(this, d, 'nominee');
+        });
+
+        // Apply tooltip functionality to the winner stars
+        vis.svg.selectAll(".winnerStar").each(function(d) {
+            vis.displayTooltip(this, d, 'winner');
+        });
+
+        // Apply tooltip functionality to the nominee stars
+        vis.svg.selectAll(".nomineeStar").each(function(d) {
+            vis.displayTooltip(this, d, 'nominee');
+        });
+
         // Append a text element for the note
         vis.svg.append("text")
+            .attr("class", "lollipop-text")
             .attr("x", vis.width / 2)  // Position the text in the center of the SVG
             .attr("y", vis.height + vis.margin.bottom - 20)  // Adjust the y-coordinate to position the text below the chart
             .style("text-anchor", "middle")
@@ -227,7 +299,7 @@ class LollipopChart {
 
         // Append a rectangle as the background for the legend box
         const legendBox = legend.append("rect")
-            .attr("width", 100) // Width of the legend box
+            .attr("width", 110) // Width of the legend box
             .attr("height", 115) // Height of the legend box
             .attr("fill", "white") // Background color of the legend box
             .attr("stroke", "black"); // Border color of the legend box
@@ -251,7 +323,7 @@ class LollipopChart {
         legend.append("text")
             .attr("x", 35) // Adjust label position relative to the star image
             .attr("y", 65) // Adjust label position relative to the star image
-            .text("Winner");
+            .text("Winners");
 
         // Append nominee star image in the legend
         legend.append("image")
@@ -265,9 +337,6 @@ class LollipopChart {
         legend.append("text")
             .attr("x", 35) // Adjust label position relative to the star image
             .attr("y", 95) // Adjust label position relative to the star image
-            .text("Nominee");
-
-
-        // TODO: ADD TOOLTIP ON HOVER
+            .text("Nominees");
     }
 }

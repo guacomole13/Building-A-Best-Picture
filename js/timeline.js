@@ -24,7 +24,7 @@ class Timeline {
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
             .attr("width", vis.width + vis.margin.left + vis.margin.right)
-            .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+            .attr("height", vis.height + vis.margin.top + vis.margin.bottom + 30)
             .append("g")
             .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
@@ -49,12 +49,6 @@ class Timeline {
         vis.y = d3.scaleLinear().range([vis.height, 0]);
 
         // init x & y axis
-        // vis.xAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--x")
-        //     .attr("transform", "translate(0," + vis.height + ")");
-        // vis.yAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--y");
-
         vis.xAxis = vis.svg.append("g")
             .attr("class", "x-axis axis")
             .attr("transform", "translate(0," + vis.height + ")");
@@ -132,18 +126,6 @@ class Timeline {
     wrangleData(){
         let vis = this;
 
-        // // Loop through the displayData array and convert OscarYear to Date objects
-        // vis.displayData.forEach(d => {
-        //     // Convert OscarYear integer to a Date object
-        //     d.OscarYear = vis.parseYear(`${d.OscarYear}`);
-        // });
-
-        // // Convert OscarYear to Date objects
-        // vis.displayData.forEach(d => {
-        //     // Convert the float to an integer representing the year and create a Date object for January 1 of that year
-        //     d.OscarYear = new Date(Math.floor(d.OscarYear), 0, 1);
-        // });
-
         // Update the visualization
         vis.updateVis();
     }
@@ -163,13 +145,45 @@ class Timeline {
         vis.xAxis.transition().duration(400).call(d3.axisBottom(vis.x));
         vis.yAxis.transition().duration(400).call(d3.axisLeft(vis.y).ticks(5).tickFormat(d => d + "%"));
 
-        // draw path (area chart)
+        // // draw path (area chart)
+        // vis.path.datum(vis.displayData)
+        //     .transition().duration(400)
+        //     .attr("d", vis.area)
+        //     .attr("fill", "#428A8D") // teal fill for area chart
+        //     .attr("stroke", "#136D70")
+        //     .attr("clip-path", "url(#clip)");
+
+        // Create the linear gradient definition
+        vis.svg.append("defs").append("linearGradient")
+            .attr("id", "area-gradient") // Assign an ID for the gradient
+            .attr("gradientUnits", "userSpaceOnUse")
+            .attr("x1", 0).attr("y1", 0) // Define start point of the gradient (top-left corner)
+            .attr("x2", vis.width).attr("y2", 0) // Define end point of the gradient (top-right corner)
+            .selectAll("stop")
+            .data([
+                {offset: "0%", color: "#8D1B18"}, // Start color (red)
+                {offset: "50%", color: "#F7632C"}, // End color (red)
+                {offset: "100%", color: "#F7C62C"}])
+            .enter().append("stop")
+            .attr("offset", d => d.offset)
+            .attr("stop-color", d => d.color);
+
+        // Apply the gradient to the area chart
         vis.path.datum(vis.displayData)
             .transition().duration(400)
             .attr("d", vis.area)
-            .attr("fill", "#428A8D")
+            .attr("fill", "url(#area-gradient)") // Apply the gradient fill
             .attr("stroke", "#136D70")
             .attr("clip-path", "url(#clip)");
+
+        // Append a text element for the note
+        vis.svg.append("g")
+            .append("text")
+            .attr("x", vis.width / 2)  // Position the text in the center of the SVG
+            .attr("y", vis.height + vis.margin.bottom + 5)  // Adjust the y-coordinate to position the text below the chart
+            .style("text-anchor", "middle")
+            .style("font-size", "12px")
+            .text("Note: Select up to a 25-year window to filter through the Rotten Tomatoes ratings plot below. ");
 
 
         vis.brushGroup
