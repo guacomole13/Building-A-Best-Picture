@@ -45,6 +45,12 @@ img {
     color: white;
 }
 
+.scrolltext{
+    font-size: 18px;
+    color: white;
+    margin-top: 80px;
+}
+
 
 .axis {
     font-family: "Montserrat", sans-serif;
@@ -66,6 +72,7 @@ img {
     text-align: center;
     font-size: 12px;
     font-family: "Montserrat", sans-serif;
+    z-index: 10;
 }
 
 .tooltip h3 {

@@ -8,6 +8,11 @@ class StudioBubbles {
         this.initVis();
     }
 
+    updateData(newData) {
+        this.data = newData;
+        this.wrangleData();
+    }
+
     initVis() {
         let vis = this;
 
@@ -218,9 +223,18 @@ class StudioBubbles {
                 vis.tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                vis.tooltip.html("Data: " + d.film.winner)
+                vis.tooltip.html(d.film.Year + ": " + d.film.Title)
                     .style("left", (event.pageX) + "px")
-                    .style("top", (event.pageY - 28) + "px");
+                    .style("top", (event.pageY - 28) + "px")
+                    .style("position", "absolute")
+                    .style("test-align", "center")
+                    .style("padding", 8 + "px")
+                    .style("font", 12 + "px sans-serif")
+                    .style("background", "lightsteelblue")
+                    .style("border", 0 + "px")
+                    .style("border-radius", 8 + "px")
+                    .style("pointer-events", "none")
+                ;
 
             })
             .on("mouseout", function(event, d) {

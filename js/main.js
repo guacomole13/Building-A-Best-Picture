@@ -33,9 +33,10 @@ function createVis(data) {
     branchHemisphere = new Hemisphere("branchHemisphere", branchsizes_2022, true);
     raceHemisphere = new Hemisphere("raceHemisphere", raceproportions_2022, false);
     genderHemisphere = new Hemisphere("genderHemisphere", genderproportions_2022, false);
-    rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
-    studiovis = new StudioVis("studiovis", squeakyCleanData2)
-    studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
+    rankchart = new RankChart("rankchart", squeakyCleanData);
+    studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2);
+    studiovis = new StudioVis("studiovis", squeakyCleanData2, function(filteredData) {
+        studiobubbles.updateData(filteredData);});
     myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
     myGenreBar = new GenreBar("genreBar", squeakyCleanData);
 

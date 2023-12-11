@@ -5,6 +5,7 @@ function showNextLine() {
     var fourthLine = document.getElementById("4");
     var fifthLine = document.getElementById("5");
     var sixthLine = document.getElementById("6");
+    var seventhLine = document.getElementById("7");
     var button = document.getElementById("showbtn");
     var resetbutton = document.getElementById("resetbtn");
 
@@ -20,6 +21,7 @@ function showNextLine() {
         // fourthLine.style.display = "none";
         fifthLine.style.display = "block";
         sixthLine.style.display = "block";
+        seventhLine.style.display = "block";
         button.style.display = "none"
         resetbutton.style.display = "inline"
     }
@@ -28,6 +30,7 @@ function showNextLine() {
         fourthLine.style.display = "none";
         fifthLine.style.display = "none";
         sixthLine.style.display = "none";
+        seventhLine.style.display = "none";
         button.style.display = "inline"
     }
 
