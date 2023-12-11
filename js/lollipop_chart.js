@@ -305,9 +305,11 @@ class LollipopChart {
 
         // Append text as the title of the legend
         legend.append("text")
-            .attr("x", 10) // Adjust title position within the legend box
+            .attr("x", 55) // Adjust title position within the legend box
             .attr("y", 30) // Adjust title position within the legend box
-            .text("Legend")
+            .style("text-anchor", "middle")
+            .style("font-size", "15px")
+            .text("Legend:")
             .style("font-weight", "bold"); // Style the title text
 
         // Append winner star image in the legend
