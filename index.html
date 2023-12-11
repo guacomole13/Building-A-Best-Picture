@@ -53,8 +53,8 @@
             <h1 id="5" class="main hidden">Among these awards, the most prestigious honor a film can receive</h1>
             <h1 id="6" class="main endtext hidden">is the Academy Award for <b>Best Picture</b>.</h1>
             <button id="showbtn" onclick="showNextLine()">Click to Continue</button>
-            <button id="resetbtn" class="hidden" onclick="showNextLine()">Click to Restart</button>
-            <h1 id="7" class="main endtext scrolltext hidden"><b>(Scroll to Continue)</b></h1>
+            <button id="resetbtn" class="hidden" onclick="showNextLine()">Click to Restart, or Scroll to Continue</button>
+<!--            <h1 id="7" class="main endtext scrolltext hidden"><b>(Scroll to Continue)</b></h1>-->
 
 
 
@@ -67,7 +67,8 @@
             <div class="container">
                 <div class="row">
                     <h1 class="title">Studio Breakdown</h1>
-                    <h3>In the early years of the Oscars, highly coveted Best Picture wins and nominations were dominated by "The Big Five" studios. Today, Academy Award Wins come from a wider variety of studios.</h3>
+                    <h3>In the early years of the Oscars, highly coveted Best Picture wins and nominations were dominated by "The Big Five" studios. Today, Academy Award Wins come from a wider variety of studios. <br> Hover over the bubbles on the left to
+                    explore individual movies, and use the timeline on the right to select a certain period of interest.</h3>
                 </div>
                 <div class="row">
                     <div class="col-6">
@@ -277,7 +278,7 @@
     <!-- Initialize Fullpage.js -->
     <script type="text/javascript">
         new fullpage('#fullpage', {
-            sectionsColor: ['#000000', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke','#000000'], // TODO: CHANGE COLORS OF SLIDES (#D0BF6F is Oscars gold)
+            sectionsColor: ['#000000', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke','#000000', 'whitesmoke', "#000000"], // TODO: CHANGE COLORS OF SLIDES (#D0BF6F is Oscars gold)
             licenseKey: 'gplv3-license',
             navigation: true // Vertical navigation bar with dots on the right of screen
         });

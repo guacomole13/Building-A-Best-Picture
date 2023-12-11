@@ -18,7 +18,7 @@ class StudioVis {
         // Method to initialize the visualization
         let vis = this;
 
-        vis.margin = {top: 40, right: 250, bottom: 85, left: 60};
+        vis.margin = {top: 40, right: 250, bottom: 95, left: 60};
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width * 5 / 6;
         vis.height = 600 - vis.margin.top - vis.margin.bottom;
@@ -53,7 +53,7 @@ class StudioVis {
         vis.svg.append("text")
             .attr("transform", "translate(" + (vis.width / 2) + " ," + (vis.height + vis.margin.bottom - 5) + ")")
             .style("text-anchor", "middle")
-            .text("Studio");
+            .text("'Big Five' Studios");
 
         // Add y-axis label
         vis.svg.append("text")
@@ -74,7 +74,15 @@ class StudioVis {
                 if (!event.selection) return; // Ignore empty selections
 
                 const selectionRange = event.selection.map(vis.yScale.invert);
-                const [startYear, endYear] = selectionRange;
+                const [endYear, startYear] = selectionRange
+                const minYears = 5;
+                const diffYears = endYear - startYear;
+                if (diffYears < minYears) {
+                    const newStartYear = endYear-5;
+                    vis.brushGroup.call(vis.brush.move, [vis.y(newStartYear), vis.y(endYear)]);
+                }
+
+                console.log(startYear);
 
                 // Filter the data based on the selected range
                 const filteredData = vis.data.filter(d => d.Year >= startYear && d.Year <= endYear);
@@ -82,35 +90,7 @@ class StudioVis {
                 // Notify StudioBubbles with the filtered data
                 vis.notifyDataFiltered(filteredData);
             });
-            // .on("brush end", function (event) {
-            //     if (!event.selection) return; // Ignore empty selections
-            //
-            //     const selectionRange = event.selection.map(vis.yScale.invert);
-            //     const [startYear, endYear] = selectionRange;
-            //
-            //     const maxAllowedYears = 25;
-            //     let startDate = new Date(startYear, 0);
-            //     let endDate = new Date(endYear, 0);
-            //
-            //     // Limit the brushed selection to a maximum of 25 years
-            //     if (endYear - startYear > maxAllowedYears) {
-            //         startDate = new Date(endYear - maxAllowedYears, 0);
-            //         vis.brushGroup.call(vis.brush.move, [vis.yScale(startDate), vis.yScale(endDate)]);
-            //     }
-            //
-            //     selectedTimeRange = [startDate, endDate];
-            //
-            //     // Update text and other visualizations
-            //     d3.select("#selectedYears").text("Selected Years: " + startDate + " to " + endDate);
-            //
-            //
-            //     // Update the consensus plot based on the selectedTimeRange
-            //     // studiobubbles.wrangleData();
-            // });
-        // notifyDataFiltered(filteredData) {
-        //     if (this.onDataFilteredCallback) {
-        //         this.onDataFilteredCallback(filteredData);
-        //     }
+
 
         vis.brushGroup = vis.svg.append("g")
             .attr("class", "brush")
@@ -118,43 +98,6 @@ class StudioVis {
 
         vis.wrangleData();
 
-        // vis.brush = d3.brushY()
-        //     .extent([[0, 0], [vis.width, vis.height]])
-        //
-        //     // // No limit on brushed selection
-        //     // .on("brush end", function (event) {
-        //     //     selectedTimeRange = [vis.x.invert(event.selection[0]), vis.x.invert(event.selection[1])];
-        //     //
-        //     //     // brushing should trigger wrangleData() method for the consensus plot
-        //     //     myConsensus.wrangleData();
-        //     // });
-        //
-        //     // Limits the brushed selection to a maximum of 25 years
-        //     .on("brush end", function (event) {
-        //         const selectionRange = event.selection.map(vis.y.invert);
-        //         const [startDate, endDate] = selectionRange;
-        //
-        //         const maxAllowedYears = 25;
-        //
-        //         // Calculate the difference in years between the start and end dates
-        //         const diffYears = endDate - startDate;
-        //
-        //         // Limit the brushed selection to a maximum of 25 years
-        //         if (diffYears > maxAllowedYears) {
-        //             const newStartDate = new Date(endDate - maxAllowedYears, endDate, endDate);
-        //             vis.brushGroup.call(vis.brush.move, [vis.x(newStartDate), vis.x(endDate)]);
-        //         }
-        //
-        //         selectedTimeRange = [startDate, endDate];
-        //
-        //         // After the user changes the selection (brush) the selected years should be updated immediately
-        //         vis.dateRange = d3.select("#selectedYears").text("Selected Years: " + dateFormatter(startDate) + " to " + dateFormatter(endDate));
-        //
-        //         // Update the consensus plot based on the selectedTimeRange
-        //         studiobubbles.wrangleData();
-        //     });
-        //
-        // vis.wrangleData();
     }
 
     wrangleData() {
