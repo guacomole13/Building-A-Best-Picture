@@ -47,7 +47,7 @@ class RankChart {
             .attr("y", vis.height - 100) // Adjust height of title
             .style("text-anchor", "middle")
             .style("font-weight", "bold")
-            .style("font-color", "white")
+            .style("color", "white")
             .style("font-size", "14px")
             .text("Note: Only 5 Movies Were Nominated Annually from 1945 to 2008");
 

@@ -20,18 +20,6 @@
     <!--Fullpage.js layout-->
     <div id="fullpage">
 
-        <!-- Title Slide -->
-<!--        <div class="section text-center">-->
-<!--&lt;!&ndash;            <h1 class="header">We love movies.</h1>&ndash;&gt;-->
-<!--&lt;!&ndash;            <h1 class="header">Every year, the Academy meets to choose the movies most worthy of a Best Picture Award.</h1>&ndash;&gt;-->
-<!--&lt;!&ndash;            <h1 class="header">What makes a Best Picture, and most of all... is the Academy right?</h1>&ndash;&gt;-->
-
-<!--            <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">-->
-<!--            <h1 class="header">An Interactive Data Visualization</h1>-->
-<!--            <h2 class="header">by</h2>-->
-<!--            <h1 class="header">Libby Wu, Michael Omole, and Timothy Fargiano</h1>-->
-<!--        </div>-->
-
         <div class="section dark-blue-gradient text-center d-flex flex-column justify-content-center w-100 h-100">
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">
@@ -118,29 +106,38 @@
             </div>
         </div>
 
-        <!-- Academy Demographics -->
-        <div class="section" id="section1">
-            <div class="container-fluid" id="hemisphereContainer">
-                <div class="col-12" id="hemisphere-header">
-                    <h1>WHO ARE THE ACADEMY VOTERS?</h1>
-                    <h4>Hover over a seat for more information</h4>
-                </div>
-                <div class="row justify-content-center column-gap-1">
-                    <div class="whitebubble col-6">
-                        <div id="branchHemisphere"></div>
-                    </div>
-                    <div class="col-5 row-gap-3">
-                        <div class="whitebubble row">
-                            <div id="raceHemisphere"></div>
-                        </div>
-                        <div class="whitebubble row">
-                            <div id="genderHemisphere"></div>
-                        </div>
-                    </div>
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <h3>In recent years, and at points throughout its long history, the Academy has come under fire for making decisions that seem to diverge significantly from the opinions of the public.</h3>
+                    <br>
+                    <h3>But how different are critic and audience opinions on films, anyway?</h3>
+                    <br>
+
                 </div>
             </div>
         </div>
 
+        <!-- Box Office Performance -->
+        <div class="section">
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    <h2>Budget and Box Office</h2>
+                    <p>One way to assess audience assessment of a movie is through box office performance, as the movie-going audience deems them worthy of seeing. For each year, given data availability, we wanted
+                        to see whether the movie with the highest box office won the Best Picture Academy Award most often, or if the movie with the highest budget, and thus the greatest
+                        spectacle, won Best Picture most often.</p>
+                </div>
+                <div class="col-2"></div>
+            </div>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-9">
+                    <div id="rankchart"></div>
+                </div>
+                <div class="col-1"></div>
+            </div>
+        </div>
 
 
         <!-- Intro to Rotten Tomatoes and IMDB Ratings -->
@@ -226,26 +223,29 @@
             <div id="lollipop"></div>
         </div>
 
-        <!-- Box Office Performance -->
-        <div class="section">
-            <div class="row">
-                <div class="col-2"></div>
-                <div class="col-8">
-                <h2>Budget and Box Office</h2>
-                <p>One way to assess audience assessment of a movie is through box office performance, as the movie-going audience deems them worthy of seeing. For each year, given data availability, we wanted
-                to see whether the movie with the highest box office won the Best Picture Academy Award most often, or if the movie with the highest budget, and thus the greatest
-                spectacle, won Best Picture most often.</p>
-                    </div>
-                <div class="col-2"></div>
-            </div>
-            <div class="row">
-                <div class="col-2"></div>
-                <div class="col-9">
-                    <div id="rankchart"></div>
+        <!-- Academy Demographics -->
+        <div class="section" id="section1">
+            <div class="container-fluid" id="hemisphereContainer">
+                <div class="col-12" id="hemisphere-header">
+                    <h1>WHO ARE THE ACADEMY VOTERS?</h1>
+                    <h4>Hover over a seat for more information</h4>
                 </div>
-                <div class="col-1"></div>
+                <div class="row justify-content-center column-gap-1">
+                    <div class="whitebubble col-6">
+                        <div id="branchHemisphere"></div>
+                    </div>
+                    <div class="col-5 row-gap-3">
+                        <div class="whitebubble row">
+                            <div id="raceHemisphere"></div>
+                        </div>
+                        <div class="whitebubble row">
+                            <div id="genderHemisphere"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
 
     </div>
 
@@ -282,7 +282,7 @@
     <!-- Initialize Fullpage.js -->
     <script type="text/javascript">
         new fullpage('#fullpage', {
-            sectionsColor: ['#000000', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke','#000000', 'whitesmoke', "#000000"], // TODO: CHANGE COLORS OF SLIDES (#D0BF6F is Oscars gold)
+            sectionsColor: ['#000000', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', '#000000', 'whitesmoke', "#000000"], // TODO: CHANGE COLORS OF SLIDES (#D0BF6F is Oscars gold)
             licenseKey: 'gplv3-license',
             navigation: true // Vertical navigation bar with dots on the right of screen
         });
