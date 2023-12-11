@@ -327,8 +327,9 @@ class ClusterPlot {
                     .style("opacity", 1); 
                 vis.svg.tooltip
                     .html(`
-                    <h3><b>Hover/drag a bubble to display film information!</b></h3>
-                    <h3><b>Hover over a bar to display genre stats!</b></h3>`);
+                    <h3><b>Each nominee or winner has a bubble for each of its genres.</b></h3>
+                    <h3><b>Hover/drag a bubble to display a film's information!</b></h3>
+                    <h3><b>Hover over a bar to display a genre's stats!</b></h3>`);
             })
             .call(drag(simulation));        
 

@@ -13,8 +13,7 @@
     <link rel="stylesheet" href="https://use.typekit.net/oov2wcw.css">
 
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/fullpage.css" />
-
+    <link rel="stylesheet" href="css/fullpage.css">
 
 </head>
 <body>
@@ -57,10 +56,26 @@
         </div>
 
         <!-- Academy Demographics -->
-        <div class="section" id="section1">
-            <div class="slide"><div id="branchHemisphere"></div></div>
-            <div class="slide"><div id="raceHemisphere"></div></div>
-            <div class="slide"><div id="genderHemisphere"></div></div>
+        <div class="section active" id="section1">
+            <div class="container-fluid" id="hemisphereContainer">
+                <div class="col-12" id="hemisphere-header">
+                    <h1>ACADEMY VOTER DEMOGRAPHICS</h1>
+                    <h4>Hover over a seat for more information</h4>
+                </div>
+                <div class="row justify-content-center column-gap-1">
+                    <div class="whitebubble col-6">
+                        <div id="branchHemisphere"></div>
+                    </div>
+                    <div class="col-5 row-gap-3">
+                        <div class="whitebubble row">
+                            <div id="raceHemisphere"></div>
+                        </div>
+                        <div class="whitebubble row">
+                            <div id="genderHemisphere"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Top Studios -->
@@ -169,7 +184,7 @@
             <div class="container-fluid" id="clusterContainer"> 
                 <div class="row" id="clusterHeader">
                     <div class="col-12">
-                        <h1 class="text-center" id="clusterTitle">BEST PICTURE NOMINEES BY GENRE (1927/28-2020)</h1>
+                        <h1 id="clusterTitle">BEST PICTURE NOMINEES BY GENRE (1927/28-2020)</h1>
                     </div>
                 </div>
                 <div class="row justify-content-center column-gap-1">
@@ -234,6 +249,7 @@
     <script src="js/genrebar.js"></script>
     <script src="js/clusterplot.js"></script>
     <script src="js/timeline.js"></script>
+    <script src="js/textreveal.js"></script>
 
     <script src="js/main.js"></script>
 
