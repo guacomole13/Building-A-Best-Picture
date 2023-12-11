@@ -3,26 +3,42 @@ class ClusterPlot {
         this.parentElement = _parentElement;
         this.data = _data;
         this.displayData = [];
-        this.colors = ["#ffd700", "#1d632f", "#ffb14e", "#ea5f94", 
-        "#fa8775", "#cd34b5", "#9d02d7", "#0000ff", "#df2020", 
-        "#b67c58", "#ff00f2", "#3cd42f", "#35e2d9", "#89a7be", 
-        "#1096ff", "#bb8ff3", "#ff91fd", "#b9ff77", 
-        "#071c54", "#74001b", "#c0c918", "#b8fffe"]
+        this.colors = ["#ffd700",
+        "#74001b",
+        "#ffb14e",
+        "#ea5f94",
+        "#fa8775",
+        "#3cd42f",
+        "#9d02d7",
+        "#0000ff",
+        "#df2020",
+        "#b67c58",
+        "#a6233f",
+        "#cd34b5",
+        "#35e2d9",
+        "#1096ff",
+        "#bb8ff3",
+        "#c8fa96",
+        "#175676",
+        "#1d632f",
+        "#89a7be",
+        "#b8fffe",
+        "#ff91fd",
+        "#ff00f2"]
 
         this.initVis();
     }
 
     initVis() {
         let vis = this;
-        console.log("initVis");
-
-        // svg dimensions
-		vis.margin = { top: 60, right: 100, bottom: 60, left: 100 };
+        // svg dimension
+        var headerHeight = document.getElementById('clusterHeader').clientHeight; 
+		vis.margin = { top: 5, right: 5, bottom: 15, left: 5 };
 		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-		vis.height = 1000 - vis.margin.top - vis.margin.bottom;
+        vis.height = window.innerHeight - vis.margin.top - vis.margin.bottom - headerHeight;
         vis.padding = 1.5; // separation b/w same color circles
-        vis.clusterPadding = 30; // separation b/w diff color circles
-        vis.constantRadius = vis.height*0.01; // size of circles
+        vis.clusterPadding = 45; // separation b/w diff color circles
+        vis.constantRadius = vis.width*0.01; // size of circles
 
 		// SVG drawing area
 		vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -31,28 +47,17 @@ class ClusterPlot {
 			.append("g")
 			.attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
-        // add title
-        vis.svg.append('g')
-            .attr('class', 'title')
-            .attr('id', 'cluster-title')
-            .append('text')
-            .text('Oscar-Nominated Films by Genre')
-            .attr('transform', `translate(${vis.width / 2}, 20)`)
-            .attr('text-anchor', 'middle');
+        // tooltip
+        vis.svg.tooltip = d3.select("#clusterMovieInformation")
 
-        // TO-DO - tooltip
-        vis.svg.tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .attr("id", "clusterTooltip")
-
-        // TO-DO - color scale
+        // color scale
         vis.scale = d3.scaleOrdinal()
             .range(vis.colors);
 
         // create legend group (need to update with genres later)
-        vis.legend = vis.svg.append("g")
-            .attr('class', 'legendOrdinal')
-            .attr('transform', `translate(${vis.width * 2.5 / 4}, ${vis.height*0.9})`)
+        vis.svg.legend = vis.svg.append("g")
+            .attr("class", "legendOrdinal")
+            .attr("transform", `translate(${vis.width * 0.1}, ${vis.height * 0.9})`);
 
         vis.wrangleData();
     }
@@ -102,27 +107,36 @@ class ClusterPlot {
             });
         });
 
+        // Example of initializing node positions based on group
+        vis.flattenedNodes.forEach(node => {
+            // Position nodes based on their group
+            // This is a simplistic example; you might need a more complex positioning logic
+            let groupIndex = vis.uniqueGenres.indexOf(node.currentGenre);
+            node.x = groupIndex * 125; // Spacing nodes out based on their group
+            node.y = groupIndex * 125;
+        });
+
         /// Define the pack layout
         vis.pack = d3.pack()
-            .size([vis.width, vis.height])
-            .padding(1.5);
+            .size([vis.width * 0.6, vis.height * 0.85])
+            .padding(1);
 
         // Create hierarchical data
-        let root = d3.hierarchy({ children: vis.flattenedNodes })
+        vis.root = d3.hierarchy({ children: vis.flattenedNodes })
             .sum(d => d.radius);  
 
         // Apply the pack layout to the hierarchical data
-        vis.pack(root);
+        vis.pack(vis.root);
 
         // Extract the leaves
-        vis.nodes = root.leaves();
+        vis.nodes = vis.root.leaves();
 
         vis.updateVis();
     }
 
     forceCluster(nodes) {
         let vis = this;
-        const strength = 1;
+        const strength = 1.75;
       
         function force(alpha) {
           const centroids = d3.rollup(nodes, vis.centroid, d => d.data.currentGenre);
@@ -150,8 +164,8 @@ class ClusterPlot {
 
     forceCollide(nodes) {
         const alpha = 0.4; // fixed for greater rigidity!
-        const padding1 = 1; // separation between same-color nodes
-        const padding2 = 4.5; // separation between different-color nodes
+        const padding1 = 0.3; // separation between same-color nodes
+        const padding2 = 4.75; // separation between different-color nodes
         let maxRadius;
       
         function force() {
@@ -195,42 +209,17 @@ class ClusterPlot {
         return {x: x / z, y: y / z};
     }
 
-    forceBoundingCircle(nodes) {
-        let vis = this;
-        let radius = 150; // Radius of the bounding circle
-        function force(alpha) {
-            for (let node of nodes) {
-                let center = vis.centers.get(node.data.currentGenre);
-                let dx = node.x - center.x;
-                let dy = node.y - center.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                let strength = alpha * 0.1;
-    
-                if (distance > radius) {
-                    node.vx -= dx / distance * strength;
-                    node.vy -= dy / distance * strength;
-                }
-            }
-        }
-    
-        force.initialize = function(_) {
-            nodes = _;
-        };
-    
-        return force;
-    }
-
     updateVis() {
         let vis = this;
 
         vis.scale.domain(vis.uniqueGenres);
 
         const simulation = d3.forceSimulation(vis.nodes)
-            .force("x", d3.forceX((vis.width + vis.margin.left) / 2).strength(0.01))
-            .force("y", d3.forceY((vis.height + vis.margin.top) / 2).strength(0.07))
+            .force("x", d3.forceX((vis.width + vis.margin.left) * 0.25).strength(0.04))
+            .force("y", d3.forceY((vis.height + vis.margin.top) * 0.25).strength(0.09))
             .force("cluster", vis.forceCluster(vis.nodes))
             .force("collide", vis.forceCollide(vis.nodes))
-            .force("bounding", vis.forceBoundingCircle(vis.nodes));
+            .force("center", d3.forceCenter(vis.width/2, vis.height/2).strength(0.015));
 
         const drag = simulation => {
   
@@ -274,55 +263,79 @@ class ClusterPlot {
             .selectAll('.circle')
             .data(vis.nodes)
             .join("circle")
-            .attr("class", "node")
+            .attr("class", (d) => `node ${d.data.currentGenre} ${d.data.Winner ? 'winner' : ''}`)
             .attr("id", (d) => `movie_${d.data.MovieId}`)
-            .attr('r', (d) => d.radius)
+            .attr("r", d => d.r)
             .style('fill', (d) => vis.scale(d.data.currentGenre))
             .style('stroke', (d) => d.data.Winner ? '#000000' : 'none')
             .style('stroke-width', (d) => d.data.Winner ? '1.5px' : '0px')
             .attr("cx", d => d.x)
             .attr("cy", d => d.y)
             .on("mouseover", function(event, d) {
-                console.log(d.data);
+                // moves to front
+                d3.selectAll(`#movie_${d.data.MovieId}`).raise();
                 // change colors
                 d3.selectAll(`#movie_${d.data.MovieId}`)
-                    .attr("r", d.r * 2)
+                    .attr("r", 15)
                     .style('stroke-width', '2px')
                     .style("stroke", "#000000")
-                    .style("fill", "#E3AE00");
+                    .style("fill", "#C79F27");
+                // select related bars
+                d3.selectAll("rect, text.genre-label")
+                    .style("opacity", 0.25)
+                    .classed("active", false);
+                d.data.Genre.forEach(genre => {
+                    d3.selectAll(`rect.${genre}`)
+                        .style("stroke", "#000000")
+                        .style('stroke-width', '2px')
+                        .style("opacity", 1);
+            
+                    d3.selectAll(`text.genre-label.${genre}`)
+                        .classed("active", true) // Add bold class
+                        .style("opacity", 1);
+                });
                 vis.svg.tooltip
-                    .style("opacity", 1)
-                    .style("left", event.pageX + 20 + "px")
-                    .style("top", event.pageY + "px")
                     .html(`
-                    <div style="display: flex; flex-direction: row; align-items: center; border: thin solid grey; border-radius: 5px; background: ${d.data.Winner ? 'linear-gradient(#c5b358, #FCF6BA, #d4af37, #FBF5B7)' : '#841b2d'}; padding: 7.5px; width: 600px;">
-                        <img src="${d.data.Poster}" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-right: 10px;"></img>
+                    <div style="display: flex; flex-direction: column; align-items: center; border: thin solid black; border-radius: 5px; background: ${d.data.Winner ? 'linear-gradient(#c5b358, #FCF6BA, #d4af37, #FBF5B7)' : '#841b2d'}; padding: 7.5px;">    
+                        ${d.data.Winner ? '<h3 style="text-align: center; color: red; font-size: 2.5rem; margin-bottom: 0rem;">WINNER</h3>' : ''}
+                        <img src="${d.data.Poster}" style="max-width: 250px; max-height: 250px; object-fit: contain; margin-bottom: 10px;"></img>
                         <div style="text-align: center; ${d.data.Winner ? '' : 'color: white;'}">
-                            <h3>${d.data.Title} (${d.data.Year})</h3>
+                            <h3><b>${d.data.Title} (${d.data.Year})</b></h3>
                             <h4>Genres: ${d.data.Genre.join(', ')}</h4>
-                            <h6>Director: ${d.data.Director}</h6>
+                            <h5>Director: ${d.data.Director}</h6>
                             <p>Plot: ${d.data.Plot}</p>
                         </div>
                     </div>`)
+            })
+            .on("click", function (event, d) {
+                console.log("I clicked" + d.data)
             })
             .on("mouseout", function(event, d) {
                 d3.selectAll(`#movie_${d.data.MovieId}`)
                     .transition()  
                     .duration(350)  
                     .attr("r", d.r)  
-                    .style("stroke", "none")
+                    .style('stroke', (d) => d.data.Winner ? '#000000' : 'none')
+                    .style('stroke-width', (d) => d.data.Winner ? '1.5px' : '0px')
                     .style("fill", (d) => vis.scale(d.data.currentGenre));
+                // Reset the styles for all rectangles and texts
+                d3.selectAll("rect, text")
+                    .style("stroke", "none") 
+                    .style('stroke-width', '1px') 
+                    .style("font-weight", "normal") 
+                    .classed("active", false)
+                    .style("opacity", 1); 
                 vis.svg.tooltip
-                    .style("opacity", 0)
-                    .style("left", 0)
-                    .style("top", 0)
-                    .html(``);
+                    .html(`
+                    <h3><b>Each nominee or winner has a bubble for each of its genres.</b></h3>
+                    <h3><b>Hover/drag a bubble to display a film's information!</b></h3>
+                    <h3><b>Hover over a bar to display a genre's stats!</b></h3>`);
             })
             .call(drag(simulation));        
 
         vis.node.transition()
-            .delay((d, i) => Math.random() * 500)
-            .duration(500)
+            .delay((d, i) => Math.random() * 350)
+            .duration(350)
             .attrTween("r", d => {
                 const i = d3.interpolate(0, d.r);
                 return t => d.r = i(t);
@@ -330,14 +343,46 @@ class ClusterPlot {
         
         simulation.on("tick", () => {
             vis.node
-                .attr("cx", d => {
-                    return Math.max(d.r, Math.min(vis.width - d.r, d.x));
-                })
-                .attr("cy", d => {
-                    return Math.max(d.r, Math.min(vis.height - d.r, d.y));
-                });
+                .attr("cx", d => Math.max(d.r + vis.clusterPadding, Math.min(vis.width - (d.r + vis.clusterPadding), d.x)))
+                .attr("cy", d => Math.max(d.r + vis.clusterPadding, Math.min(vis.height - (d.r + vis.clusterPadding), d.y)));
         });
-                              
-        console.log("updateVis");
+
+        // renders legend 
+        vis.svg.legend
+            .append("circle")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("r", 4.635863675090555)
+            .style("fill", "#FFFFFF")
+            .style("stroke-width", "0.5px")
+            .style("stroke", "#000000");
+
+        vis.svg.legend
+            .append("circle")
+            .attr("cx", 0)
+            .attr("cy", 25)
+            .attr("r", 8.029551422219816)
+            .attr("class", "legendCircle winner")
+            .style("fill", "#FFFFFF")
+            .style("stroke-width", "1.5px")
+            .style("stroke", "#000000");
+
+        vis.svg.legend
+            .append("text")
+            .attr("x", 15)
+            .attr("y", 1.5)
+            .attr("class", "legendText")
+            .text("Nominee")
+            .style("font-size", "15px")
+            .attr("alignment-baseline","middle");
+
+        vis.svg.legend
+            .append("text")
+            .attr("x", 15)
+            .attr("y", 27)
+            .attr("class", "legendText")
+            .text("Winner")
+            .style("font-size", "15px")
+            .attr("alignment-baseline","middle");                          
     }
 }

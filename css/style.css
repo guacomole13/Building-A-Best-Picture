@@ -2,6 +2,33 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+/*gradient background animation*/
+.dark-blue-gradient {
+    background: linear-gradient(-45deg, #000000, #0e0d1e, #111133, #222233); /* another shade option: #15142d */
+    background-size: 400% 400%;
+    animation: gradient 4s ease infinite; /* controls speed of gradient color change */
+    height: 100vh;
+}
+
+.warm-gradient {
+    background: linear-gradient(-45deg, #000000, #2f0000, #40060b, #4c0a0a);
+    background-size: 400% 400%;
+    animation: gradient 4s ease infinite; /* controls speed of gradient color change */
+    height: 100vh;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 h1 {
     font-size: 30px;
 }
@@ -30,6 +57,8 @@ img {
 .title {
     font-size: 18px;
     font-weight: bold;
+    font-family: century-gothic, sans-serif;
+    text-transform: uppercase;
 }
 
 .tooltip {
@@ -47,6 +76,11 @@ img {
 .tooltip h3,h4 {
     text-align: left;
 }
+
+.tooltip h4 {
+    font-size: 12px;
+}
+
 .main{
     color: black;
 }
@@ -77,15 +111,21 @@ button{
 .visible {
     opacity: 1;
 }
-.tooltip h4 {
-    font-size: 12px;
+
+#lollipop {
+    color: white;
+}
+
+.lollipop-text {
+    fill: white;
 }
 
 #selectedYears {
     font-size: 15px;
     font-weight: bold;
     margin-bottom: 20px;
-    color: #136D70;
+    /*color: #136D70;*/
+    color: #8D1B18;
     background-color: white;
     border: 1px solid black;
     padding: 5px;
@@ -96,40 +136,223 @@ button{
     left: 45%;
 }
 
-#time-period-slider {
-    width: 200px;
-    display: inline-block;
-    margin: 0 15px;
+/*CLUSTERPLOT STYLES*/
+
+.vertical-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.range-slider-value {
-    background-color: #EFE9E9;
-    color: #888;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    padding: 2px 10px;
-    font-size: 14px;
-    display: inline-block;
+div#clusterContainer {
+    background: #000000;
+}
+
+.genre-label.active {
+    font-weight: bold !important;
+}
+
+div#clusterMovieInformation {
+    padding: 7.5px;
+}
+
+div#clusterMovieInformation h3, h4 {
+    text-align: center;
+}
+
+#clusterTitle {
+    font-family: century-gothic, sans-serif;
+    font-style: normal;
+    text-align: center;
+    font-weight: 400;
+    font-size: 60px;
+    color: #C79F27;
+}
+
+.bubble {
+    background: #FAF0D0;
+    border-radius: 15px;
+    border: 4px solid #f3d782;
+}
+
+/* Ensures the SVG container fits inside the bubble */
+#genreBar, #clusterplot {
+    width: 100%;
+    height: 100%;
+}
+
+/*HEMISPHERE STYLES*/
+
+div#hemisphereContainer {
+    background: #274FC7;
+}
+
+/* title */
+#hemisphere-header h1 {
+    font-family: century-gothic, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 60px;
+    text-align: center;
+    margin-bottom: 0px;
+    color: #C79F27;
+}
+
+#hemisphere-header h4 {
+    font-family: century-gothic, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+    color: white;
+}
+
+.whitebubble {
+    background: #FFFFFF;
+    border-radius: 15px;
+    border: 4px solid #f3d782;
+}
+
+/* more efficient to hardcode colors due to large number of dots */
+svg circle.seat.PeopleOfColor { fill: #8b4513; stroke-width: 0px; }
+svg circle.seat.White { fill: #e9967a ; stroke-width: 0px; }
+svg circle.seat.Women { fill: #ee86b7; stroke-width: 0px; }
+svg circle.seat.Men { fill: #93dbf8; stroke-width: 0px; }
+svg circle.seat.Actors { fill: red; stroke-width: 0px; }
+svg circle.seat.CastingDirectors { fill: orange; stroke-width: 0px; }
+svg circle.seat.Cinematographers { fill: yellow; stroke-width: 0px; }
+svg circle.seat.CostumeDesigners { fill: green; stroke-width: 0px; }
+svg circle.seat.Directors { fill: blue; stroke-width: 0px; }
+svg circle.seat.Documentary { fill: indigo; stroke-width: 0px; }
+svg circle.seat.Executives { fill: violet; stroke-width: 0px; }
+svg circle.seat.FilmEditors { fill: pink; stroke-width: 0px; }
+svg circle.seat.MakeupArtists { fill: teal; stroke-width: 0px; }
+svg circle.seat.MarketingPR { fill: black; stroke-width: 0px; }
+svg circle.seat.Music { fill: brown; stroke-width: 0px; }
+svg circle.seat.Producers { fill: fuchsia; stroke-width: 0px; }
+svg circle.seat.ProductionDesign { fill: greenyellow; stroke-width: 0px; }
+svg circle.seat.ShortFilms { fill: NavajoWhite; stroke-width: 0px; }
+svg circle.seat.Sound { fill: coral; stroke-width: 0px; }
+svg circle.seat.VisualEffects { fill: magenta; stroke-width: 0px; }
+svg circle.seat.Writers { fill: blueviolet; stroke-width: 0px; }
+svg circle.seat.MembersAtLarge { fill: grey; stroke-width: 0px; }
+
+hemisphereLegend.large g.legendCells g.cell text.label { fill: red; font-size: small; }
+
+#branchHemisphere, #raceHemisphere, #genderHemisphere {
+    width: 100%;
+    height: 100%;
+}
+.emphasis {
+    color: #FFF5C8;
+}
+
+.carousel {
+    position: relative;
+    top: -90px; /* Adjust the value to move the carousel up */
+}
+
+#tomatoes-heading {
+    margin-top: 40px;
+    text-align: center;
+    font-family: century-gothic, sans-serif;
+    text-transform: uppercase;
+}
+
+.center-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+/*FOR TEXT THAT CHANGES PERSPECTIVE ON HOVER*/
+/*Adapted from James Bosworth on Codepen: https://codepen.io/bosworthco/pen/YWBLpR*/
+
+/* Common styles */
+.perspective-text {
+    color: #FFFFFF;
+    display: flex;
+    height: 100%;
+}
+
+/* Apply styles to the parent element */
+.Words {
+    margin: 0 auto;
+    /*padding: 120px 0;*/
+    padding-top: 20%; /* Adjust padding-top and padding-bottom */
+    padding-bottom: 20%;
+    max-height: 80vh;
+    /*font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;*/
+    font-family: century-gothic, sans-serif;
+    font-size: 53px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    /* Sort out nasty text fuzz */
+    /*transform: translate3d(0, 0, 0);*/
+    transform: translate(-10%, -15%);
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-kerning: normal;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Apply common styles to each line of text */
+.Words-line {
+    height: 60px; /* Set to desired clip height */
+    overflow: hidden;
+    position: relative;
+}
+
+/* Apply perspective to alternating lines */
+.Words-line:nth-child(odd) {
+    transform: skew(60deg, -30deg) scaleY(0.66667);
+}
+
+.Words-line:nth-child(even) {
+    transform: skew(0deg, -30deg) scaleY(1.33333);
+}
+
+/* Loop over the total lines and apply a left offset */
+.Words-line:nth-child(1) {
+    left: 29px;
+}
+
+.Words-line:nth-child(2) {
+    left: 58px;
+}
+
+.Words-line:nth-child(3) {
+    left: 87px;
+}
+
+.Words-line:nth-child(4) {
+    left: 116px;
+}
+
+.Words-line:nth-child(5) {
+    left: 145px;
+}
+
+.Words-line:nth-child(6) {
+    left: 174px;
+}
+
+.Words-line:nth-child(7) {
+    left: 203px;
+}
+
+/* Fine-grained text styles */
+.Words-line p {
+    height: 60px; /* Set to desired clip height */
+    line-height: 55px; /* Clip height - 5 */
+    padding: 0 10px;
+    transition: all .4s ease-in-out;
+    transform: translate3d(0, 0, 0);
     vertical-align: top;
+    white-space: nowrap;
 }
 
-.noUi-connect {
-    background: #92B592;
-}
-
-/**********/
-/* Custom */
-/**********/
-
-#sliderlabel1 {
-    text-anchor: middle;
-    font-family: "Times New Roman";
-    font-size: 18px;
-}
-
-#sliderlabel2 {
-    text-anchor: middle;
-    font-family: "Times New Roman";
-    font-size: 18px;
+/* The hover interaction */
+.Words:hover p {
+    transform: translate3d(0, -78px, 0); /* Change middle number to  desired clip height */
 }

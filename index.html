@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CS 171 Final Project</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://use.typekit.net/oov2wcw.css">
 
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/fullpage.css" />
-
+    <link rel="stylesheet" href="css/fullpage.css">
 
 </head>
 <body>
@@ -20,15 +21,24 @@
     <div id="fullpage">
 
         <!-- Title Slide -->
-        <div class="section text-center">
-<!--            <h1 class="header">We love movies.</h1>-->
-<!--            <h1 class="header">Every year, the Academy meets to choose the movies most worthy of a Best Picture Award.</h1>-->
-<!--            <h1 class="header">What makes a Best Picture, and most of all... is the Academy right?</h1>-->
+<!--        <div class="section text-center">-->
+<!--&lt;!&ndash;            <h1 class="header">We love movies.</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;            <h1 class="header">Every year, the Academy meets to choose the movies most worthy of a Best Picture Award.</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;            <h1 class="header">What makes a Best Picture, and most of all... is the Academy right?</h1>&ndash;&gt;-->
 
-            <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">
-            <h1 class="header">An Interactive Data Visualization</h1>
-            <h2 class="header">by</h2>
-            <h1 class="header">Libby Wu, Michael Omole, and Timothy Fargiano</h1>
+<!--            <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">-->
+<!--            <h1 class="header">An Interactive Data Visualization</h1>-->
+<!--            <h2 class="header">by</h2>-->
+<!--            <h1 class="header">Libby Wu, Michael Omole, and Timothy Fargiano</h1>-->
+<!--        </div>-->
+
+        <div class="section dark-blue-gradient text-center d-flex flex-column justify-content-center w-100 h-100">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">
+                <h1 class="header">An Interactive Data Visualization</h1>
+                <h2 class="header">by</h2>
+                <h1 class="header">Libby Wu, Michael Omole, and Timothy Fargiano</h1>
+            </div>
         </div>
 
         <div class="section text-center">
@@ -38,6 +48,7 @@
             <h1 id="4" class="main endtext hidden"> known as <b>Academy Awards</b>, or <b>Oscars</b>.</h1>
             <h1 id="5" class="main hidden">Among these awards, the most prestigious honor a film can receive</h1>
             <h1 id="6" class="main endtext hidden">is the Academy Award for <b>Best Picture</b>.</h1>
+            <h1 id="7" class="main endtext"><b>BUT WHO EXACTLY IS DOING THE VOTING?></b></h1>
             <button id="showbtn" onclick="showNextLine()">Next</button>
             <button id="resetbtn" class="hidden" onclick="showNextLine()">Restart</button>
 
@@ -47,9 +58,25 @@
 
         <!-- Academy Demographics -->
         <div class="section" id="section1">
-            <div class="slide"><div id="branchHemisphere"></div></div>
-            <div class="slide"><div id="raceHemisphere"></div></div>
-            <div class="slide"><div id="genderHemisphere"></div></div>
+            <div class="container-fluid" id="hemisphereContainer">
+                <div class="col-12" id="hemisphere-header">
+                    <h1>ACADEMY VOTER DEMOGRAPHICS</h1>
+                    <h4>Hover over a seat for more information</h4>
+                </div>
+                <div class="row justify-content-center column-gap-1">
+                    <div class="whitebubble col-6">
+                        <div id="branchHemisphere"></div>
+                    </div>
+                    <div class="col-5 row-gap-3">
+                        <div class="whitebubble row">
+                            <div id="raceHemisphere"></div>
+                        </div>
+                        <div class="whitebubble row">
+                            <div id="genderHemisphere"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Top Studios -->
@@ -78,6 +105,76 @@
             </div>
         </div>
 
+        <!-- Intro to Rotten Tomatoes and IMDB Ratings -->
+        <div class="section warm-gradient perspective-text d-flex flex-column ">
+            <div class="container d-flex flex-column">
+                <div class="row">
+                    <div class="col-6">
+                        <ul class="Words">
+                            <li class="Words-line">
+                                <p>&nbsp;</p>
+                                <p>Now...Is</p>
+                            </li>
+                            <li class="Words-line">
+                                <p>Now...Is</p>
+                                <p class="emphasis">The Academy's</p>
+                            </li>
+                            <li class="Words-line">
+                                <p class="emphasis">The Academy's</p>
+                                <p>Opinion</p>
+                            </li>
+                            <li class="Words-line">
+                                <p>Opinion</p>
+                                <p>Reflective of</p>
+                            </li>
+                            <li class="Words-line">
+                                <p>Reflective of</p>
+                                <p class="emphasis">The Audience's</p>
+                            </li>
+                            <li class="Words-line">
+                                <p class="emphasis">The Audience's</p>
+                                <p>Opinions?</p>
+                            </li>
+                            <li class="Words-line">
+                                <p>Opinions?</p>
+                                <p>&nbsp;</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-6">
+                        <div id="tomatoes-heading">
+                            <h3>To answer this question, let’s turn to Rotten Tomatoes and IMDB ratings, as many movie fanatics do. </h3>
+                        </div>
+                        <div id="reviewCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+
+                                <div class="carousel-item active">
+                                    <img class="d-block w-100" src="img/rotten_description.png" alt="First slide">
+                                </div>
+
+                                <div class="carousel-item">
+                                    <img class="d-block w-100" src="img/IMDB_description.png" alt="Second slide">
+                                    <div class="carousel-caption d-none d-md-block"></div>
+                                </div>
+                            </div>
+
+                            <!-- Controls -->
+                            <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Rotten Tomatoes Consensus -->
         <div class="section">
             <div id="timeline"></div>
@@ -87,6 +184,7 @@
 
         <!-- IMDB Ratings -->
         <div class="section">
+            <img src="img/imdb-header2.jpeg" class="center-image" alt="IMDB header image" >
             <div id="lollipop"></div>
         </div>
 
@@ -95,19 +193,38 @@
             <div id="rankchart"></div>
         </div>
 
-        <!-- Oscar-Nominated Films by Genre  -->
         <div class="section">
-            <div id="clusterplot"></div>
+            <div class="container-fluid" id="clusterContainer"> 
+                <div class="row" id="clusterHeader">
+                    <div class="col-12">
+                        <h1 id="clusterTitle">BEST PICTURE NOMINEES BY GENRE (1927/28-2020)</h1>
+                    </div>
+                </div>
+                <div class="row justify-content-center column-gap-1">
+                    <div class="bubble col-2" id="barchart-dims">
+                        <div id="genreBar"></div>
+                    </div>
+                    <div class="bubble col-6" id="clusterplot-dims">
+                        <div id="clusterplot"></div>
+                    </div>
+                    <div class="bubble col-3 vertical-center" id="clusterMovieInformation">
+                            <h3><b>Hover/drag a bubble to display film information!</b></h3>
+                            <h3><b>Hover over a bar to display genre stats!</b></h3>
+                        <!-- Tooltip content will be updated here -->
+                    </div>                
+                </div>
+            </div>
         </div>
 
     </div>
 
     <!-- Load JS libraries -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" 
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
 
     <!-- d3 -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -134,7 +251,7 @@
     <!-- Initialize Fullpage.js -->
     <script type="text/javascript">
         new fullpage('#fullpage', {
-            sectionsColor: ['#000000', 'whitesmoke', '#D0BF6F', 'whitesmoke', '#ccddff'], // TODO: CHANGE COLORS OF SLIDES
+            sectionsColor: ['#000000', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke','#000000'], // TODO: CHANGE COLORS OF SLIDES (#D0BF6F is Oscars gold)
             licenseKey: 'gplv3-license',
             navigation: true // Vertical navigation bar with dots on the right of screen
         });
@@ -147,6 +264,7 @@
     <script src="js/lollipop_chart.js"></script>
     <script src="js/moviestudio.js"></script>
     <script src="js/studiobubbles.js"></script>
+    <script src="js/genrebar.js"></script>
     <script src="js/clusterplot.js"></script>
     <script src="js/timeline.js"></script>
     <script src="js/textreveal.js"></script>

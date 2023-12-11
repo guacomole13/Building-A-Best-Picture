@@ -1,5 +1,5 @@
 // declare global variables for visualization
-let branchHemisphere, raceHemisphere, genderHemisphere, myConsensus, myTimeline, myLollipop, rankchart, myClusterplot, studiovis, studiobubbles;
+let branchHemisphere, raceHemisphere, genderHemisphere, myConsensus, myTimeline, myLollipop, rankchart, myClusterplot, studiovis, studiobubbles, myGenreBar;
 let selectedTimeRange = [];
 let parseYear = d3.timeParse('%Y'); // Convert OscarYear integer to a Date object
 let dateFormatter = d3.timeFormat("%Y"); // Function to convert date objects to strings or reverse
@@ -30,13 +30,14 @@ function createVis(data) {
     let squeakyCleanData2 = data[4];
 
     // Create visualization instances
-    branchHemisphere = new Hemisphere("branchHemisphere", branchsizes_2022);
-    raceHemisphere = new Hemisphere("raceHemisphere", raceproportions_2022);
-    genderHemisphere = new Hemisphere("genderHemisphere", genderproportions_2022);
+    branchHemisphere = new Hemisphere("branchHemisphere", branchsizes_2022, true);
+    raceHemisphere = new Hemisphere("raceHemisphere", raceproportions_2022, false);
+    genderHemisphere = new Hemisphere("genderHemisphere", genderproportions_2022, false);
     rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
     studiovis = new StudioVis("studiovis", squeakyCleanData2)
     studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
     myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
+    myGenreBar = new GenreBar("genreBar", squeakyCleanData);
 
     /////// PREPARE DATA FOR CONSENSUS PLOT ////////
 
@@ -101,14 +102,6 @@ function createVis(data) {
         movie.AudienceRating = parseInt(movie.AudienceRating, 10);
     });
 
-    // displayData.forEach(movie => {
-    //     // Convert OscarYear integer to a Date object
-    //     movie.OscarYear = parseYear(`${movie.OscarYear}`);
-    // });
-
-    // Output the updated array
-    console.log(displayData);
-
     // New consensus plot object
     myConsensus = new ConsensusPlot("consensus", displayData);
 
@@ -134,8 +127,6 @@ function createVis(data) {
         movie.OscarYear = parseFloat(movie.OscarYear) + 1;
         movie.IMDBRating = parseFloat(movie.IMDBRating);
     });
-
-    console.log(imdbData); // Check the content of imdbData array
 
     // New lollipop chart object
     myLollipop = new LollipopChart("lollipop", imdbData);
