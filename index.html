@@ -38,22 +38,79 @@
                 <h1 class="header">An Interactive Data Visualization</h1>
                 <h2 class="header">by</h2>
                 <h1 class="header">Libby Wu, Michael Omole, and Timothy Fargiano</h1>
+                <br>
+                <h2 class="scrolltext">Scroll to Continue!</h2>
             </div>
         </div>
 
         <div class="section text-center">
+<!--            <img src="img/oscars-logo.png" width="30%" alt="Oscars Logo">-->
+<!--            <br>-->
             <h1 id="1" class="main">For every year since 1929, a select group of Hollywood insiders has met</h1>
             <h1 id="2" class="main endtext">to recognize outstanding achievements in the film industry.</h1>
             <h1 id="3" class="main hidden">This committee, known as The Academy, gives out a series of annual awards</h1>
             <h1 id="4" class="main endtext hidden"> known as <b>Academy Awards</b>, or <b>Oscars</b>.</h1>
             <h1 id="5" class="main hidden">Among these awards, the most prestigious honor a film can receive</h1>
             <h1 id="6" class="main endtext hidden">is the Academy Award for <b>Best Picture</b>.</h1>
-            <h1 id="7" class="main endtext"><b>BUT WHO EXACTLY IS DOING THE VOTING?></b></h1>
-            <button id="showbtn" onclick="showNextLine()">Next</button>
-            <button id="resetbtn" class="hidden" onclick="showNextLine()">Restart</button>
+            <button id="showbtn" onclick="showNextLine()">Click to Continue</button>
+            <button id="resetbtn" class="hidden" onclick="showNextLine()">Click to Restart</button>
+            <h1 id="7" class="main endtext scrolltext hidden"><b>(Scroll to Continue)</b></h1>
 
 
-            <!--            <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">-->
+
+
+        </div>
+
+        <!-- Top Studios -->
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">Studio Breakdown</h1>
+                    <h3>In the early years of the Oscars, highly coveted Best Picture wins and nominations were dominated by "The Big Five" studios. Today, Academy Award Wins come from a wider variety of studios.</h3>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div id="studiobubbles"></div>
+                    </div>
+                    <div class="col-6">
+                        <div id="studiovis"></div>
+                    </div>
+                </div>
+            </div>Studio Breakdown
+<!--            In the early years of the Oscars, Best Picture wins and nominations were dominated by "The Big Five" studios. Today, Academy Award Wins come from a wider variety of studios.-->
+        </div>
+
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <h2>Genre Breakdown</h2>
+                    <h3>While movies of any genre can be nominated for best picture, dramas are nominated disproportionately for the ceremony's highest honor.</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academy Award Films by Genre -->
+        <div class="section">
+            <div class="container-fluid" id="clusterContainer">
+                <div class="row" id="clusterHeader">
+                    <div class="col-12">
+                        <h1 id="clusterTitle">BEST PICTURE NOMINEES BY GENRE (1927/28-2020)</h1>
+                    </div>
+                </div>
+                <div class="row justify-content-center column-gap-1">
+                    <div class="bubble col-2" id="barchart-dims">
+                        <div id="genreBar"></div>
+                    </div>
+                    <div class="bubble col-6" id="clusterplot-dims">
+                        <div id="clusterplot"></div>
+                    </div>
+                    <div class="bubble col-3 vertical-center" id="clusterMovieInformation">
+                        <h3><b>Hover/drag a bubble to display film information!</b></h3>
+                        <h3><b>Hover over a bar to display genre stats!</b></h3>
+                        <!-- Tooltip content will be updated here -->
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Academy Demographics -->
@@ -79,31 +136,7 @@
             </div>
         </div>
 
-        <!-- Top Studios -->
-        <div class="section">
-            <div class="container">
-                <div class="row">
-                    <h3>Filter Years:</h3>
-                    <div class="row">
-                        <div class="col-1" id="sliderlabel1">
-                        </div>
-                        <div class="col-10">
-                            <div id="slider"></div>
-                        </div>
-                        <div class="col-1" id="sliderlabel2">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div id="studiobubbles"></div>
-                    </div>
-                    <div class="col-6">
-                        <div id="studiovis"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!-- Intro to Rotten Tomatoes and IMDB Ratings -->
         <div class="section warm-gradient perspective-text d-flex flex-column ">
@@ -190,29 +223,22 @@
 
         <!-- Box Office Performance -->
         <div class="section">
-            <div id="rankchart"></div>
-        </div>
-
-        <div class="section">
-            <div class="container-fluid" id="clusterContainer"> 
-                <div class="row" id="clusterHeader">
-                    <div class="col-12">
-                        <h1 id="clusterTitle">BEST PICTURE NOMINEES BY GENRE (1927/28-2020)</h1>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-8">
+                <h2>Budget and Box Office</h2>
+                <p>One way to assess audience assessment of a movie is through box office performance, as the movie-going audience deems them worthy of seeing. For each year, given data availability, we wanted
+                to see whether the movie with the highest box office won the Best Picture Academy Award most often, or if the movie with the highest budget, and thus the greatest
+                spectacle, won Best Picture most often.</p>
                     </div>
+                <div class="col-2"></div>
+            </div>
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-9">
+                    <div id="rankchart"></div>
                 </div>
-                <div class="row justify-content-center column-gap-1">
-                    <div class="bubble col-2" id="barchart-dims">
-                        <div id="genreBar"></div>
-                    </div>
-                    <div class="bubble col-6" id="clusterplot-dims">
-                        <div id="clusterplot"></div>
-                    </div>
-                    <div class="bubble col-3 vertical-center" id="clusterMovieInformation">
-                            <h3><b>Hover/drag a bubble to display film information!</b></h3>
-                            <h3><b>Hover over a bar to display genre stats!</b></h3>
-                        <!-- Tooltip content will be updated here -->
-                    </div>                
-                </div>
+                <div class="col-1"></div>
             </div>
         </div>
 
