@@ -6,9 +6,7 @@ let dateFormatter = d3.timeFormat("%Y"); // Function to convert date objects to 
  
 // Load data with promises
 let promises = [
-    d3.json("data/movies_list.json"),
     d3.csv("data/oscars_df.csv"),
-    d3.csv("data/film_budget_data.csv"),
     d3.json("data/cleanestdata.json"),
     d3.json("data/cleanestdata2.json")
 ];
@@ -23,11 +21,9 @@ Promise.all(promises)
     });
 
 function createVis(data) {    
-    let movieList = data[0];
-    let oscarsDF = data[1];
-    let budgetData = data[2];
-    let squeakyCleanData = data[3];
-    let squeakyCleanData2 = data[4];
+    let oscarsDF = data[0];
+    let squeakyCleanData = data[1];
+    let squeakyCleanData2 = data[2];
 
     // Create visualization instances
     branchHemisphere = new Hemisphere("branchHemisphere", branchsizes_2022, true);
