@@ -33,7 +33,7 @@
 <!--            <h1 class="header">Libby Wu, Michael Omole, and Timothy Fargiano</h1>-->
 <!--        </div>-->
 
-        <div class="section gradient text-center d-flex flex-column justify-content-center w-100 h-100">
+        <div class="section dark-blue-gradient text-center d-flex flex-column justify-content-center w-100 h-100">
             <div class="d-flex flex-column justify-content-center align-items-center">
                 <img src="img/oscars-logo.png" width="50%" alt="Oscars Logo">
                 <h1 class="header">An Interactive Data Visualization</h1>
@@ -72,6 +72,118 @@
                     </div>
                     <div class="col-6">
                         <div id="studiovis"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intro to Rotten Tomatoes and IMDB Ratings -->
+<!--        <div class="section warm-gradient perspective-text d-flex flex-column ">-->
+<!--            <div class="d-flex flex-column">-->
+<!--                <ul class="Words">-->
+<!--                    <li class="Words-line">-->
+<!--                        <p>&nbsp;</p>-->
+<!--                        <p>Now...Is</p>-->
+<!--                    </li>-->
+<!--                    <li class="Words-line">-->
+<!--                        <p>Now...Is</p>-->
+<!--                        <p class="emphasis">The Academy's</p>-->
+<!--                    </li>-->
+<!--                    <li class="Words-line">-->
+<!--                        <p class="emphasis">The Academy's</p>-->
+<!--                        <p>Opinion</p>-->
+<!--                    </li>-->
+<!--                    <li class="Words-line">-->
+<!--                        <p>Opinion</p>-->
+<!--                        <p>Reflective of</p>-->
+<!--                    </li>-->
+<!--                    <li class="Words-line">-->
+<!--                        <p>Reflective of</p>-->
+<!--                        <p class="emphasis">The Audience's</p>-->
+<!--                    </li>-->
+<!--                    <li class="Words-line">-->
+<!--                        <p class="emphasis">The Audience's</p>-->
+<!--                        <p>Opinions?</p>-->
+<!--                    </li>-->
+<!--                    <li class="Words-line">-->
+<!--                        <p>Opinions?</p>-->
+<!--                        <p>&nbsp;</p>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="section warm-gradient perspective-text d-flex flex-column ">
+            <div class="container d-flex flex-column">
+                <div class="row">
+                    <div class="col-6">
+                        <ul class="Words">
+                            <li class="Words-line">
+                                <p>&nbsp;</p>
+                                <p>Now...Is</p>
+                            </li>
+                            <li class="Words-line">
+                                <p>Now...Is</p>
+                                <p class="emphasis">The Academy's</p>
+                            </li>
+                            <li class="Words-line">
+                                <p class="emphasis">The Academy's</p>
+                                <p>Opinion</p>
+                            </li>
+                            <li class="Words-line">
+                                <p>Opinion</p>
+                                <p>Reflective of</p>
+                            </li>
+                            <li class="Words-line">
+                                <p>Reflective of</p>
+                                <p class="emphasis">The Audience's</p>
+                            </li>
+                            <li class="Words-line">
+                                <p class="emphasis">The Audience's</p>
+                                <p>Opinions?</p>
+                            </li>
+                            <li class="Words-line">
+                                <p>Opinions?</p>
+                                <p>&nbsp;</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-6">
+                        <div id="tomatoes-heading">
+                            <h3>To answer this question, let’s turn to Rotten Tomatoes and IMDB ratings, as many movie fanatics do. </h3>
+                        </div>
+                        <div id="reviewCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <!-- Indicators -->
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#reviewCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            </div>
+
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+
+                                <div class="carousel-item active">
+                                    <img class="d-block w-100" src="img/rotten_description.png" alt="First slide">
+<!--                                    <div class="carousel-caption d-none d-md-block"></div>-->
+                                </div>
+
+                                <div class="carousel-item">
+                                    <img class="d-block w-100" src="img/IMDB_description.png" alt="Second slide">
+                                    <div class="carousel-caption d-none d-md-block"></div>
+                                </div>
+                            </div>
+
+                            <!-- Controls -->
+                            <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#reviewCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,7 +260,7 @@
     <!-- Initialize Fullpage.js -->
     <script type="text/javascript">
         new fullpage('#fullpage', {
-            sectionsColor: ['#000000', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', '#000000'], // TODO: CHANGE COLORS OF SLIDES (#D0BF6F is Oscars gold)
+            sectionsColor: ['#000000', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke', 'whitesmoke','#000000'], // TODO: CHANGE COLORS OF SLIDES (#D0BF6F is Oscars gold)
             licenseKey: 'gplv3-license',
             navigation: true // Vertical navigation bar with dots on the right of screen
         });
