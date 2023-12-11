@@ -6,14 +6,14 @@ body {
 .dark-blue-gradient {
     background: linear-gradient(-45deg, #000000, #0e0d1e, #111133, #222233); /* another shade option: #15142d */
     background-size: 400% 400%;
-    animation: gradient 6s ease infinite; /* controls speed of gradient color change */
+    animation: gradient 4s ease infinite; /* controls speed of gradient color change */
     height: 100vh;
 }
 
 .warm-gradient {
     background: linear-gradient(-45deg, #000000, #2f0000, #40060b, #4c0a0a);
     background-size: 400% 400%;
-    animation: gradient 6s ease infinite; /* controls speed of gradient color change */
+    animation: gradient 4s ease infinite; /* controls speed of gradient color change */
     height: 100vh;
 }
 
@@ -272,7 +272,7 @@ div#clusterMovieInformation h3, h4 {
 }
 
 /* Fine-grained text styles */
-p {
+.Words-line p {
     height: 60px; /* Set to desired clip height */
     line-height: 55px; /* Clip height - 5 */
     padding: 0 10px;
@@ -286,3 +286,5 @@ p {
 .Words:hover p {
     transform: translate3d(0, -78px, 0); /* Change middle number to  desired clip height */
 }
+
+

@@ -22,7 +22,6 @@ class ConsensusPlot {
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        // vis.height = 1700 - vis.margin.top - vis.margin.bottom;
         vis.height = 520 - vis.margin.top - vis.margin.bottom;
 
 
@@ -93,9 +92,6 @@ class ConsensusPlot {
 
         // Check if there's a brushed selection
         if (selectedTimeRange.length === 2) {
-
-            console.log(selectedTimeRange);
-
             // Extract the year part from the selectedTimeRange
             const startYear = selectedTimeRange[0].getFullYear();
             const endYear = selectedTimeRange[1].getFullYear();
@@ -113,8 +109,6 @@ class ConsensusPlot {
                 return filmYear >= 2010 && filmYear <= 2020;
             });
         }
-
-        console.log(vis.filteredData);
 
         // Update the visualization
         vis.updateVis();
@@ -167,7 +161,6 @@ class ConsensusPlot {
     }
 
 
-
     /*
      * The drawing function
      */
@@ -206,7 +199,6 @@ class ConsensusPlot {
             .append("line")
             .attr("class", "consensus-line")
             .merge(lines) // Merge enter and update selections
-            // .transition().duration(800) // Apply transitions
             .attr("x1", d => vis.x(d.CriticRating))
             .attr("x2", d => vis.x(d.AudienceRating))
             .attr("y1", d => vis.y(d.Film))
@@ -307,36 +299,37 @@ class ConsensusPlot {
 
         // Append text as the title of the critic ratings legend
         criticLegend.append("text")
-            .attr("x", 10) // Adjust title position within the critic ratings legend box
+            .attr("x", 90) // Adjust title position within the critic ratings legend box
             .attr("y", 30) // Adjust title position within the critic ratings legend box
+            .style("text-anchor", "middle")
             .text("Critic Ratings:")
             .style("font-weight", "bold"); // Style the title text
 
         // Append fresh critic icon in the legend
         criticLegend.append("image")
             .attr("xlink:href", "img/fresh_critic.png")
-            .attr("x", 10) // Adjust position within the legend box
+            .attr("x", 20) // Adjust position within the legend box
             .attr("y", 50) // Adjust position within the legend box
             .attr("width", 20)
             .attr("height", 20);
 
         // Append text label for fresh critic rating
         criticLegend.append("text")
-            .attr("x", 35) // Adjust label position relative to the image
+            .attr("x", 45) // Adjust label position relative to the image
             .attr("y", 65) // Adjust label position relative to the image
             .text("Fresh (>= 60%)");
 
         // Append rotten critic icon in the legend
         criticLegend.append("image")
             .attr("xlink:href", "img/rotten_critic.png")
-            .attr("x", 10) // Adjust position within the legend box
+            .attr("x", 20) // Adjust position within the legend box
             .attr("y", 80) // Adjust position within the legend box
             .attr("width", 20)
             .attr("height", 20);
 
         // Append text label for rotten critic rating
         criticLegend.append("text")
-            .attr("x", 35) // Adjust label position relative to the image
+            .attr("x", 45) // Adjust label position relative to the image
             .attr("y", 95) // Adjust label position relative to the image
             .text("Rotten (<60%)");
 
@@ -354,39 +347,38 @@ class ConsensusPlot {
 
         // Append text as the title of the audience ratings legend
         audienceLegend.append("text")
-            .attr("x", 10) // Adjust title position within the audience ratings legend box
+            .attr("x", 90) // Adjust title position within the audience ratings legend box
             .attr("y", 30) // Adjust title position within the audience ratings legend box
+            .style("text-anchor", "middle")
             .text("Audience Ratings:")
             .style("font-weight", "bold"); // Style the title text
 
         // Append fresh audience icon in the legend
         audienceLegend.append("image")
             .attr("xlink:href", "img/fresh_audience.png")
-            .attr("x", 10) // Adjust position within the legend box
+            .attr("x", 20) // Adjust position within the legend box
             .attr("y", 50) // Adjust position within the legend box
             .attr("width", 20)
             .attr("height", 20);
 
         // Append text label for fresh audience rating
         audienceLegend.append("text")
-            .attr("x", 35) // Adjust label position relative to the image
+            .attr("x", 45) // Adjust label position relative to the image
             .attr("y", 65) // Adjust label position relative to the image
             .text("Fresh (>=60%)");
 
         // Append rotten audience icon in the legend
         audienceLegend.append("image")
             .attr("xlink:href", "img/rotten_audience.png")
-            .attr("x", 10) // Adjust position within the legend box
+            .attr("x", 20) // Adjust position within the legend box
             .attr("y", 80) // Adjust position within the legend box
             .attr("width", 20)
             .attr("height", 20);
 
         // Append text label for rotten audience rating
         audienceLegend.append("text")
-            .attr("x", 35) // Adjust label position relative to the image
+            .attr("x", 45) // Adjust label position relative to the image
             .attr("y", 95) // Adjust label position relative to the image
             .text("Rotten (<60%)");
-
-
     }
 }

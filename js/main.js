@@ -102,14 +102,6 @@ function createVis(data) {
         movie.AudienceRating = parseInt(movie.AudienceRating, 10);
     });
 
-    // displayData.forEach(movie => {
-    //     // Convert OscarYear integer to a Date object
-    //     movie.OscarYear = parseYear(`${movie.OscarYear}`);
-    // });
-
-    // Output the updated array
-    console.log(displayData);
-
     // New consensus plot object
     myConsensus = new ConsensusPlot("consensus", displayData);
 
@@ -135,8 +127,6 @@ function createVis(data) {
         movie.OscarYear = parseFloat(movie.OscarYear) + 1;
         movie.IMDBRating = parseFloat(movie.IMDBRating);
     });
-
-    console.log(imdbData); // Check the content of imdbData array
 
     // New lollipop chart object
     myLollipop = new LollipopChart("lollipop", imdbData);
