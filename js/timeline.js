@@ -85,14 +85,6 @@ class Timeline {
         vis.brush = d3.brushX()
             .extent([[0, 0], [vis.width, vis.height]])
 
-            // // No limit on brushed selection
-            // .on("brush end", function (event) {
-            //     selectedTimeRange = [vis.x.invert(event.selection[0]), vis.x.invert(event.selection[1])];
-            //
-            //     // brushing should trigger wrangleData() method for the consensus plot
-            //     myConsensus.wrangleData();
-            // });
-
             // Limits the brushed selection to a maximum of 25 years
             .on("brush end", function (event) {
                 const selectionRange = event.selection.map(vis.x.invert);
