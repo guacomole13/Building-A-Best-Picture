@@ -1,5 +1,5 @@
 // declare global variables for visualization
-let branchHemisphere, raceHemisphere, genderHemisphere, myConsensus, myTimeline, myLollipop, rankchart, myClusterplot, studiovis, studiobubbles;
+let branchHemisphere, raceHemisphere, genderHemisphere, myConsensus, myTimeline, myLollipop, rankchart, myClusterplot, studiovis, studiobubbles, myGenreBar;
 let selectedTimeRange = [];
 let parseYear = d3.timeParse('%Y'); // Convert OscarYear integer to a Date object
 let dateFormatter = d3.timeFormat("%Y"); // Function to convert date objects to strings or reverse
@@ -37,6 +37,7 @@ function createVis(data) {
     // studiovis = new StudioVis("studiovis", squeakyCleanData2)
     // studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
     myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
+    myGenreBar = new GenreBar("genreBar", squeakyCleanData);
 
     /////// PREPARE DATA FOR CONSENSUS PLOT ////////
 

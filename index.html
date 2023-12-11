@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CS 171 Final Project</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://use.typekit.net/oov2wcw.css">
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/fullpage.css" />
@@ -92,18 +94,24 @@
             <div id="rankchart"></div>
         </div>
 
-        <!-- Oscar-Nominated Films by Genre  -->
         <div class="section">
-            <div class="container-fluid"> 
-                <div class="row no-gutters">
-                    <div class="col-2">
-                        bar chart/legend here
+            <div class="container-fluid" id="clusterContainer"> 
+                <div class="row" id="clusterHeader">
+                    <div class="col-12">
+                        <h1 class="text-center" id="clusterTitle">BEST PICTURE NOMINEES BY GENRE (1927/28-2020)</h1>
                     </div>
-                    <div class="col-7" id="clusterplot-dims">
+                </div>
+                <div class="row justify-content-center column-gap-1">
+                    <div class="bubble col-2" id="barchart-dims">
+                        <div id="genreBar"></div>
+
+                    </div>
+                    <div class="bubble col-6" id="clusterplot-dims">
                         <div id="clusterplot"></div>
                     </div>
-                    <div class="col-3 vertical-center">
-                        <div id="clusterMovieInformation"></div>
+                    <div class="bubble col-3 vertical-center" id="clusterMovieInformation">
+                            <h3><b>Hover/drag a bubble to display film information!</b></h3>
+                            <h3><b>Hover over a bar to display genre stats!</b></h3>
                         <!-- Tooltip content will be updated here -->
                     </div>                
                 </div>
@@ -114,10 +122,11 @@
 
     <!-- Load JS libraries -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" 
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
 
     <!-- d3 -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -152,6 +161,7 @@
     <script src="js/lollipop_chart.js"></script>
     <script src="js/moviestudio.js"></script>
     <script src="js/studiobubbles.js"></script>
+    <script src="js/genrebar.js"></script>
     <script src="js/clusterplot.js"></script>
     <script src="js/timeline.js"></script>
 

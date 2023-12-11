@@ -1,4 +1,3 @@
-
 class Timeline {
 
     // constructor method to initialize Timeline object
@@ -190,3 +189,4 @@ class Timeline {
             .call(vis.brush);
     }
 }
+
