@@ -252,26 +252,24 @@ div#clusterMovieInformation h3, h4 {
 }
 
 .Words-line:nth-child(3) {
-    left: 87px; /* Adjust left offset for the third line */
+    left: 87px;
 }
 
 .Words-line:nth-child(4) {
-    left: 116px; /* Adjust left offset for the third line */
+    left: 116px;
 }
 
 .Words-line:nth-child(5) {
-    left: 145px; /* Adjust left offset for the third line */
+    left: 145px;
 }
 
 .Words-line:nth-child(6) {
-    left: 174px; /* Adjust left offset for the third line */
+    left: 174px;
 }
 
 .Words-line:nth-child(7) {
-    left: 203px; /* Adjust left offset for the third line */
+    left: 203px;
 }
-
-/* Continue this pattern for the total number of lines */
 
 /* Fine-grained text styles */
 p {
