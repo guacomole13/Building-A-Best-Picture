@@ -3,19 +3,34 @@ class ClusterPlot {
         this.parentElement = _parentElement;
         this.data = _data;
         this.displayData = [];
-        this.colors = ["#ffd700", "#1d632f", "#ffb14e", "#ea5f94", 
-        "#fa8775", "#cd34b5", "#9d02d7", "#0000ff", "#df2020", 
-        "#b67c58", "#ff00f2", "#3cd42f", "#35e2d9", "#89a7be", 
-        "#1096ff", "#bb8ff3", "#ff91fd", "#b9ff77", 
-        "#071c54", "#74001b", "#c0c918", "#b8fffe"]
+        this.colors = ["#ffd700",
+        "#1d632f",
+        "#ffb14e",
+        "#ea5f94",
+        "#fa8775",
+        "#3cd42f",
+        "#9d02d7",
+        "#0000ff",
+        "#df2020",
+        "#b67c58",
+        "#a6233f",
+        "#cd34b5",
+        "#35e2d9",
+        "#1096ff",
+        "#bb8ff3",
+        "#c8fa96",
+        "#175676",
+        "#74001b",
+        "#89a7be",
+        "#b8fffe",
+        "#ff91fd",
+        "#ff00f2"]
 
         this.initVis();
     }
 
     initVis() {
         let vis = this;
-        console.log("initVis");
-
         // svg dimension
 		vis.margin = { top: 5, right: 5, bottom: 15, left: 5 };
 		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
@@ -36,7 +51,7 @@ class ClusterPlot {
             .attr('class', 'title')
             .attr('id', 'cluster-title')
             .append('text')
-            .text('Oscar-Nominated Films by Genre')
+            .text('Best Picture Nominees by Genre')
             .attr('transform', `translate(${vis.width / 2}, 20)`)
             .attr('text-anchor', 'middle');
 
@@ -256,7 +271,7 @@ class ClusterPlot {
             .selectAll('.circle')
             .data(vis.nodes)
             .join("circle")
-            .attr("class", "node")
+            .attr("class", (d) => `node ${d.data.currentGenre} ${d.data.Winner ? 'winner' : ''}`)
             .attr("id", (d) => `movie_${d.data.MovieId}`)
             .attr("r", d => d.r)
             .style('fill', (d) => vis.scale(d.data.currentGenre))
@@ -265,10 +280,11 @@ class ClusterPlot {
             .attr("cx", d => d.x)
             .attr("cy", d => d.y)
             .on("mouseover", function(event, d) {
-                console.log(d.data);
+                // moves to front
+                d3.selectAll(`#movie_${d.data.MovieId}`).raise();
                 // change colors
                 d3.selectAll(`#movie_${d.data.MovieId}`)
-                    .attr("r", d.r * 2)
+                    .attr("r", 15)
                     .style('stroke-width', '2px')
                     .style("stroke", "#000000")
                     .style("fill", "#E3AE00");
@@ -279,7 +295,7 @@ class ClusterPlot {
                         <div style="text-align: center; ${d.data.Winner ? '' : 'color: white;'}">
                             <h3><b>${d.data.Title} (${d.data.Year})</b></h3>
                             <h4>Genres: ${d.data.Genre.join(', ')}</h4>
-                            <h6>Director: ${d.data.Director}</h6>
+                            <h5>Director: ${d.data.Director}</h6>
                             <p>Plot: ${d.data.Plot}</p>
                         </div>
                     </div>`)
@@ -314,6 +330,5 @@ class ClusterPlot {
                 .attr("cy", d => Math.max(d.r + vis.clusterPadding, Math.min(vis.height - (d.r + vis.clusterPadding), d.y)));
         });
                               
-        console.log("updateVis");
     }
 }
