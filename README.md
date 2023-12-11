@@ -16,6 +16,7 @@ Items related to libraries will be *italicized*.
 1. README.md - Guides readers through our project and files; containss links to our website and video.
 2. [index.html](index.html) - Our website page, home to our story and visualizations.
 3. [.gitignore](.gitignore) - File we used to store things we did not want to push (currently empty).
+4. CNAME - CNAME file with custom domain
 5. [css](css) - Contains all our project style sheets.
     - *fullpage.css* - Necessary components for fullpage.js, a module we used to help smooth transitions between visualizations.
     - *fullpage.min.css* - See above
