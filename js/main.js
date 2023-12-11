@@ -33,9 +33,9 @@ function createVis(data) {
     branchHemisphere = new Hemisphere("branchHemisphere", branchsizes_2022);
     raceHemisphere = new Hemisphere("raceHemisphere", raceproportions_2022);
     genderHemisphere = new Hemisphere("genderHemisphere", genderproportions_2022);
-    // rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
-    // studiovis = new StudioVis("studiovis", squeakyCleanData2)
-    // studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
+    rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
+    studiovis = new StudioVis("studiovis", squeakyCleanData2)
+    studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
     myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
 
     /////// PREPARE DATA FOR CONSENSUS PLOT ////////
