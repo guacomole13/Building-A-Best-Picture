@@ -68,11 +68,10 @@ class LollipopChart {
 
         // Graph title
         vis.svg.append("text")
-            .attr("class", "lollipop-text")
+            .attr('class', 'title lollipop-text')
             .attr("x", vis.width / 2)
             .attr("y", vis.margin.top - 60) // Adjust height of title
             .style("text-anchor", "middle")
-            .style("font-size", "16px")
             .text("How do average IMDB ratings for Best Picture winners vs. nominees compare throughout the years?");
 
         // Append tooltip

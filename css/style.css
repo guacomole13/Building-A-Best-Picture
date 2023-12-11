@@ -57,6 +57,8 @@ img {
 .title {
     font-size: 18px;
     font-weight: bold;
+    font-family: century-gothic, sans-serif;
+    text-transform: uppercase;
 }
 
 .tooltip {
@@ -160,8 +162,9 @@ div#clusterMovieInformation h3, h4 {
     font-family: century-gothic, sans-serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 60px;
+    font-size: 53px;
     color: #C79F27;
+    margin: 1.5rem;
 }
 
 .bubble {
@@ -188,7 +191,7 @@ div#clusterMovieInformation h3, h4 {
 #tomatoes-heading {
     margin-top: 40px;
     text-align: center;
-    font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+    font-family: century-gothic, sans-serif;
     text-transform: uppercase;
 }
 
@@ -209,8 +212,9 @@ div#clusterMovieInformation h3, h4 {
     padding-top: 20%; /* Adjust padding-top and padding-bottom */
     padding-bottom: 20%;
     max-height: 80vh;
-    font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
-    font-size: 55px;
+    /*font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;*/
+    font-family: century-gothic, sans-serif;
+    font-size: 53px;
     font-weight: 900;
     letter-spacing: -2px;
     text-transform: uppercase;
