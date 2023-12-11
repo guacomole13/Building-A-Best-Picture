@@ -39,7 +39,7 @@ h2{
 
 img {
     margin: 15px;
-    loading: lazy;
+    loading: "lazy";
 }
 
 .header {
