@@ -108,7 +108,7 @@ class LollipopChart {
         });
 
         // Log the final nestedData to check calculated averages
-        console.log('Nested Data with Averages:', vis.nestedData);
+        // console.log('Nested Data with Averages:', vis.nestedData);
 
         // Update the visualization
         vis.updateVis();
