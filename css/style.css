@@ -102,10 +102,38 @@ button{
     justify-content: center;
 }
 
+div#clusterContainer {
+    background: #000000;
+}
+
+.genre-label.active {
+    font-weight: bold !important;
+}
+
 div#clusterMovieInformation {
-    margin: auto;
-    position: absolute;
-    border: thin solid black;
-    border-radius: 5px;
     padding: 7.5px;
+}
+
+div#clusterMovieInformation h3, h4 {
+    text-align: center;
+}
+
+#clusterTitle {
+    font-family: century-gothic, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 60px;
+    color: #C79F27;
+}
+
+.bubble {
+    background: #FAF0D0;
+    border-radius: 15px;
+    border: 4px solid #f3d782;
+}
+
+/* Ensures the SVG container fits inside the bubble */
+#genreBar, #clusterplot {
+    width: 100%;
+    height: 100%;
 }

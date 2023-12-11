@@ -4,7 +4,7 @@ class ClusterPlot {
         this.data = _data;
         this.displayData = [];
         this.colors = ["#ffd700",
-        "#1d632f",
+        "#74001b",
         "#ffb14e",
         "#ea5f94",
         "#fa8775",
@@ -20,7 +20,7 @@ class ClusterPlot {
         "#bb8ff3",
         "#c8fa96",
         "#175676",
-        "#74001b",
+        "#1d632f",
         "#89a7be",
         "#b8fffe",
         "#ff91fd",
@@ -32,9 +32,10 @@ class ClusterPlot {
     initVis() {
         let vis = this;
         // svg dimension
+        var headerHeight = document.getElementById('clusterHeader').clientHeight; 
 		vis.margin = { top: 5, right: 5, bottom: 15, left: 5 };
 		vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-		vis.height = window.innerHeight - vis.margin.top - vis.margin.bottom;
+        vis.height = window.innerHeight - vis.margin.top - vis.margin.bottom - headerHeight;
         vis.padding = 1.5; // separation b/w same color circles
         vis.clusterPadding = 45; // separation b/w diff color circles
         vis.constantRadius = vis.width*0.01; // size of circles
@@ -46,15 +47,6 @@ class ClusterPlot {
 			.append("g")
 			.attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
-        // add title
-        vis.svg.append('g')
-            .attr('class', 'title')
-            .attr('id', 'cluster-title')
-            .append('text')
-            .text('Best Picture Nominees by Genre')
-            .attr('transform', `translate(${vis.width / 2}, 20)`)
-            .attr('text-anchor', 'middle');
-
         // tooltip
         vis.svg.tooltip = d3.select("#clusterMovieInformation")
 
@@ -63,9 +55,9 @@ class ClusterPlot {
             .range(vis.colors);
 
         // create legend group (need to update with genres later)
-        vis.legend = vis.svg.append("g")
-            .attr('class', 'legendOrdinal')
-            .attr('transform', `translate(${vis.width * 2.5 / 4}, ${vis.height*0.9})`)
+        vis.svg.legend = vis.svg.append("g")
+            .attr("class", "legendOrdinal")
+            .attr("transform", `translate(${vis.width * 0.1}, ${vis.height * 0.9})`);
 
         vis.wrangleData();
     }
@@ -126,8 +118,8 @@ class ClusterPlot {
 
         /// Define the pack layout
         vis.pack = d3.pack()
-            .size([vis.width * 0.95, vis.height * 0.75])
-            .padding(1.5);
+            .size([vis.width * 0.6, vis.height * 0.85])
+            .padding(1);
 
         // Create hierarchical data
         vis.root = d3.hierarchy({ children: vis.flattenedNodes })
@@ -287,11 +279,26 @@ class ClusterPlot {
                     .attr("r", 15)
                     .style('stroke-width', '2px')
                     .style("stroke", "#000000")
-                    .style("fill", "#E3AE00");
+                    .style("fill", "#C79F27");
+                // select related bars
+                d3.selectAll("rect, text.genre-label")
+                    .style("opacity", 0.25)
+                    .classed("active", false);
+                d.data.Genre.forEach(genre => {
+                    d3.selectAll(`rect.${genre}`)
+                        .style("stroke", "#000000")
+                        .style('stroke-width', '2px')
+                        .style("opacity", 1);
+            
+                    d3.selectAll(`text.genre-label.${genre}`)
+                        .classed("active", true) // Add bold class
+                        .style("opacity", 1);
+                });
                 vis.svg.tooltip
                     .html(`
-                    <div style="display: flex; flex-direction: column; align-items: center; border: thin solid grey; border-radius: 5px; background: ${d.data.Winner ? 'linear-gradient(#c5b358, #FCF6BA, #d4af37, #FBF5B7)' : '#841b2d'}; padding: 7.5px;">
-                        <img src="${d.data.Poster}" style="max-width: 300px; max-height: 300px; object-fit: contain; margin-bottom: 10px;"></img>
+                    <div style="display: flex; flex-direction: column; align-items: center; border: thin solid black; border-radius: 5px; background: ${d.data.Winner ? 'linear-gradient(#c5b358, #FCF6BA, #d4af37, #FBF5B7)' : '#841b2d'}; padding: 7.5px;">    
+                        ${d.data.Winner ? '<h3 style="text-align: center; color: red; font-size: 2.5rem; margin-bottom: 0rem;">WINNER</h3>' : ''}
+                        <img src="${d.data.Poster}" style="max-width: 250px; max-height: 250px; object-fit: contain; margin-bottom: 10px;"></img>
                         <div style="text-align: center; ${d.data.Winner ? '' : 'color: white;'}">
                             <h3><b>${d.data.Title} (${d.data.Year})</b></h3>
                             <h4>Genres: ${d.data.Genre.join(', ')}</h4>
@@ -311,8 +318,17 @@ class ClusterPlot {
                     .style('stroke', (d) => d.data.Winner ? '#000000' : 'none')
                     .style('stroke-width', (d) => d.data.Winner ? '1.5px' : '0px')
                     .style("fill", (d) => vis.scale(d.data.currentGenre));
+                // Reset the styles for all rectangles and texts
+                d3.selectAll("rect, text")
+                    .style("stroke", "none") 
+                    .style('stroke-width', '1px') 
+                    .style("font-weight", "normal") 
+                    .classed("active", false)
+                    .style("opacity", 1); 
                 vis.svg.tooltip
-                    .html(`<h3><b>Hover or click to display film information!</b></h3>`);
+                    .html(`
+                    <h3><b>Hover/drag a bubble to display film information!</b></h3>
+                    <h3><b>Hover over a bar to display genre stats!</b></h3>`);
             })
             .call(drag(simulation));        
 
@@ -329,6 +345,43 @@ class ClusterPlot {
                 .attr("cx", d => Math.max(d.r + vis.clusterPadding, Math.min(vis.width - (d.r + vis.clusterPadding), d.x)))
                 .attr("cy", d => Math.max(d.r + vis.clusterPadding, Math.min(vis.height - (d.r + vis.clusterPadding), d.y)));
         });
-                              
+
+        // renders legend 
+        vis.svg.legend
+            .append("circle")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("r", 4.635863675090555)
+            .style("fill", "#FFFFFF")
+            .style("stroke-width", "0.5px")
+            .style("stroke", "#000000");
+
+        vis.svg.legend
+            .append("circle")
+            .attr("cx", 0)
+            .attr("cy", 25)
+            .attr("r", 8.029551422219816)
+            .attr("class", "legendCircle winner")
+            .style("fill", "#FFFFFF")
+            .style("stroke-width", "1.5px")
+            .style("stroke", "#000000");
+
+        vis.svg.legend
+            .append("text")
+            .attr("x", 15)
+            .attr("y", 1.5)
+            .attr("class", "legendText")
+            .text("Nominee")
+            .style("font-size", "15px")
+            .attr("alignment-baseline","middle");
+
+        vis.svg.legend
+            .append("text")
+            .attr("x", 15)
+            .attr("y", 27)
+            .attr("class", "legendText")
+            .text("Winner")
+            .style("font-size", "15px")
+            .attr("alignment-baseline","middle");                          
     }
 }
