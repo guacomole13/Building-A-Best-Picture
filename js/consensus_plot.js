@@ -23,7 +23,7 @@ class ConsensusPlot {
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
         // vis.height = 1700 - vis.margin.top - vis.margin.bottom;
-        vis.height = 550 - vis.margin.top - vis.margin.bottom;
+        vis.height = 520 - vis.margin.top - vis.margin.bottom;
 
 
         // SVG drawing area
@@ -195,7 +195,7 @@ class ConsensusPlot {
             .call(vis.yAxis);
 
         // Select all existing lines and bind filteredData
-        let lines = vis.svg.selectAll(".line")
+        let lines = vis.svg.selectAll(".consensus-line")
             .data(vis.filteredData, d => d.Film);
 
         // Remove lines that don't have data anymore
@@ -204,7 +204,7 @@ class ConsensusPlot {
         // Append new lines for new data
         let linesEnter = lines.enter()
             .append("line")
-            .attr("class", "line")
+            .attr("class", "consensus-line")
             .merge(lines) // Merge enter and update selections
             // .transition().duration(800) // Apply transitions
             .attr("x1", d => vis.x(d.CriticRating))
@@ -269,7 +269,7 @@ class ConsensusPlot {
         });
 
         // Apply tooltip functionality to the lines
-        vis.svg.selectAll(".line").each(function(d) {
+        vis.svg.selectAll(".consensus-line").each(function(d) {
             vis.displayTooltip(this, d);
         });
 
@@ -291,87 +291,7 @@ class ConsensusPlot {
             .text("Note: Each line connecting the icons denotes the difference between a film's Rotten Tomatoes critic rating and Rotten Tomatoes audience rating.");
 
 
-
-        //////// ADD LEGEND ////////
-
-        // // Append a group element for the legend
-        // const legend = vis.svg.append("g")
-        //     .attr("class", "legend")
-        //     .attr("transform", `translate(${vis.width + 20}, 20)`); // Position the legend to the right of the graph
-        //
-        // // Append a rectangle as the background for the legend box
-        // const legendBox = legend.append("rect")
-        //     .attr("width", 230) // Width of the legend box
-        //     .attr("height", 180) // Height of the legend box
-        //     .attr("fill", "white") // Background color of the legend box
-        //     .attr("stroke", "black"); // Border color of the legend box
-        //
-        // // Append text as the title of the legend
-        // legend.append("text")
-        //     .attr("x", 10) // Adjust title position within the legend box
-        //     .attr("y", 30) // Adjust title position within the legend box
-        //     .text("Legend")
-        //     .style("font-weight", "bold"); // Style the title text
-        //
-        // // Append fresh critic icon in the legend
-        // legend.append("image")
-        //     .attr("xlink:href", "img/fresh_critic.png")
-        //     .attr("x", 10) // Adjust position within the legend box
-        //     .attr("y", 50) // Adjust position within the legend box
-        //     .attr("width", 20)
-        //     .attr("height", 20);
-        //
-        // // Append text label for fresh critic rating
-        // legend.append("text")
-        //     .attr("x", 35) // Adjust label position relative to the image
-        //     .attr("y", 65) // Adjust label position relative to the image
-        //     .text("Fresh Critic Rating (>= 60%)");
-        //
-        // // Append rotten critic icon in the legend
-        // legend.append("image")
-        //     .attr("xlink:href", "img/rotten_critic.png")
-        //     .attr("x", 10) // Adjust position within the legend box
-        //     .attr("y", 80) // Adjust position within the legend box
-        //     .attr("width", 20)
-        //     .attr("height", 20);
-        //
-        // // Append text label for rotten critic rating
-        // legend.append("text")
-        //     .attr("x", 35) // Adjust label position relative to the image
-        //     .attr("y", 95) // Adjust label position relative to the image
-        //     .text("Rotten Critic Rating (<60%)");
-        //
-        // // Append fresh audience icon in the legend
-        // legend.append("image")
-        //     .attr("xlink:href", "img/fresh_audience.png")
-        //     .attr("x", 10) // Adjust position within the legend box
-        //     .attr("y", 110) // Adjust position within the legend box
-        //     .attr("width", 20)
-        //     .attr("height", 20);
-        //
-        // // Append text label for fresh audience rating
-        // legend.append("text")
-        //     .attr("x", 35) // Adjust label position relative to the image
-        //     .attr("y", 125) // Adjust label position relative to the image
-        //     .text("Fresh Audience Rating (>=60%)");
-        //
-        // // Append rotten audience icon in the legend
-        // legend.append("image")
-        //     .attr("xlink:href", "img/rotten_audience.png")
-        //     .attr("x", 10) // Adjust position within the legend box
-        //     .attr("y", 140) // Adjust position within the legend box
-        //     .attr("width", 20)
-        //     .attr("height", 20);
-        //
-        // // Append text label for rotten audience rating
-        // legend.append("text")
-        //     .attr("x", 35) // Adjust label position relative to the image
-        //     .attr("y", 155) // Adjust label position relative to the image
-        //     .text("Rotten Audience Rating (<60%)");
-        //
-
-
-        // 2 SEPARATE LEGENDS
+        //////// ADD 2 SEPARATE LEGENDS ////////
 
         // Append a group element for the critic ratings legend
         const criticLegend = vis.svg.append("g")

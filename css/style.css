@@ -2,6 +2,26 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+/*gradient background animation*/
+.gradient {
+    background: linear-gradient(-45deg, #000000, #0e0d1e, #111133, #222233); /* another shade option: #15142d */
+    background-size: 400% 400%;
+    animation: gradient 6s ease infinite; /* controls speed of gradient color change */
+    height: 100vh;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 h1 {
     font-size: 30px;
 }
@@ -47,6 +67,11 @@ img {
 .tooltip h3,h4 {
     text-align: left;
 }
+
+.tooltip h4 {
+    font-size: 12px;
+}
+
 .main{
     color: black;
 }
@@ -77,15 +102,21 @@ button{
 .visible {
     opacity: 1;
 }
-.tooltip h4 {
-    font-size: 12px;
+
+#lollipop {
+    color: white;
+}
+
+.lollipop-text {
+    fill: white;
 }
 
 #selectedYears {
     font-size: 15px;
     font-weight: bold;
     margin-bottom: 20px;
-    color: #136D70;
+    /*color: #136D70;*/
+    color: #8D1B18;
     background-color: white;
     border: 1px solid black;
     padding: 5px;
