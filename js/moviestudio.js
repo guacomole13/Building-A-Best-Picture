@@ -51,7 +51,7 @@ class StudioVis {
             .call(d3.axisLeft(vis.yScale).tickFormat(d3.format("d")));
 
         vis.svg.append("text")
-            .attr("transform", "translate(" + (vis.width / 2) + " ," + (vis.height + vis.margin.bottom) + ")")
+            .attr("transform", "translate(" + (vis.width / 2) + " ," + (vis.height + vis.margin.bottom - 7.5) + ")")
             .style("text-anchor", "middle")
             .text("'Big Five' Studios");
 
