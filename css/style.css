@@ -6,6 +6,10 @@ h1 {
     font-size: 30px;
 }
 
+h2{
+    font-size:20px;
+}
+
 img {
     margin: 15px;
 }
@@ -48,6 +52,37 @@ img {
     font-size: 12px;
 }
 
+.main{
+    color: black;
+}
+
+.endtext{
+    padding-bottom: 30px;
+}
+
+.hidden {
+    display: none;
+}
+
+button{
+    /*border-left-color: black;*/
+    /*border-bottom-color: black;*/
+    /*border-right-color: black;*/
+    /*border-top-color: black;*/
+    border-radius: 0.1;
+    border-color: black;
+    opacity: 100;
+}
+
+.line {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.visible {
+    opacity: 1;
+}
+
 #lollipop {
     color: white;
 }
@@ -70,4 +105,18 @@ img {
     display: inline-block;
     position: relative;
     left: 45%;
+}
+
+.vertical-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+div#clusterMovieInformation {
+    margin: auto;
+    position: absolute;
+    border: thin solid black;
+    border-radius: 5px;
+    padding: 7.5px;
 }
