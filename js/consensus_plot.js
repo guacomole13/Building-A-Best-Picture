@@ -280,7 +280,7 @@ class ConsensusPlot {
             .attr("y", vis.height + vis.margin.bottom - 20)  // Adjust the y-coordinate to position the text below the chart
             .style("text-anchor", "middle")
             .style("font-size", "12px")
-            .text("Note: Each line connecting the icons denotes the difference between a film's Rotten Tomatoes critic rating and Rotten Tomatoes audience rating.");
+            .text("Note: Each line connecting the icons denotes the difference between a film's Rotten Tomatoes critic rating and Rotten Tomatoes audience rating. Hover over an icon or a line for more information.");
 
 
         //////// ADD 2 SEPARATE LEGENDS ////////

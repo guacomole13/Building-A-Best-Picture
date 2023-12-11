@@ -18,10 +18,10 @@ class StudioVis {
         // Method to initialize the visualization
         let vis = this;
 
-        vis.margin = {top: 40, right: 250, bottom: 95, left: 60};
+        vis.margin = {top: 40, right: 180, bottom: 105, left: 60};
 
-        vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width * 5 / 6;
-        vis.height = 600 - vis.margin.top - vis.margin.bottom;
+        vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
+        vis.height = 510 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -51,7 +51,7 @@ class StudioVis {
             .call(d3.axisLeft(vis.yScale).tickFormat(d3.format("d")));
 
         vis.svg.append("text")
-            .attr("transform", "translate(" + (vis.width / 2) + " ," + (vis.height + vis.margin.bottom - 5) + ")")
+            .attr("transform", "translate(" + (vis.width / 2) + " ," + (vis.height + vis.margin.bottom) + ")")
             .style("text-anchor", "middle")
             .text("'Big Five' Studios");
 

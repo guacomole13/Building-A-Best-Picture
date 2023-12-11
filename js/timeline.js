@@ -17,7 +17,6 @@ class Timeline {
         vis.margin = {top: 60, right: 50, bottom: 35, left: 50};
 
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        // vis.height = document.getElementById(vis.parentElement).getBoundingClientRect().height - vis.margin.top - vis.margin.bottom;
         vis.height = 165 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
@@ -85,14 +84,6 @@ class Timeline {
         vis.brush = d3.brushX()
             .extent([[0, 0], [vis.width, vis.height]])
 
-            // // No limit on brushed selection
-            // .on("brush end", function (event) {
-            //     selectedTimeRange = [vis.x.invert(event.selection[0]), vis.x.invert(event.selection[1])];
-            //
-            //     // brushing should trigger wrangleData() method for the consensus plot
-            //     myConsensus.wrangleData();
-            // });
-
             // Limits the brushed selection to a maximum of 25 years
             .on("brush end", function (event) {
                 const selectionRange = event.selection.map(vis.x.invert);
@@ -143,14 +134,6 @@ class Timeline {
         // draw x & y axis
         vis.xAxis.transition().duration(400).call(d3.axisBottom(vis.x));
         vis.yAxis.transition().duration(400).call(d3.axisLeft(vis.y).ticks(5).tickFormat(d => d + "%"));
-
-        // // draw path (area chart)
-        // vis.path.datum(vis.displayData)
-        //     .transition().duration(400)
-        //     .attr("d", vis.area)
-        //     .attr("fill", "#428A8D") // teal fill for area chart
-        //     .attr("stroke", "#136D70")
-        //     .attr("clip-path", "url(#clip)");
 
         // Create the linear gradient definition
         vis.svg.append("defs").append("linearGradient")
