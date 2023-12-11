@@ -127,6 +127,8 @@ button{
     left: 45%;
 }
 
+/*CLUSTERPLOT STYLES*/
+
 .vertical-center {
     display: flex;
     flex-direction: column;
@@ -152,6 +154,7 @@ div#clusterMovieInformation h3, h4 {
 #clusterTitle {
     font-family: century-gothic, sans-serif;
     font-style: normal;
+    text-align: center;
     font-weight: 400;
     font-size: 60px;
     color: #C79F27;
@@ -165,6 +168,68 @@ div#clusterMovieInformation h3, h4 {
 
 /* Ensures the SVG container fits inside the bubble */
 #genreBar, #clusterplot {
+    width: 100%;
+    height: 100%;
+}
+
+/*HEMISPHERE STYLES*/
+
+div#hemisphereContainer {
+    background: #274FC7;
+}
+
+/* title */
+#hemisphere-header h1 {
+    font-family: century-gothic, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 60px;
+    text-align: center;
+    margin-bottom: 0px;
+    color: #C79F27;
+}
+
+#hemisphere-header h4 {
+    font-family: century-gothic, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+    color: white;
+}
+
+.whitebubble {
+    background: #FFFFFF;
+    border-radius: 15px;
+    border: 4px solid #f3d782;
+}
+
+/* more efficient to hardcode colors due to large number of dots */
+svg circle.seat.PeopleOfColor { fill: #8b4513; stroke-width: 0px; }
+svg circle.seat.White { fill: #e9967a ; stroke-width: 0px; }
+svg circle.seat.Women { fill: #ee86b7; stroke-width: 0px; }
+svg circle.seat.Men { fill: #93dbf8; stroke-width: 0px; }
+svg circle.seat.Actors { fill: red; stroke-width: 0px; }
+svg circle.seat.CastingDirectors { fill: orange; stroke-width: 0px; }
+svg circle.seat.Cinematographers { fill: yellow; stroke-width: 0px; }
+svg circle.seat.CostumeDesigners { fill: green; stroke-width: 0px; }
+svg circle.seat.Directors { fill: blue; stroke-width: 0px; }
+svg circle.seat.Documentary { fill: indigo; stroke-width: 0px; }
+svg circle.seat.Executives { fill: violet; stroke-width: 0px; }
+svg circle.seat.FilmEditors { fill: pink; stroke-width: 0px; }
+svg circle.seat.MakeupArtists { fill: teal; stroke-width: 0px; }
+svg circle.seat.MarketingPR { fill: black; stroke-width: 0px; }
+svg circle.seat.Music { fill: brown; stroke-width: 0px; }
+svg circle.seat.Producers { fill: fuchsia; stroke-width: 0px; }
+svg circle.seat.ProductionDesign { fill: greenyellow; stroke-width: 0px; }
+svg circle.seat.ShortFilms { fill: NavajoWhite; stroke-width: 0px; }
+svg circle.seat.Sound { fill: coral; stroke-width: 0px; }
+svg circle.seat.VisualEffects { fill: magenta; stroke-width: 0px; }
+svg circle.seat.Writers { fill: blueviolet; stroke-width: 0px; }
+svg circle.seat.MembersAtLarge { fill: grey; stroke-width: 0px; }
+
+hemisphereLegend.large g.legendCells g.cell text.label { fill: red; font-size: small; }
+
+#branchHemisphere, #raceHemisphere, #genderHemisphere {
     width: 100%;
     height: 100%;
 }

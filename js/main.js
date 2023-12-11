@@ -30,12 +30,12 @@ function createVis(data) {
     let squeakyCleanData2 = data[4];
 
     // Create visualization instances
-    branchHemisphere = new Hemisphere("branchHemisphere", branchsizes_2022);
-    raceHemisphere = new Hemisphere("raceHemisphere", raceproportions_2022);
-    genderHemisphere = new Hemisphere("genderHemisphere", genderproportions_2022);
-    // rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
-    // studiovis = new StudioVis("studiovis", squeakyCleanData2)
-    // studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
+    branchHemisphere = new Hemisphere("branchHemisphere", branchsizes_2022, true);
+    raceHemisphere = new Hemisphere("raceHemisphere", raceproportions_2022, false);
+    genderHemisphere = new Hemisphere("genderHemisphere", genderproportions_2022, false);
+    rankchart = new RankChart("rankchart", budgetData, movieList, squeakyCleanData);
+    studiovis = new StudioVis("studiovis", squeakyCleanData2)
+    studiobubbles = new StudioBubbles("studiobubbles", squeakyCleanData2)
     myClusterplot = new ClusterPlot("clusterplot", squeakyCleanData);
     myGenreBar = new GenreBar("genreBar", squeakyCleanData);
 
