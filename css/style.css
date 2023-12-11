@@ -195,6 +195,13 @@ div#clusterMovieInformation h3, h4 {
     text-transform: uppercase;
 }
 
+.center-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
 /*FOR TEXT THAT CHANGES PERSPECTIVE ON HOVER*/
 /*Adapted from James Bosworth on Codepen: https://codepen.io/bosworthco/pen/YWBLpR*/
 

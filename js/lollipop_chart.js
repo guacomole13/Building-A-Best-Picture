@@ -14,11 +14,11 @@ class LollipopChart {
         let vis = this;
 
         // Define svg
-        vis.margin = { top: 40, right: 180, bottom: 100, left: 100 }; // Adjust margins to allow axes / labels to fit
+        vis.margin = { top: 50, right: 180, bottom: 100, left: 100 }; // Adjust margins to allow axes / labels to fit
 
         // Set width based on the dimensions of the parent element
-        vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right;
-        vis.height = 600 - vis.margin.top - vis.margin.bottom; // Adjust as needed
+        vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right - 35;
+        vis.height = 500 - vis.margin.top - vis.margin.bottom; // Adjust as needed
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -294,13 +294,13 @@ class LollipopChart {
         // Append a group element for the legend
         const legend = vis.svg.append("g")
             .attr("class", "legend")
-            .attr("transform", `translate(${vis.width + 20}, 20)`); // Position the legend to the right of the graph
+            .attr("transform", `translate(${vis.width + 20}, ${vis.height / 3})`); // Position the legend to the right of the graph
 
         // Append a rectangle as the background for the legend box
         const legendBox = legend.append("rect")
             .attr("width", 110) // Width of the legend box
             .attr("height", 115) // Height of the legend box
-            .attr("fill", "white") // Background color of the legend box
+            .attr("fill", "#EEEEEE") // Background color of the legend box
             .attr("stroke", "black"); // Border color of the legend box
 
         // Append text as the title of the legend
