@@ -90,7 +90,7 @@ img {
 }
 
 .main{
-    color: black;
+    color: white;
 }
 
 .endtext{
@@ -399,4 +399,9 @@ svg circle.seat.MembersAtLarge { fill: grey; stroke-width: 0px; }
 
 informationtext {
     text-align: center
+}
+
+.story {
+    fill: white;
+    color: white;
 }
