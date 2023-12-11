@@ -365,3 +365,11 @@ hemisphereLegend.large g.legendCells g.cell text.label { fill: red; font-size: s
 .Words:hover p {
     transform: translate3d(0, -78px, 0); /* Change middle number to  desired clip height */
 }
+
+/* rank chart */
+#budgetTooltip {
+    padding: 5px;
+    background-color: #FAF0D0;
+    border-radius: 15px;
+    border: thin solid black;
+}

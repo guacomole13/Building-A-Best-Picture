@@ -51,12 +51,10 @@ class RankChart {
             .style("font-size", "14px")
             .text("Note: Only 5 Movies Were Nominated Annually from 1945 to 2008");
 
-        vis.tooltip = d3.select(".tooltip");
-        if (vis.tooltip.empty()) {
-            vis.tooltip = d3.select("body").append("div")
+        vis.svg.tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
+                .attr("id", "budgetTooltip")
                 .style("opacity", 0);
-        }
 
         vis.wrangleData();
     }
@@ -180,30 +178,34 @@ class RankChart {
             .attr('fill', 'steelblue')
             // Add mouseover and mouseout event listeners for the circles
             .on("mouseover", function(event, d) {
-                event.stopPropagation();
                 d3.select(this).transition()
                     .duration(200)
+                    .attr("stroke", "black")
+                    .attr("stroke-width", "1px")
                     .attr('r', 8); // Increase the radius for highlight
-                vis.tooltip.transition()
+                vis.svg.tooltip.transition()
                     .duration(200)
                     .style("opacity", 1);
-                vis.tooltip.html(
+                vis.svg.tooltip.html(
                     "Title: " + d.Title + "<br/>" +
                     "Year: " + d.Year + "<br/>" +
                     "Box Office Rank: " + d.BoxOffice_Rank + "<br/>" +
                     "Budget Rank: " + d.Budget_Rank
                 )
-                    .style("left", (event.pageX) + "px")
+                    .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", function(event, d) {
-                event.stopPropagation();
                 d3.select(this).transition()
                     .duration(500)
-                    .attr('r', 5); // Reset the radius
-                vis.tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
+                    .attr('r', 5) // Reset the radius
+                    .attr("stroke", "none")
+                    .attr("stroke-width", "0px");
+                vis.svg.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0);
+                vis.svg.tooltip.html(``);
             });
 
 
@@ -219,30 +221,34 @@ class RankChart {
             .attr('fill', 'darkred')
             // Add mouseover and mouseout event listeners for the circles
             .on("mouseover", function(event, d) {
-                event.stopPropagation();
                 d3.select(this).transition()
+                    .attr('r', 8) // Increase the radius for highlight
                     .duration(400)
-                    .attr('r', 8); // Increase the radius for highlight
-                vis.tooltip.transition()
+                    .attr("stroke", "black")
+                    .attr("stroke-width", "1px");
+                vis.svg.tooltip.transition()
                     .duration(400)
                     .style("opacity", 1);
-                vis.tooltip.html(
+                vis.svg.tooltip.html(
                     "Title: " + d.Title + "<br/>" +
                     "Year: " + d.Year + "<br/>" +
                     "Box Office Rank: " + d.BoxOffice_Rank + "<br/>" +
                     "Budget Rank: " + d.Budget_Rank
                 )
-                    .style("left", (event.pageX) + "px")
+                    .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", function(event, d) {
-                event.stopPropagation();
                 d3.select(this).transition()
                     .duration(500)
-                    .attr('r', 4); // Reset the radius
-                vis.tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
+                    .attr('r', 4) // Reset the radius
+                    .attr("stroke", "none")
+                    .attr("stroke-width", "0px");
+                vis.svg.tooltip
+                    .style("opacity", 0)
+                    .style("left", 0)
+                    .style("top", 0);
+                vis.svg.tooltip.html(``);
             });
 
         // Add vertical lines between BoxOfficeRank and BudgetRank
