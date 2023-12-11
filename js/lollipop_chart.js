@@ -300,7 +300,7 @@ class LollipopChart {
         const legendBox = legend.append("rect")
             .attr("width", 110) // Width of the legend box
             .attr("height", 115) // Height of the legend box
-            .attr("fill", "white") // Background color of the legend box
+            .attr("fill", "#EEEEEE") // Background color of the legend box
             .attr("stroke", "black"); // Border color of the legend box
 
         // Append text as the title of the legend
