@@ -50,7 +50,7 @@ class Hemisphere {
 
         // creates legend group
         vis.svg.append("g")
-            .attr("class", vis.largeBoolean ? "hemisphereLegend large" : "hemisphereLegend small")
+            .attr("class", vis.largeBoolean ? "hemisphereLegend large " + vis.parentElement : "hemisphereLegend small " + vis.parentElement)
             .attr("transform", vis.largeBoolean ? `translate(${vis.width * 0.1},0)` : `translate(${vis.width * 0.39},${vis.height * 0.88})`);
 
        // renders proper legend text
@@ -115,6 +115,15 @@ class Hemisphere {
                         <p>${this.__data__.party.seats} out of 9579 seats</p>
                         ${this.__data__.party.legend ? `<p>${this.__data__.party.legend}</p>` : ''}
                     </div>`);
+            d3.selectAll(`.hemisphereLegend.${vis.parentElement}`)
+                    .style("opacity", 0.25);
+            vis.svg.selectAll(".title")
+                .append("text")
+                .attr("class", "title")
+                .style("text-anchor", "middle")
+                .style("font-weight", "bold")    
+                .style("font-size", "25px")
+                .text(`The Academy is ${d3.format(".0%")(this.__data__.party.seats / 9579)} ${this.__data__.party.name}`);
         });
         vis.parliament.on("mouseout", function(event, d) {
             // Reset the color of the hovered section
@@ -125,12 +134,22 @@ class Hemisphere {
             // Reset the color of all other circles
             d3.selectAll(`circle:not(.${this.__data__.party.id})`)
                 .style("opacity", 1);
+            d3.selectAll(".hemisphereLegend")
+                .style("opacity", 1);
             vis.svg.tooltip
                 .style("opacity", 0)
                 .style("left", 0)
                 .style("top", 0)
-                .html(``);
+                .html(``)
+            vis.svg.selectAll(".title")
+                .selectAll("text")
+                .remove();
         });
+
+        // add title
+        vis.svg.append("g")
+            .attr("class", "title")
+            .attr("transform", `translate(${vis.width * 0.5},${vis.height * 0.25})`)
     }
 }
 

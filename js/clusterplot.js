@@ -307,9 +307,6 @@ class ClusterPlot {
                         </div>
                     </div>`)
             })
-            .on("click", function (event, d) {
-                console.log("I clicked" + d.data)
-            })
             .on("mouseout", function(event, d) {
                 d3.selectAll(`#movie_${d.data.MovieId}`)
                     .transition()  

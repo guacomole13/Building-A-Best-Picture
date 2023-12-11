@@ -39,6 +39,7 @@ h2{
 
 img {
     margin: 15px;
+    loading: lazy;
 }
 
 .header {
@@ -242,8 +243,6 @@ svg circle.seat.Sound { fill: coral; stroke-width: 0px; }
 svg circle.seat.VisualEffects { fill: magenta; stroke-width: 0px; }
 svg circle.seat.Writers { fill: blueviolet; stroke-width: 0px; }
 svg circle.seat.MembersAtLarge { fill: grey; stroke-width: 0px; }
-
-hemisphereLegend.large g.legendCells g.cell text.label { fill: red; font-size: small; }
 
 #branchHemisphere, #raceHemisphere, #genderHemisphere {
     width: 100%;
