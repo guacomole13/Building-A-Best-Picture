@@ -296,6 +296,8 @@ hemisphereLegend.large g.legendCells g.cell text.label { fill: red; font-size: s
     -webkit-text-size-adjust: 100%;
 }
 
+/* WORDS */
+
 /* Apply common styles to each line of text */
 .Words-line {
     height: 60px; /* Set to desired clip height */
