@@ -94,9 +94,7 @@ class GenreBar {
     }
 
     wrangleData(){
-        let vis = this;
-        console.log(vis.data);
-        
+        let vis = this;        
         // Create a function that creates a JavaScript dict where each element represents a genre
         // Each genre element has properties for the total number of movies and the number of winners in that genre
         vis.data.forEach(movie => {
@@ -111,23 +109,17 @@ class GenreBar {
             });
         });
 
-        console.log(vis.displayData);
-
         vis.updateVis();
     }
 
     updateVis(){
         let vis = this;
 
-        console.log(Object.values(vis.displayData));
-        console.log(Object.entries(vis.displayData));
         vis.x.domain([0, d3.max(Object.values(vis.displayData), d => d.total)]).nice();
-
 
         // sorts data by winners
         let sortedData = Object.entries(vis.displayData).sort((a, b) => b[1].winners - a[1].winners);
-        console.log(sortedData);
-
+        
         // Update the domain of the y-scale to reflect the sorted order
         vis.y.domain(sortedData.map(d => d[0]));
 
@@ -326,7 +318,6 @@ class GenreBar {
                         <h3><b>Each nominee or winner has a bubble for each of its genres.</b></h3>
                         <h3><b>Hover/drag a bubble to display a film's information!</b></h3>
                         <h3><b>Hover over a bar to display a genre's stats!</b></h3>`);
-            }); 
-        
+            });
     }
 }
