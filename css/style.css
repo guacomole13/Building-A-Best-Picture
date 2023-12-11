@@ -3,10 +3,17 @@ body {
 }
 
 /*gradient background animation*/
-.gradient {
+.dark-blue-gradient {
     background: linear-gradient(-45deg, #000000, #0e0d1e, #111133, #222233); /* another shade option: #15142d */
     background-size: 400% 400%;
-    animation: gradient 6s ease infinite; /* controls speed of gradient color change */
+    animation: gradient 4s ease infinite; /* controls speed of gradient color change */
+    height: 100vh;
+}
+
+.warm-gradient {
+    background: linear-gradient(-45deg, #000000, #2f0000, #40060b, #4c0a0a);
+    background-size: 400% 400%;
+    animation: gradient 4s ease infinite; /* controls speed of gradient color change */
     height: 100vh;
 }
 
@@ -50,6 +57,8 @@ img {
 .title {
     font-size: 18px;
     font-weight: bold;
+    font-family: century-gothic, sans-serif;
+    text-transform: uppercase;
 }
 
 .tooltip {
@@ -232,4 +241,118 @@ hemisphereLegend.large g.legendCells g.cell text.label { fill: red; font-size: s
 #branchHemisphere, #raceHemisphere, #genderHemisphere {
     width: 100%;
     height: 100%;
+}
+.emphasis {
+    color: #FFF5C8;
+}
+
+.carousel {
+    position: relative;
+    top: -90px; /* Adjust the value to move the carousel up */
+}
+
+#tomatoes-heading {
+    margin-top: 40px;
+    text-align: center;
+    font-family: century-gothic, sans-serif;
+    text-transform: uppercase;
+}
+
+.center-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+/*FOR TEXT THAT CHANGES PERSPECTIVE ON HOVER*/
+/*Adapted from James Bosworth on Codepen: https://codepen.io/bosworthco/pen/YWBLpR*/
+
+/* Common styles */
+.perspective-text {
+    color: #FFFFFF;
+    display: flex;
+    height: 100%;
+}
+
+/* Apply styles to the parent element */
+.Words {
+    margin: 0 auto;
+    /*padding: 120px 0;*/
+    padding-top: 20%; /* Adjust padding-top and padding-bottom */
+    padding-bottom: 20%;
+    max-height: 80vh;
+    /*font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;*/
+    font-family: century-gothic, sans-serif;
+    font-size: 53px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+    /* Sort out nasty text fuzz */
+    /*transform: translate3d(0, 0, 0);*/
+    transform: translate(-10%, -15%);
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-kerning: normal;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* Apply common styles to each line of text */
+.Words-line {
+    height: 60px; /* Set to desired clip height */
+    overflow: hidden;
+    position: relative;
+}
+
+/* Apply perspective to alternating lines */
+.Words-line:nth-child(odd) {
+    transform: skew(60deg, -30deg) scaleY(0.66667);
+}
+
+.Words-line:nth-child(even) {
+    transform: skew(0deg, -30deg) scaleY(1.33333);
+}
+
+/* Loop over the total lines and apply a left offset */
+.Words-line:nth-child(1) {
+    left: 29px;
+}
+
+.Words-line:nth-child(2) {
+    left: 58px;
+}
+
+.Words-line:nth-child(3) {
+    left: 87px;
+}
+
+.Words-line:nth-child(4) {
+    left: 116px;
+}
+
+.Words-line:nth-child(5) {
+    left: 145px;
+}
+
+.Words-line:nth-child(6) {
+    left: 174px;
+}
+
+.Words-line:nth-child(7) {
+    left: 203px;
+}
+
+/* Fine-grained text styles */
+.Words-line p {
+    height: 60px; /* Set to desired clip height */
+    line-height: 55px; /* Clip height - 5 */
+    padding: 0 10px;
+    transition: all .4s ease-in-out;
+    transform: translate3d(0, 0, 0);
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+/* The hover interaction */
+.Words:hover p {
+    transform: translate3d(0, -78px, 0); /* Change middle number to  desired clip height */
 }
