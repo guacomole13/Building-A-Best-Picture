@@ -11,9 +11,9 @@ class StudioVis {
         // Method to initialize the visualization
         let vis = this;
 
-        vis.margin = {top: 40, right: 10, bottom: 80, left: 60};
+        vis.margin = {top: 40, right: 250, bottom: 85, left: 60};
 
-        vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width * 5 / 6 - vis.margin.left - vis.margin.right;
+        vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width * 5 / 6;
         vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
@@ -31,46 +31,17 @@ class StudioVis {
             .attr('transform', `translate(${vis.width / 2}, 20)`)
             .attr('text-anchor', 'middle');
 
-
-        // vis.xScale = d3.scaleLinear()
-        // .domain([10, 1])
-        // .range([0, vis.height]);
-
-        // init x & y axis
-        // vis.xAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--x")
-        //     .attr("transform", "translate(0," + vis.height + ")");
-        // vis.yAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--y");
-
         vis.xAxis = vis.svg.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + vis.height + ")");
-        // .call(d3.axisBottom(vis.xScale));
-
-        // vis.yAxis = vis.svg.append("g")
-        //     .attr("class", "axis axis--y");
 
         vis.yScale = d3.scaleLinear()
             .domain([d3.min(vis.data, d => d.Year), d3.max(vis.data, d => d.Year)])
-            .range([vis.margin.top, vis.height]);
+            .range([vis.height, vis.margin.top]);
 
         vis.yAxis = vis.svg.append("g")
             .attr("class", "axis axis--y")
             .call(d3.axisLeft(vis.yScale).tickFormat(d3.format("d")));
-        // .call(d3.axisLeft(vis.yScale));
-
-        // flip axis
-        // vis.svg.selectAll('.axis--y .tick text')
-        //     .attr('dy', '-0.7em');
-
-        // vis.BOline = d3.line()
-        //     .x(d => vis.xScale(d.Year))
-        //     .y(d => vis.yScale(d.BoxOffice_Rank));
-
-        // vis.BUline = d3.line()
-        //     .x(d => vis.xScale(d.Year))
-        //     .y(d => vis.yScale(d.Budget_Rank));
 
         vis.svg.append("text")
             .attr("transform", "translate(" + (vis.width / 2) + " ," + (vis.height + vis.margin.bottom-5) + ")")
@@ -86,22 +57,45 @@ class StudioVis {
             .style("text-anchor", "middle")
             .text("Year");
 
-        // Filter data to include only winners
+        vis.brushGroup = vis.svg.append("g")
+            .attr("class", "brush");
 
+        // init brush
+        vis.brush = d3.brushX()
+            .extent([[0, 0], [vis.width, vis.height]])
 
-        // // init pathGroup
-        // vis.pathGroup = vis.svg.append('g').attr('class', 'pathGroup');
-        //
-        // // init path one (average)
-        // vis.pathOne = vis.pathGroup
-        //     .append('path')
-        //     .attr("class", "pathOne");
-        //
-        // // init path two (single state)
-        // vis.pathTwo = vis.pathGroup
-        //     .append('path')
-        //     .attr("class", "pathTwo");
+            // // No limit on brushed selection
+            // .on("brush end", function (event) {
+            //     selectedTimeRange = [vis.x.invert(event.selection[0]), vis.x.invert(event.selection[1])];
+            //
+            //     // brushing should trigger wrangleData() method for the consensus plot
+            //     myConsensus.wrangleData();
+            // });
 
+            // Limits the brushed selection to a maximum of 25 years
+            .on("brush end", function (event) {
+                const selectionRange = event.selection.map(vis.x.invert);
+                const [startDate, endDate] = selectionRange;
+
+                const maxAllowedYears = 25;
+
+                // Calculate the difference in years between the start and end dates
+                const diffYears = endDate.getFullYear() - startDate.getFullYear();
+
+                // Limit the brushed selection to a maximum of 25 years
+                if (diffYears > maxAllowedYears) {
+                    const newStartDate = new Date(endDate.getFullYear() - maxAllowedYears, endDate.getMonth(), endDate.getDate());
+                    vis.brushGroup.call(vis.brush.move, [vis.x(newStartDate), vis.x(endDate)]);
+                }
+
+                selectedTimeRange = [startDate, endDate];
+
+                // After the user changes the selection (brush) the selected years should be updated immediately
+                vis.dateRange = d3.select("#selectedYears").text("Selected Years: " + dateFormatter(startDate) + " to " + dateFormatter(endDate));
+
+                // Update the consensus plot based on the selectedTimeRange
+                studiobubbles.wrangleData();
+            });
 
         vis.wrangleData();
     }
@@ -109,6 +103,7 @@ class StudioVis {
     wrangleData() {
         // Method to wrangle the data
         let vis = this;
+
         console.log(vis.data);
         vis.studioCounts = d3.rollup(
             vis.data,
@@ -126,136 +121,26 @@ class StudioVis {
 
         vis.sortedStudios = Array.from(vis.topStudios.keys()).sort((a, b) => vis.topStudios.get(b) - vis.topStudios.get(a)).slice(0, 5);
 
-        vis.filteredData = vis.data.filter(d => vis.sortedStudios.includes(d.distributor));
+        // vis.filteredData = vis.data.filter(d => vis.sortedStudios.includes(d.distributor));
+
+        vis.sortedStudios.push("Other");
+
+        // Modify dataset: replace all studios not in topStudios with "Other"
+        vis.filteredData = vis.data.map(d => {
+            if (!vis.sortedStudios.includes(d.distributor)) {
+                return {...d, distributor: "Other"};
+            }
+            return d;
+        });
+
+
 
         console.log(vis.filteredData);
-
-        // vis.winnersData = vis.data.filter(d => d.winner === true);
-        //
-        // // vis.winnersData = vis.data.filter(d => d.winner === true);
-        //
-        // // console.log(vis.data);
-        // // console.log(vis.budgetdata);
-        // // vis.winnersData = vis.data.filter(d => d.true);
-        // console.log(vis.winnersData);
-        // console.log("the winners!")
-        // vis.filteredWinnersData = vis.winnersData.filter(d => !isNaN(d.BoxOffice_Rank) && !isNaN(d.Budget_Rank));
-        //
-        // vis.filteredWinnersData = vis.filteredWinnersData.sort((a, b) => a.year - b.year);
-        //
-        //
-        //
-        // console.log(vis.filteredWinnersData)
-        // console.log("the filtered winners!")
-
 
         vis.updateVis();
     }
 
-    // updateVis() {
-    //     // Method to update the visualization
-    //     let vis = this;
-    //
-    //     vis.xAxis.call(d3.axisBottom(vis.xScale));
-    //     vis.yAxis.call(d3.axisLeft(vis.yScale))
-    //
-    //     // Bind data to line elements
-    //     vis.svg.selectAll('.boxoffice-line')
-    //         .data([vis.filteredWinnersData])
-    //         .enter()
-    //         .append('path')
-    //         .attr('class', 'boxoffice-line')
-    //         .attr('d', vis.BOline)
-    //         .attr('fill', 'none')
-    //         .attr('stroke', 'steelblue');
-    //     // console.log("data updated");
-    //
-    //     vis.svg.selectAll('.budget-line')
-    //         .data([vis.filteredWinnersData])
-    //         .enter()
-    //         .append('path')
-    //         .attr('class', 'budget-line')
-    //         .attr('d', vis.BUline)
-    //         .attr('fill', 'none')
-    //         .attr('stroke', 'gray');
-    //     // console.log("data updated");
-    // }
     updateVis() {
-        // Method to update the visualization
-        // let vis = this;
-        //
-        // // vis.xAxis.call(d3.axisBottom(vis.xScale));
-        // // vis.yAxis.call(d3.axisLeft(vis.yScale));
-        // vis.xScale = d3.scaleBand()
-        //     .domain(vis.sortedStudios)
-        //     .range([0, vis.width])
-        //     .padding(0.1);
-        //
-        // // init scales
-        // vis.yScale = d3.scaleLinear()
-        //     .domain([d3.min(vis.data, d => d.Year), d3.max(vis.data, d => d.Year)])
-        //     .range([0, vis.width]);
-        //
-        // vis.xAxis.call(d3.axisBottom(vis.xScale));
-        // vis.yAxis.call(d3.axisLeft(vis.yScale));
-        //
-        // // Create line generators for each category
-        // // const boxOfficeLine = d3.line()
-        // //     .x(d => vis.xScale(d.Year))
-        // //     .y(d => vis.yScale(d.BoxOffice_Rank));
-        // //
-        // // const budgetLine = d3.line()
-        // //     .x(d => vis.xScale(d.Year))
-        // //     .y(d => vis.yScale(d.Budget_Rank));
-        //
-        // // Bind data to circles for each point
-        // // vis.svg.selectAll('.boxoffice-circle')
-        // //     .data(vis.filteredWinnersData)
-        // //     .enter()
-        // //     .append('circle')
-        // //     .attr('class', 'boxoffice-circle')
-        // //     .attr('cx', d => vis.xScale(d.Year))
-        // //     .attr('cy', d => vis.yScale(d.BoxOffice_Rank))
-        // //     .attr('r', 4)
-        // //     .attr('fill', 'steelblue');
-        // //
-        // // vis.svg.selectAll('.budget-circle')
-        // //     .data(vis.filteredWinnersData)
-        // //     .enter()
-        // //     .append('circle')
-        // //     .attr('class', 'budget-circle')
-        // //     .attr('cx', d => vis.xScale(d.Year))
-        // //     .attr('cy', d => vis.yScale(d.Budget_Rank))
-        // //     .attr('r', 4)
-        // //     .attr('fill', 'gray');
-        //
-        // vis.svg.selectAll('circle')
-        //     .data(vis.data)
-        //     .enter().append('circle')
-        //     .attr('cx', d => vis.xScale(d.distributor) + vis.xScale.bandwidth() / 2)
-        //     .attr('cy', d => vis.yScale(d.year))
-        //     .attr('r', 5)  // Adjust the radius as needed
-        //     .attr('fill', d => d.winner ? 'red' : 'gray');
-        //
-        // // Add a class 'black' if the studio had both winner=true and winner=false
-        // vis.svg.selectAll('circle')
-        //     .filter(d => vis.data.some(e => e.distributor === d.distributor && e.year === d.year && e.winner !== d.winner))
-        //     .attr('class', 'black');
-
-        // Draw lines connecting the points for each category
-        // vis.svg.append('path')
-        //     .datum(vis.filteredWinnersData)
-        //     .attr('class', 'boxoffice-line')
-        //     .attr('d', boxOfficeLine)
-        //     .attr('fill', 'none')
-        //     .attr('stroke', 'steelblue');
-        //
-        // vis.svg.append('path')
-        //     .datum(vis.filteredWinnersData)
-        //     .attr('class', 'budget-line')
-        //     .attr('d', budgetLine)
-        //     .attr('fill', 'none')
-        //     .attr('stroke', 'gray');
 
         let vis = this;
 
@@ -264,36 +149,10 @@ class StudioVis {
             .range([0, vis.width])
             .padding(0.1);
 
-        // vis.yScale = d3.scaleLinear()
-        //     .domain([d3.min(vis.filteredData, d => d.year), d3.max(vis.filteredData, d => d.year)])
-        //     .range([0, vis.height]);
-
         vis.xAxis.call(d3.axisBottom(vis.xScale))
             .selectAll('text')  // Select all the text elements for styling
             .attr('transform', 'rotate(-45)')  // Rotate the labels by -45 degrees
             .style('text-anchor', 'end');  // Adjust text anchor to end
-
-        // vis.yAxis.call(d3.axisLeft(vis.yScale));
-
-        // vis.svg.selectAll('circle')
-        //     .data(vis.data)
-        //     .enter().append('circle')
-        //     .attr('cx', d => vis.xScale(d.distributor) + vis.xScale.bandwidth() / 2)
-        //     .attr('cy', d => vis.yScale(d.year))
-        //     .attr('r', 5)  // Adjust the radius as needed
-        //     .attr('fill', d => d.winner ? 'red' : 'gray');
-        // vis.svg.selectAll('circle')  // Select all existing circles
-        //     .data(vis.filteredData)
-        //     .enter()  // Enter selection for new data points
-        //     .append('circle')  // Append new circles
-        //     .attr('cx', d => vis.xScale(d.distributor) + vis.xScale.bandwidth() / 2)
-        //     .attr('cy', d => vis.yScale(d.Year))
-        //     .attr('r', 5)  // Adjust the radius as needed
-        //     .attr('fill', d => d.winner ? 'red' : 'gray')
-        //     .attr('class', d => {
-        //         // Add a class 'black' if the studio had both winner=true and winner=false
-        //         return vis.filteredData.some(e => e.distributor === d.distributor && e.year === d.year && e.winner !== d.winner) ? 'black' : '';
-        //     });
 
         vis.svg.selectAll('.gray-circle')
             .data(vis.filteredData)
@@ -317,10 +176,37 @@ class StudioVis {
             .attr('r', 5)
             .attr('fill', 'red');
 
+        let legend = vis.svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(" + (vis.width+20) + "," + 40 + ")"); // Adjust the translation as needed
 
-        // vis.svg.selectAll('circle')
-        //     .filter(d => vis.filteredData.some(e => e.distributor === d.distributor && e.year === d.year && e.winner !== d.winner))
-        //     .attr('class', 'black');
+        legend.append("text")
+            .attr("x", 0)
+            .attr("y", -15)
+            .style("font-weight", "bold")
+            .text("Legend:");
+
+        // Add legend items
+        legend.append("rect")
+            .attr("width", 10)
+            .attr("height", 10)
+            .attr("fill", "red"); // Adjust color as needed
+
+        legend.append("text")
+            .attr("x", 15)
+            .attr("y", 10)
+            .text("Best Picture Winners"); // Adjust text and position as needed
+
+        legend.append("rect")
+            .attr("width", 10)
+            .attr("height", 10)
+            .attr("y", 20)
+            .attr("fill", "Gray"); // Adjust color as needed
+
+        legend.append("text")
+            .attr("x", 15)
+            .attr("y", 30)
+            .text("Best Picture Nominees"); // Adjust text and position as needed
 
     }
 }
