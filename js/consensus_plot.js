@@ -195,7 +195,7 @@ class ConsensusPlot {
             .call(vis.yAxis);
 
         // Select all existing lines and bind filteredData
-        let lines = vis.svg.selectAll(".line")
+        let lines = vis.svg.selectAll(".consensus-line")
             .data(vis.filteredData, d => d.Film);
 
         // Remove lines that don't have data anymore
@@ -204,7 +204,7 @@ class ConsensusPlot {
         // Append new lines for new data
         let linesEnter = lines.enter()
             .append("line")
-            .attr("class", "line")
+            .attr("class", "consensus-line")
             .merge(lines) // Merge enter and update selections
             // .transition().duration(800) // Apply transitions
             .attr("x1", d => vis.x(d.CriticRating))
@@ -269,7 +269,7 @@ class ConsensusPlot {
         });
 
         // Apply tooltip functionality to the lines
-        vis.svg.selectAll(".line").each(function(d) {
+        vis.svg.selectAll(".consensus-line").each(function(d) {
             vis.displayTooltip(this, d);
         });
 
