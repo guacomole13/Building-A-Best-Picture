@@ -18,7 +18,7 @@ class LollipopChart {
 
         // Set width based on the dimensions of the parent element
         vis.width = document.getElementById(vis.parentElement).getBoundingClientRect().width - vis.margin.left - vis.margin.right - 35;
-        vis.height = 500 - vis.margin.top - vis.margin.bottom; // Adjust as needed
+        vis.height = 500 - vis.margin.top - vis.margin.bottom;
 
         // SVG drawing area
         vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -60,7 +60,7 @@ class LollipopChart {
         vis.svg.append("text")
             .attr("class", "lollipop-text")
             .attr("transform", "rotate(-90)")
-            .attr("y", 40 - vis.margin.left) // Adjusted y-coordinate
+            .attr("y", 40 - vis.margin.left)
             .attr("x", 0 - (vis.height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
@@ -70,7 +70,7 @@ class LollipopChart {
         vis.svg.append("text")
             .attr('class', 'title lollipop-text')
             .attr("x", vis.width / 2)
-            .attr("y", vis.margin.top - 60) // Adjust height of title
+            .attr("y", vis.margin.top - 70)
             .style("text-anchor", "middle")
             .text("How do average IMDB ratings for Best Picture winners vs. nominees compare throughout the years?");
 
@@ -106,9 +106,6 @@ class LollipopChart {
 
             return { key, value: { winnerAvg, nomineeAvg } };
         });
-
-        // Log the final nestedData to check calculated averages
-        // console.log('Nested Data with Averages:', vis.nestedData);
 
         // Update the visualization
         vis.updateVis();
@@ -287,7 +284,7 @@ class LollipopChart {
             .attr("y", vis.height + vis.margin.bottom - 20)  // Adjust the y-coordinate to position the text below the chart
             .style("text-anchor", "middle")
             .style("font-size", "12px")
-            .text("Note: Each decade captures 10 years of Academy Awards ceremonies. Year of ceremony is the year displayed, not the year in which the movie was released.");
+            .text("Note: Each decade captures 10 years of Academy Awards ceremonies. Year of ceremony is the year displayed, not the year in which the movie was released. Hover over an star or a squiggly line for more information.");
 
         //////// ADD LEGEND ////////
 

@@ -373,6 +373,17 @@ svg circle.seat.MembersAtLarge { fill: grey; stroke-width: 0px; }
     border: thin solid black;
 }
 
+.heading {
+    font-family: century-gothic, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    /*font-size: 60px;*/
+    /*color: #C79F27;*/
+}
+
 .linear {
     transition: opacity 1s ease, transform 1s ease;
     opacity: 0;
