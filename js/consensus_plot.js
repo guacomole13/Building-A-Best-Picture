@@ -136,7 +136,7 @@ class ConsensusPlot {
                 .style("left", event.pageX + 20 + "px")
                 .style("top", event.pageY - 20 + "px")
                 .html(`
-            <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
+            <div style="border: thin solid grey; border-radius: 5px; background: #FFF5C8; padding: 20px">
                 <h3>${data.Film}</h3>
                 <h4>Oscar Year: ${data.OscarYear.getFullYear()}</h4>
                 <h4>Critic Rating: ${data.CriticRating}%</h4>

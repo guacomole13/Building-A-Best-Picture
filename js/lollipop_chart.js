@@ -152,7 +152,7 @@ class LollipopChart {
                 .style("left", event.pageX + 20 + "px")
                 .style("top", event.pageY - 20 + "px")
                 .html(`
-        <div style="border: thin solid grey; border-radius: 5px; background: lightgrey; padding: 20px">
+        <div style="border: thin solid grey; border-radius: 5px; background: #FFF5C8; padding: 20px">
             <h3>${decade} Best Picture ${awardType === 'winner' ? 'Winners' : 'Nominees'}</h3>
             <h4>Average IMDB Rating: ${averageRating.toFixed(1)} out of 10 </h4>
         </div>`
