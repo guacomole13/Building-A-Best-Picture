@@ -43,13 +43,13 @@ class RankChart {
 
         // Graph Info
         vis.svg.append("text")
-            .attr("x", vis.width * 3 / 7)
+            .attr("x", vis.width * 6 / 14)
             .attr("y", vis.height - 100) // Adjust height of title
             .style("text-anchor", "middle")
             .style("font-weight", "bold")
             .style("color", "white")
             .style("font-size", "14px")
-            .text("Note: Only 5 Movies Were Nominated Annually from 1945 to 2008");
+            .text("Note: Only 5 Movies per Year Were Nominated for Best Picture from 1945 to 2008");
 
         vis.svg.tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
