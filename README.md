@@ -7,7 +7,7 @@ Authors: Timothy Fargiano (team leader), Michael Omole, and Libby Wu
 ## SUBMISSION LINKS
 
 **Website:** [Link](https://guacomole13.github.io/CS171-Final-/) </br>
-**Video:** [Link]()
+**Video:** [Link](https://drive.google.com/file/d/1Gz8rkzMEfkG0sS667TnjT76lnEwajXbe/view?usp=drive_link)
 
 ## FILE WALKTHROUGH
 
