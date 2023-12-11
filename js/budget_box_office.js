@@ -186,7 +186,7 @@ class RankChart {
                     .attr('r', 8); // Increase the radius for highlight
                 vis.tooltip.transition()
                     .duration(200)
-                    .style("opacity", .9);
+                    .style("opacity", 1);
                 vis.tooltip.html(
                     "Title: " + d.Title + "<br/>" +
                     "Year: " + d.Year + "<br/>" +
@@ -219,12 +219,13 @@ class RankChart {
             .attr('fill', 'darkred')
             // Add mouseover and mouseout event listeners for the circles
             .on("mouseover", function(event, d) {
+                event.stopPropagation();
                 d3.select(this).transition()
                     .duration(400)
                     .attr('r', 8); // Increase the radius for highlight
                 vis.tooltip.transition()
                     .duration(400)
-                    .style("opacity", .9);
+                    .style("opacity", 1);
                 vis.tooltip.html(
                     "Title: " + d.Title + "<br/>" +
                     "Year: " + d.Year + "<br/>" +
@@ -235,6 +236,7 @@ class RankChart {
                     .style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", function(event, d) {
+                event.stopPropagation();
                 d3.select(this).transition()
                     .duration(500)
                     .attr('r', 4); // Reset the radius
@@ -258,7 +260,9 @@ class RankChart {
 
         // Add legend items
         legend.append("circle")
-            .attr("radius", 5)
+            .attr("r", 5)
+            .attr("cx", 5)
+            .attr("cy", 7)
             .attr("fill", "steelblue"); // Adjust color as needed
 
         legend.append("text")
@@ -267,8 +271,9 @@ class RankChart {
             .text("Box Office Rank"); // Adjust text and position as needed
 
         legend.append("circle")
-            .attr("radius", 4)
-            .attr("y", 20)
+            .attr("r", 4)
+            .attr("cx", 5)
+            .attr("cy", 26)
             .attr("fill", "darkred"); // Adjust color as needed
 
         legend.append("text")
