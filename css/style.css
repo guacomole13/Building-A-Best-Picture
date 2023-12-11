@@ -373,3 +373,16 @@ hemisphereLegend.large g.legendCells g.cell text.label { fill: red; font-size: s
     border-radius: 15px;
     border: thin solid black;
 }
+
+.linear {
+    transition: opacity 1s ease, transform 1s ease;
+    opacity: 0;
+    transform: translateY(-20px); /* initial state: slightly above and invisible */
+    display: none; /* hidden by default */
+}
+
+.linear.show {
+    opacity: 1;
+    transform: translateY(0px); /* final state: visible and in normal position */
+    display: block; /* make sure it's not set to none */
+}

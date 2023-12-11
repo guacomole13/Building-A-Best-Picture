@@ -62,7 +62,7 @@ class RankChart {
     wrangleData() {
         // Method to wrangle the data
         let vis = this;
-        console.log(vis.data);
+        // console.log(vis.data);
         vis.winnersData = vis.data.filter(d => d.winner === true);
 
         // vis.winnersData = vis.data.filter(d => d.winner === true);
@@ -70,16 +70,16 @@ class RankChart {
         // console.log(vis.data);
         // console.log(vis.budgetdata);
         // vis.winnersData = vis.data.filter(d => d.true);
-        console.log(vis.winnersData);
-        console.log("the winners!")
+        // console.log(vis.winnersData);
+        // console.log("the winners!")
         vis.filteredWinnersData = vis.winnersData.filter(d => !isNaN(d.BoxOffice_Rank) && !isNaN(d.Budget_Rank));
 
         vis.filteredWinnersData = vis.filteredWinnersData.sort((a, b) => a.year - b.year);
 
 
 
-        console.log(vis.filteredWinnersData)
-        console.log("the filtered winners!")
+        // console.log(vis.filteredWinnersData)
+        // console.log("the filtered winners!")
 
 
         vis.updateVis();

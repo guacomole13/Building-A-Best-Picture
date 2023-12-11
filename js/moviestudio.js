@@ -104,7 +104,7 @@ class StudioVis {
         // Method to wrangle the data
         let vis = this;
 
-        console.log(vis.data);
+        // console.log(vis.data);
         vis.studioCounts = d3.rollup(
             vis.data,
             v => d3.sum(v, d => d.winner ? 2 : 1),  // 2 for winner=true, 1 for winner=false
@@ -135,7 +135,7 @@ class StudioVis {
 
 
 
-        console.log(vis.filteredData);
+        // console.log(vis.filteredData);
 
         vis.updateVis();
     }
