@@ -6,7 +6,7 @@ Authors: Timothy Fargiano (team leader), Michael Omole, and Libby Wu
 
 ## SUBMISSION LINKS
 
-**Website:** [Link](https://guacomole13.github.io/CS171-Final-/) </br>
+**Website:** [Link]([https://guacomole13.github.io/CS171-Final) </br>
 **Video:** [Link](https://drive.google.com/file/d/1Gz8rkzMEfkG0sS667TnjT76lnEwajXbe/view?usp=drive_link)
 
 ## FILE WALKTHROUGH
@@ -45,3 +45,4 @@ Items related to libraries will be *italicized*.
     - [studiobubbles.js](studiobubbles.js) - Creates bubbles visually representing the number of winners and nominees for each studio.
     - [textreveal.js](textreveal.js) - Custom function to stagger text reveal to aid visual storytelling.
     - [timeline.js](timeline.js) - Brushable timeline linked to consensusplot.js.
+
